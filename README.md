@@ -1,5 +1,3 @@
-
-
 # Quant
-- Stock
+- Stock prediction
 
