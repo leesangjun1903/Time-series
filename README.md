@@ -5,6 +5,9 @@ Cherry Quant : https://wikidocs.net/book/7089 : 퀀트란 무엇인가?
 - Commodity prediction
 
 # Forecasting
+## Awesome Series
+- Awesome Large Foundation Models/Task-Specific Models for Weather and Climate : https://github.com/shengchaochen82/Awesome-Foundation-Models-for-Weather-and-Climate
+
 - Numerical Weather prediction
 - 
 
