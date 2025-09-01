@@ -2,7 +2,7 @@
 
 ## 주요 주장 및 기여 (간결 요약)
 Neural Ordinary Differential Equations(ODE-Net) 논문은 **딥 신경망의 연속적 깊이 모델**을 제안하며, 다음 네 가지 핵심 기여를 제시한다.  
-1. **연속적 깊이 파라미터화**: ResNet의 불연속 계층 대신, 상태의 미분방정식 $$ \frac{dh(t)}{dt} = f(h(t), t, \theta) $$ 으로 숨겨진 표현을 정의하여 연속 깊이 모델을 제시.  
+1. **연속적 깊이 파라미터화**: ResNet의 불연속 계층 대신, 상태의 미분방정식 $$\frac{dh(t)}{dt} = f(h(t), t, \theta) $$ 으로 숨겨진 표현을 정의하여 연속 깊이 모델을 제시.  
 2. **상수 메모리 역전파**: 어드조인트 민감도 해법(adj oint sensitivity method)을 활용해 ODE 솔버를 블랙박스로 취급하고, 메모리 사용을 입력·출력 여유공간만으로 상수화.  
 3. **적응적 계산 비용 제어**: 기존 ODE 솔버의 오차 감시 및 적응적 단계 조정 능력을 활용하여 입력 복잡도에 따라 함수 평가 횟수(“가상 계층 수”)를 조절.  
 4. **연속 정규화 흐름(CNF)**: 연속적 변화 공식(Instantaneous Change of Variables, $$\partial_t \log p(z(t)) = -\mathrm{tr}\bigl(\partial_z f(z(t),t)\bigr)$$)을 유도하여, 역행렬 대신 트레이스 연산만으로 밀도 변화를 계산하는 효율적 가역 생성 모델 제안.  
