@@ -13,6 +13,9 @@
 - Time-LLM: Time Series Forecasting by Reprogramming Large Language Models | 2023 · 950회 인용
 - TEST: Text Prototype Aligned Embedding to Activate LLM's Ability for Time Series | 2023 · 186회 인용
 - TEMPO: Prompt-based Generative Pre-trained Transformer for Time Series Forecasting | 2023 · 311회 인용
+- Pathformer: Multi-scale Transformers with Adaptive Pathways for Time Series Forecasting | 2024 · 179회 인용
+- iTransformer: Inverted Transformers Are Effective for Time Series Forecasting | 2023 · 1695회 인용
+- ModernTCN: A Modern Pure Convolution Structure for General Time Series Analysis | 2024 . 254회 인용
 
 ## Framework
 - The THORPEX Interactive Grand Global Ensemble | 2010 · 541회 인용
