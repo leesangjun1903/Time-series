@@ -6,3 +6,4 @@
 # Forecasting
 - Accurate Medium-Range Global Weather Forecasting with 3D Neural Networks, 2023 · 1598회 인용
 - An introduction to full waveform inversion, 2017 · 275회 인용
+- ClimaX: A foundation model for weather and climate, 2023 · 461회 인용
