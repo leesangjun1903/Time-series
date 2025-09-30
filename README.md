@@ -13,5 +13,5 @@ Cherry Quant : https://wikidocs.net/book/7089 : 퀀트란 무엇인가?
 - 
 
 # Time series AI Papers
-- TEST: Text Prototype Aligned Embedding to Activate LLM's Ability for Time Series | 2023 · 186회 인용
+
 
