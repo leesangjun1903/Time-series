@@ -11,6 +11,7 @@
 - FourCastNet: A Global Data-driven High-resolution Weather Model using Adaptive Fourier Neural Operators | 2022 · 987회 인용
 - W-Transformers : A Wavelet-based Transformer Framework for Univariate Time Series Forecasting | 2022 · 44회 인용
 - Time-LLM: Time Series Forecasting by Reprogramming Large Language Models | 2023 · 950회 인용
+- TEST: Text Prototype Aligned Embedding to Activate LLM's Ability for Time Series | 2023 · 186회 인용
 - TEMPO: Prompt-based Generative Pre-trained Transformer for Time Series Forecasting | 2023 · 311회 인용
 
 ## Framework
