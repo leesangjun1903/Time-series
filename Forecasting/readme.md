@@ -4,4 +4,5 @@
 # Audio
 
 # Forecasting
-- (Earthquake)
+- Accurate Medium-Range Global Weather Forecasting with 3D Neural Networks, 2023 · 1598회 인용
+- 
