@@ -8,3 +8,4 @@
 - An introduction to full waveform inversion, 2017 · 275회 인용
 - ClimaX: A foundation model for weather and climate, 2023 · 461회 인용
 - DeepTCN : Probabilistic forecasting with temporal convolutional neural network, 2019 · 458회 인용
+- Automatic Time Series Forecasting: The forecast Package for R, 2008 · 5566회 인용
