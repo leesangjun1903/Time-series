@@ -18,6 +18,7 @@
 - ModernTCN: A Modern Pure Convolution Structure for General Time Series Analysis | 2024 . 254회 인용
 - TimeMixer: Decomposable Multiscale Mixing for Time Series Forecasting | 2024 · 497회 인용
 - FITS: Modeling Time Series with 10k Parameters | 2023 · 219회 인용
+- UniTime: A Language-Empowered Unified Model for Cross-Domain Time Series Forecasting | 2023 · 156회 인용
 
 ## Framework
 - The THORPEX Interactive Grand Global Ensemble | 2010 · 541회 인용
