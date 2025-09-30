@@ -12,4 +12,6 @@
 - EddyNet: A Deep Neural Network for Pixel-Wise Classification of Oceanic Eddies | 2017 · 207회 인용
 - FEDformer: Frequency Enhanced Decomposed Transformer for Long-term Series Forecasting | 2022 · 2801회 인용
 - FourCastNet: A Global Data-driven High-resolution Weather Model using Adaptive Fourier Neural Operators | 2022 · 987회 인용
+
+## Framework
 - The THORPEX Interactive Grand Global Ensemble | 2010 · 541회 인용
