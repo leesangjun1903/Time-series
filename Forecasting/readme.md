@@ -16,6 +16,8 @@
 - Pathformer: Multi-scale Transformers with Adaptive Pathways for Time Series Forecasting | 2024 · 179회 인용
 - iTransformer: Inverted Transformers Are Effective for Time Series Forecasting | 2023 · 1695회 인용
 - ModernTCN: A Modern Pure Convolution Structure for General Time Series Analysis | 2024 . 254회 인용
+- TimeMixer: Decomposable Multiscale Mixing for Time Series Forecasting | 2024 · 497회 인용
+- FITS: Modeling Time Series with 10k Parameters | 2023 · 219회 인용
 
 ## Framework
 - The THORPEX Interactive Grand Global Ensemble | 2010 · 541회 인용
