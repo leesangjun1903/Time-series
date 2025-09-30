@@ -13,5 +13,7 @@ Cherry Quant : https://wikidocs.net/book/7089 : 퀀트란 무엇인가?
 - 
 
 # Time series AI Papers
+- Diffusion-TS: Interpretable Diffusion for General Time Series Generation | 2024 · 138회 인용
+- 
 
 
