@@ -11,3 +11,4 @@
 - Automatic Time Series Forecasting: The forecast Package for R | 2008 · 5566회 인용
 - EddyNet: A Deep Neural Network for Pixel-Wise Classification of Oceanic Eddies | 2017 · 207회 인용
 - FEDformer: Frequency Enhanced Decomposed Transformer for Long-term Series Forecasting | 2022 · 2801회 인용
+- FourCastNet: A Global Data-driven High-resolution Weather Model using Adaptive Fourier Neural Operators | 2022 · 987회 인용
