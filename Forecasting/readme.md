@@ -21,7 +21,7 @@
 - UniTime: A Language-Empowered Unified Model for Cross-Domain Time Series Forecasting | 2023 · 156회 인용
 - MSGNet: Learning Multi-Scale Inter-Series Correlations for Multivariate Time Series Forecasting | 2023 · 170회 인용
 - Fully-Connected Spatial-Temporal Graph for Multivariate Time-Series Data | 2023 · 100회 인용
-- One Fits All: Power General Time Series Analysis by Pretrained LM
+- One Fits All: Power General Time Series Analysis by Pretrained LM | 2023 · 757회 인용
 
 
 ## Framework
