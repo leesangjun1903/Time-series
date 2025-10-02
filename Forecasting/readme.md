@@ -27,6 +27,7 @@
 - FourierGNN: Rethinking Multivariate Time Series Forecasting from a Pure Graph Perspective | 2023 · 229회 인용
 - FreTS : Frequency-domain MLPs are More Effective Learners in Time Series Forecasting | 2023 · 331회 인용
 - Predict, Refine, Synthesize: Self-Guiding Diffusion Models for Probabilistic Time Series Forecasting | 2023 · 104회 인용
+- Conformal PID Control for Time Series Prediction | 2023 · 125회 인용
 
 
 ## Framework
