@@ -29,6 +29,7 @@
 - Predict, Refine, Synthesize: Self-Guiding Diffusion Models for Probabilistic Time Series Forecasting | 2023 · 104회 인용
 - Conformal PID Control for Time Series Prediction | 2023 · 125회 인용
 - SimMTM: A Simple Pre-Training Framework for Masked Time-Series Modeling | 2023 · 193회 인용
+- Koopa: Learning Non-stationary Time Series Dynamics with Koopman Predictors | 2023 · 179회 인용
 
 
 ## Framework
