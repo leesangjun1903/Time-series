@@ -24,6 +24,7 @@
 - One Fits All: Power General Time Series Analysis by Pretrained LM | 2023 · 757회 인용
 - Large Language Models Are Zero-Shot Time Series Forecasters | 2023 · 673회 인용
 - ContiFormer: Continuous-Time Transformer for Irregular Time Series Modeling | 2024 · 116회 인용
+- FourierGNN: Rethinking Multivariate Time Series Forecasting from a Pure Graph Perspective | 2023 · 229회 인용
 
 
 ## Framework
