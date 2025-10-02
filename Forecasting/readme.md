@@ -20,6 +20,8 @@
 - FITS: Modeling Time Series with 10k Parameters | 2023 · 219회 인용
 - UniTime: A Language-Empowered Unified Model for Cross-Domain Time Series Forecasting | 2023 · 156회 인용
 - MSGNet: Learning Multi-Scale Inter-Series Correlations for Multivariate Time Series Forecasting | 2023 · 170회 인용
+- Fully-Connected Spatial-Temporal Graph for Multivariate Time-Series Data | 2023 · 100회 인용
+
 
 ## Framework
 - The THORPEX Interactive Grand Global Ensemble | 2010 · 541회 인용
