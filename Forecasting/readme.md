@@ -22,6 +22,7 @@
 - MSGNet: Learning Multi-Scale Inter-Series Correlations for Multivariate Time Series Forecasting | 2023 · 170회 인용
 - Fully-Connected Spatial-Temporal Graph for Multivariate Time-Series Data | 2023 · 100회 인용
 - One Fits All: Power General Time Series Analysis by Pretrained LM | 2023 · 757회 인용
+- Large Language Models Are Zero-Shot Time Series Forecasters | 2023 · 673회 인용
 
 
 ## Framework
