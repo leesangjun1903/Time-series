@@ -36,6 +36,7 @@
 - Crossformer: Transformer Utilizing Cross-Dimension Dependency for Multivariate Time Series Forecasting | 2022 · 1459회 인용
 - CrossGNN: Confronting Noisy Multivariate Time Series Via Cross Interaction Refinement | 2023 · 106회 인용
 - Scaleformer: Iterative Multi-scale Refining Transformers for Time Series Forecasting | 2022 · 170회 인용
+- MICN: Multi-scale Local and Global Context Modeling for Long-term Series Forecasting | 2023 . 538회 인용
 
 
 ## Framework
