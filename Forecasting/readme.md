@@ -40,6 +40,7 @@
 - TimesNet: Temporal 2D-Variation Modeling for General Time Series Analysis | 2022 · 2204회 인용
 - DCdetector: Dual Attention Contrastive Representation Learning for Time Series Anomaly Detection | 2023 · 275회 인용
 - TSMixer: Lightweight MLP-Mixer Model for Multivariate Time Series Forecasting | 2023 · 330회 인용
+- AirFormer: Predicting Nationwide Air Quality in China with Transformers | 2022 · 172회 인용
 
 
 ## Framework
