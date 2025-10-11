@@ -38,6 +38,7 @@
 - Scaleformer: Iterative Multi-scale Refining Transformers for Time Series Forecasting | 2022 · 170회 인용
 - MICN: Multi-scale Local and Global Context Modeling for Long-term Series Forecasting | 2023 . 538회 인용
 - TimesNet: Temporal 2D-Variation Modeling for General Time Series Analysis | 2022 · 2204회 인용
+- DCdetector: Dual Attention Contrastive Representation Learning for Time Series Anomaly Detection | 2023 · 275회 인용
 
 
 ## Framework
