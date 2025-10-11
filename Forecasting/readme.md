@@ -44,6 +44,7 @@
 - Dish-TS: A General Paradigm for Alleviating Distribution Shift in Time Series Forecasting | 2023 · 133회 인용
 - Are Transformers Effective for Time Series Forecasting? | 2022 · 3409회 인용
 - Spatio-Temporal Meta-Graph Learning for Traffic Forecasting | 2022 · 301회 인용
+- FiLM: Frequency improved Legendre Memory Model for Long-term Time Series Forecasting | 2022 · 330회 인용
 
 
 ## Framework
