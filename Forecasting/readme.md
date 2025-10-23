@@ -53,6 +53,7 @@
 - Self-Supervised Contrastive Pre-Training for Time Series via Time-Frequency Consistency | 2022 · 446회 인용
 - Domain Adaptation for Time Series Forecasting via Attention Sharing | 2021 · 130회 인용
 - Dynamic Spatial-Temporal Aware Graph Neural Network for Traffic Flow Forecasting | 2022 · 525회 인용
+- Adaptive Conformal Predictions for Time Series | 2022 · 212회 인용
 
 
 ## Framework
