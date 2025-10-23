@@ -47,6 +47,7 @@
 - FiLM: Frequency improved Legendre Memory Model for Long-term Time Series Forecasting | 2022 · 330회 인용
 - SCINet: Sample Convolution and Interaction Network for Time Series Forecasting | 2021 · 693회 인용
 - Non-stationary Transformers: Exploring the Stationarity in Time Series Forecasting | 2022 · 930회 인용
+- Earthformer: Exploring Space-Time Transformers for Earth System Forecasting | 2022 · 276회 인용
 
 
 ## Framework
