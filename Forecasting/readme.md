@@ -51,6 +51,7 @@
 - D3VAE: Generative Time Series Forecasting with Diffusion, Denoise, and Disentanglement | 2023 · 176회 인용
 - Learning Latent Seasonal-Trend Representations for Time Series Forecasting | 2022 · 110회 인용
 - Self-Supervised Contrastive Pre-Training for Time Series via Time-Frequency Consistency | 2022 · 446회 인용
+- Domain Adaptation for Time Series Forecasting via Attention Sharing | 2021 · 130회 인용
 
 
 ## Framework
