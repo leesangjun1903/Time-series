@@ -56,6 +56,7 @@
 - Adaptive Conformal Predictions for Time Series | 2022 · 212회 인용
 - Modeling Irregular Time Series with Continuous Recurrent Units | 2021 · 148회 인용
 - Unsupervised Time-Series Representation Learning with Iterative Bilinear Temporal-Spectral Fusion | 2022 · 181회 인용
+- Pyraformer: Low-Complexity Pyramidal Attention for Long-Range Time Series Modeling and Forecasting | 2022 , 1269회 인용
 
 
 ## Framework
