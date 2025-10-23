@@ -54,6 +54,7 @@
 - Domain Adaptation for Time Series Forecasting via Attention Sharing | 2021 · 130회 인용
 - Dynamic Spatial-Temporal Aware Graph Neural Network for Traffic Flow Forecasting | 2022 · 525회 인용
 - Adaptive Conformal Predictions for Time Series | 2022 · 212회 인용
+- Modeling Irregular Time Series with Continuous Recurrent Units | 2021 · 148회 인용
 
 
 ## Framework
