@@ -48,6 +48,7 @@
 - SCINet: Sample Convolution and Interaction Network for Time Series Forecasting | 2021 · 693회 인용
 - Non-stationary Transformers: Exploring the Stationarity in Time Series Forecasting | 2022 · 930회 인용
 - Earthformer: Exploring Space-Time Transformers for Earth System Forecasting | 2022 · 276회 인용
+- D3VAE: Generative Time Series Forecasting with Diffusion, Denoise, and Disentanglement | 2023 · 176회 인용
 
 
 ## Framework
