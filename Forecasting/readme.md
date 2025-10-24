@@ -68,6 +68,7 @@
 - Conditional Local Convolution for Spatio-temporal Meteorological Forecasting | 2021 · 126회 인용
 - Graph Neural Controlled Differential Equations for Traffic Forecasting | 2021 · 407회 인용
 - STDEN: Towards Physics-Guided Neural Networks for Traffic Flow Prediction | 2022 · 124회 인용
+- TS2Vec: Towards Universal Representation of Time Series | 2021 · 927회 인용
 
 
 ## Framework
