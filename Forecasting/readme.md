@@ -67,6 +67,7 @@
 - CausalGNN: Causal-Based Graph Neural Networks for Spatio-Temporal Epidemic Forecasting | 2022 · 144회 인용
 - Conditional Local Convolution for Spatio-temporal Meteorological Forecasting | 2021 · 126회 인용
 - Graph Neural Controlled Differential Equations for Traffic Forecasting | 2021 · 407회 인용
+- STDEN: Towards Physics-Guided Neural Networks for Traffic Flow Prediction | 2022 · 124회 인용
 
 
 ## Framework
