@@ -1,4 +1,4 @@
-# Filling the Gaps: Multivariate Time Series Imputation by Graph Neural Networks
+# Filling the G_ap_s: Multivariate Time Series Imputation by Graph Neural Networks
 
 ## 1. 핵심 주장 및 주요 기여[1]
 
