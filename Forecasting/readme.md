@@ -65,6 +65,7 @@
 - MSDR: Multi-Step Dependency Relation Networks for Spatial Temporal Forecasting | 2022 · 132회 인용
 - Spatio-Temporal Graph Few-Shot Learning with Cross-City Knowledge Transfer | 2022 · 103회 인용
 - CausalGNN: Causal-Based Graph Neural Networks for Spatio-Temporal Epidemic Forecasting | 2022 · 144회 인용
+- Conditional Local Convolution for Spatio-temporal Meteorological Forecasting | 2021 · 126회 인용
 
 
 ## Framework
