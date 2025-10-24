@@ -60,6 +60,7 @@
 - DEPTS: Deep Expansion Learning for Periodic Time Series Forecasting | 2022 · 101회 인용
 - CoST: Contrastive Learning of Disentangled Seasonal-Trend Representations for Time Series Forecasting | 2022 · 434회 인용
 - Reversible Instance Normalization for Accurate Time-Series Forecasting against Distribution Shift | 2021 , 972회 인용
+- Learning the Evolutionary and Multi-scale Graph Structure for Multivariate Time Series Forecasting | 2022 · 162회 인용
 
 
 ## Framework
