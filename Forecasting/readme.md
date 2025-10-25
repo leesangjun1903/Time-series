@@ -70,6 +70,7 @@
 - STDEN: Towards Physics-Guided Neural Networks for Traffic Flow Prediction | 2022 · 124회 인용
 - TS2Vec: Towards Universal Representation of Time Series | 2021 · 927회 인용
 - Triformer: Triangular, Variable-Specific Attentions for Long Sequence Multivariate Time Series Forecasting | 2022 · 203회 인용
+- Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting | 2021 · 4175회 인용
 
 
 ## Framework
