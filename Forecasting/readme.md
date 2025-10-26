@@ -1,6 +1,13 @@
 # Time-series
 
 # Forecasting
+> ### 예측이 기업에 주는 실질적인 이점은 무엇인가?
+> 현재 및 과거 데이터를 기반으로 예측을 통해 조직은 수용 가능하고 달성 가능한 목표를 설정할 수 있습니다.
+> 신뢰할 수 있는 데이터와 통계를 바탕으로 평가하면 기업은 어떤 수준의 변화, 개발 또는 진전을 성공적인 것으로 간주할지 판단하는 데 도움이 됩니다.
+
+>Based on current and historical data, forecasting allows organizations to create acceptable and achievable goals.
+>Having reliable data and statistics to evaluate assists firms in determining what level of change, development, or progress will be considered successful.
+
 - Accurate Medium-Range Global Weather Forecasting with 3D Neural Networks | 2023 · 1598회 인용
 - An introduction to full waveform inversion | 2017 · 275회 인용
 - ClimaX: A foundation model for weather and climate | 2023 · 461회 인용
