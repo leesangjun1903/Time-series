@@ -84,6 +84,7 @@
 - End-to-End Learning of Coherent Probabilistic Forecasts for Hierarchical Time Series | 2021 · 105회 인용
 - Z-GCNETs: Time Zigzags at Graph Convolutional Networks for Time Series Forecasting | 2021 · 221회 인용
 - Explaining Time Series Predictions with Dynamic Masks | 2021 · 133회 인용
+- Conformal Prediction Interval for Dynamic Time-Series | 2021 · 202회 인용
 
 
 ## Framework
