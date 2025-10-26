@@ -82,6 +82,7 @@
 - Neural Flows: Efficient Alternative to Neural ODEs | 2021 · 116회 인용
 - TimeGrad: Autoregressive Denoising Diffusion Models for Multivariate Probabilistic Time Series Forecasting | 2021 · 568회 인용
 - End-to-End Learning of Coherent Probabilistic Forecasts for Hierarchical Time Series | 2021 · 105회 인용
+- Z-GCNETs: Time Zigzags at Graph Convolutional Networks for Time Series Forecasting | 2021 · 221회 인용
 
 
 ## Framework
