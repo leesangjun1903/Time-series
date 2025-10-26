@@ -90,6 +90,7 @@
 - Multivariate Probabilistic Time Series Forecasting via Conditioned Normalizing Flows | 2020 · 257회 인용
 - Discrete Graph Structure Learning for Forecasting Multiple Time Series | 2021 · 452회 인용
 - ST-Norm: Spatial and Temporal Normalization for Multi-variate Time Series Forecasting | 2021 · 251회 인용
+- Spatial-Temporal Graph ODE Networks for Traffic Flow Forecasting | 2021 · 695회 인용
 
 
 ## Framework
