@@ -88,6 +88,7 @@
 - Neural Rough Differential Equations for Long Time Series | 2020 · 208회 인용
 - Learning Neural Event Functions for Ordinary Differential Equations | 2020 · 159회 인용
 - Multivariate Probabilistic Time Series Forecasting via Conditioned Normalizing Flows | 2020 · 257회 인용
+- Discrete Graph Structure Learning for Forecasting Multiple Time Series | 2021 · 452회 인용
 
 
 ## Framework
