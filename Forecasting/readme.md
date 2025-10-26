@@ -85,6 +85,7 @@
 - Z-GCNETs: Time Zigzags at Graph Convolutional Networks for Time Series Forecasting | 2021 · 221회 인용
 - Explaining Time Series Predictions with Dynamic Masks | 2021 · 133회 인용
 - Conformal Prediction Interval for Dynamic Time-Series | 2021 · 202회 인용
+- Neural Rough Differential Equations for Long Time Series | 2020 · 208회 인용
 
 
 ## Framework
