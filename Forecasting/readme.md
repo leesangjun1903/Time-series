@@ -80,6 +80,7 @@
 - Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting | 2021 · 4175회 인용
 - Conformal Time-Series Forecasting | 2021 · 204회 인용
 - Neural Flows: Efficient Alternative to Neural ODEs | 2021 · 116회 인용
+- TimeGrad: Autoregressive Denoising Diffusion Models for Multivariate Probabilistic Time Series Forecasting | 2021 · 568회 인용
 
 
 ## Framework
