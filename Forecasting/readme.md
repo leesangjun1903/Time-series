@@ -79,6 +79,7 @@
 - Triformer: Triangular, Variable-Specific Attentions for Long Sequence Multivariate Time Series Forecasting | 2022 · 203회 인용
 - Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting | 2021 · 4175회 인용
 - Conformal Time-Series Forecasting | 2021 · 204회 인용
+- Neural Flows: Efficient Alternative to Neural ODEs | 2021 · 116회 인용
 
 
 ## Framework
