@@ -93,6 +93,7 @@
 - Spatial-Temporal Graph ODE Networks for Traffic Flow Forecasting | 2021 · 695회 인용
 - Dynamic and Multi-faceted Spatio-temporal Deep Learning for Traffic Speed Forecasting | 2021 · 325회 인용
 - A Transformer-based Framework for Multivariate Time Series Representation Learning | 2020 · 1470회 인용
+- Informer: Beyond Efficient Transformer for Long Sequence Time-Series Forecasting | 2020 · 7546회 인용
 
 
 ## Framework
