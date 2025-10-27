@@ -98,6 +98,7 @@
 - Meta-learning framework with applications to zero-shot time-series forecasting | 2020 · 167회 인용
 - Hierarchical Graph Convolution Networks for Traffic Forecasting | 2021 · 272회 인용
 - Traffic Flow Forecasting with Spatial-Temporal Graph Diffusion Network | 2021 · 266회 인용
+- Spatial-Temporal Fusion Graph Neural Networks for Traffic Flow Forecasting | 2020 · 1095회 인용
 
 
 
