@@ -96,6 +96,7 @@
 - Informer: Beyond Efficient Transformer for Long Sequence Time-Series Forecasting | 2020 · 7546회 인용
 - Temporal Latent Auto-Encoder: A Method for Probabilistic Multivariate Time Series Forecasting | 2021 · 103회 인용
 - Meta-learning framework with applications to zero-shot time-series forecasting | 2020 · 167회 인용
+- Hierarchical Graph Convolution Networks for Traffic Forecasting | 2021 · 272회 인용
 
 
 
