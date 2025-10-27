@@ -1,4 +1,4 @@
-# Generative Semi-supervised Learning for Multivariate Time Series Imputation: Summary and Analysis
+# Generative Semi-supervised Learning for Multivariate Time Series Imputation
 
 ## 1. 핵심 주장과 주요 기여 간결 요약
 이 논문은 불완전한 다변량 시계열 데이터에서 결측값을 효과적으로 보완하는 새로운 반지도 학습 기반의 적대적 생성 신경망 모델(SSGAN)을 제안한다. SSGAN은 생성기(generator), 판별기(discriminator), 분류기(classifier)의 세 구성 요소로 이루어져 있으며, 라벨 정보가 일부만 주어진 현실 데이터에서도 결측치를 정확히 추정하고 다운스트림 분석 성능을 크게 향상시킬 수 있다는 점에서 차별화된다. 또한, 시간 종속성을 반영하는 bidirectional RNN과 temporal reminder matrix를 활용해 판별기의 판별 능력을 강화하고, 생성기와 분류기 간의 상호작용을 통해 데이터 분포에 점진적으로 수렴함을 이론적으로 보장한다. 실제 의료·활동·기상 데이터에서 기존 최첨단 기법 대비 15% 이상의 성능 향상을 보임을 실험적으로 입증한다.
