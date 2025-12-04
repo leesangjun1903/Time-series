@@ -1,5 +1,7 @@
 - Books Recommendation: 10 Books about Machine Learning for Time Series Analysis : https://www.linkedin.com/pulse/books-recommendation-10-machine-learning-time-series-baharudin
 
+- Sampling & Reconstruction & shannon Sampling Theorem : https://hagisilecoding.tistory.com/m/93
+
 
 ## Machine Learning & Data Science Blueprints for Finance, Hariom Tatsat
 Machine Learning in Finance: The Landscape  
