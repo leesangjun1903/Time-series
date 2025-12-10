@@ -8,6 +8,8 @@ Cherry Quant : https://wikidocs.net/book/7089 : 퀀트란 무엇인가?
 # Awesome Series
 - Awesome Time Series Forecasting/Prediction Papers : https://github.com/ddz16/TSFpaper
 
+- awesome-TS-anomaly-detection : https://github.com/rob-med/awesome-TS-anomaly-detection
+
 - AI for Time Series (AI4TS) Papers, Tutorials, and Surveys : https://github.com/qingsongedu/awesome-AI-for-time-series-papers
 
 - Awesome Time Series Papers : https://github.com/TSCenter/awesome-time-series-papers
