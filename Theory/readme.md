@@ -2,6 +2,8 @@
 
 - Sampling & Reconstruction & shannon Sampling Theorem : https://hagisilecoding.tistory.com/m/93
 
+- 시계열 데이터를 이미지로 바꿔보자! : https://dongju923.github.io/dl/TS_imaging/
+
 
 ## Machine Learning & Data Science Blueprints for Finance, Hariom Tatsat
 Machine Learning in Finance: The Landscape  
