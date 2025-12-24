@@ -14,6 +14,7 @@
 - DeepTCN : Probabilistic forecasting with temporal convolutional neural network | 2019 · 458회 인용
 - Automatic Time Series Forecasting: The forecast Package for R | 2008 · 5566회 인용
 - EddyNet: A Deep Neural Network for Pixel-Wise Classification of Oceanic Eddies | 2017 · 207회 인용
+- Modeling Long- and Short-Term Temporal Patterns with Deep Neural Networks | 2017 · 3133회 인용
 - FEDformer: Frequency Enhanced Decomposed Transformer for Long-term Series Forecasting | 2022 · 2801회 인용
 - FourCastNet: A Global Data-driven High-resolution Weather Model using Adaptive Fourier Neural Operators | 2022 · 987회 인용
 - W-Transformers : A Wavelet-based Transformer Framework for Univariate Time Series Forecasting | 2022 · 44회 인용
