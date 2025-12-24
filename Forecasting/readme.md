@@ -108,6 +108,7 @@
 - Domain Generalization in Time Series Forecasting | 2024 · 16회 인용
 - A Dual-Stage Attention-Based Recurrent Neural Network for Time Series Prediction | 2017 · 1963회 인용
 - DeepAR: Probabilistic Forecasting with Autoregressive Recurrent Networks | 2017 · 3135회 인용
+- A Multi-Horizon Quantile Recurrent Forecaster | 2017 · 700회 인용
 
 
 
