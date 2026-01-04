@@ -110,6 +110,7 @@
 - DeepAR: Probabilistic Forecasting with Autoregressive Recurrent Networks | 2017 · 3135회 인용
 - A Multi-Horizon Quantile Recurrent Forecaster | 2017 · 700회 인용
 - TimesFM: A decoder-only foundation model for time-series forecasting | 2023 · 643회 인용
+- Chronos: Learning the Language of Time Series | 2024 · 722회 인용
 
 
 
