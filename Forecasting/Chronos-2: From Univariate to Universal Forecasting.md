@@ -1,4 +1,4 @@
-# Chronos-2: From Univariate to Universal Forecasting
+# Chronos2: From Univariate to Universal Forecasting
 
 ### **1. 핵심 주장 및 주요 기여**
 
