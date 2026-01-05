@@ -112,6 +112,7 @@
 - TimesFM: A decoder-only foundation model for time-series forecasting | 2023 · 643회 인용
 - Chronos: Learning the Language of Time Series | 2024 · 722회 인용
 - In-Context Fine-Tuning for Time-Series Foundation Models | 2024 · 12회 인용
+- Chronos-2: From Univariate to Universal Forecasting | 2025 · 5회 인용
 
 
 
