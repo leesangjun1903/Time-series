@@ -12,12 +12,20 @@
 
 - Awesome Time Series : https://github.com/cure-lab/Awesome-time-series
 
+
+# Models
 - Awesome Large Foundation Models/Task-Specific Models for Weather and Climate : https://github.com/shengchaochen82/Awesome-Foundation-Models-for-Weather-and-Climate
 
+- Diffusion Model for Time Series and Spatio-Temporal Data : https://github.com/yyysjz1997/Awesome-TimeSeries-SpatioTemporal-Diffusion-Model
+
+
+# Optimization
+
+# Application
 ## Anomaly Detection
 - awesome anomaly detection : https://github.com/hoya012/awesome-anomaly-detection
 
-## Frameworks, Packages
+## Frameworks, Packages, Libraries
 ### Versatile(Classification, Prediction, Regression...)
 - sktime: scikit-learn과 유사한 API를 제공하여 다양한 시계열 작업(분류, 회귀, 예측 등)을 통합적으로 처리할 수 있습니다.
 - AIStream의 flow-forecast : 시계열 예측, 분류 및 이상 탐지를 위한 딥러닝 PyTorch 라이브러리입니다(원래는 홍수 예측용으로 개발됨).
@@ -29,12 +37,8 @@
 - tsflex : 유연하고 효율적인 시계열 특징 추출 및 처리 툴킷입니다. 이 패키지는 다변량, 불규칙 샘플링된 시퀀스 데이터에 대한 스트라이드 윈도우 특징 추출을 지원합니다.
 - tslearn : 시계열 분석을 위한 머신러닝 도구를 제공하는 파이썬 패키지입니다. 이 패키지는 scikit-learn, numpy, scipy 라이브러리를 기반으로 합니다.
 
-
 ### Causal inferenceg
 - Tigramite : 인과 시계열 분석을 위한 파이썬 패키지입니다. 이 패키지를 사용하면 고차원 시계열 데이터 세트에서 인과 그래프를 효율적으로 재구성하고, 얻어진 인과 관계를 모델링하여 인과 매개 및 예측 분석을 수행할 수 있습니다.
-
-
-### Modeling
 - Darts: 고전적인 통계 모델부터 딥러닝 모델까지 다양한 예측 모델을 지원하는 유연한 라이브러리입니다.
 - Prophet: Meta(구 Facebook)에서 개발한 것으로, 계절성 및 공휴일 패턴이 있는 비즈니스 데이터 예측에 강점을 보입니다.
 - Statsmodels: ARIMA, SARIMA 등 고전적인 통계 모델링 및 분석에 적합합니다.
@@ -42,7 +46,6 @@
 - Pmdarima: R의 auto.arima와 유사한 기능을 Python에서 제공하여 최적의 ARIMA 모델을 자동으로 찾아줍니다.
 - GluonTS: Amazon에서 개발한 확률적 시계열 예측 라이브러리로, 딥러닝 기반 모델에 중점을 둡니다.
 - Merlion - 시계열 분석을 위한 머신러닝 프레임워크, ARIMA를 포함한 다양한 모델 지원
-
 
 ### Anomaly Detection
 - Chaos Genius(https://github.com/chaos-genius/chaos_genius) : 이상치/이상 징후 탐지 및 근본 원인 분석을 위한 머신러닝 기반 분석 엔진
@@ -55,7 +58,6 @@
 - ruptures : 오프라인 변화점 감지를 위한 파이썬 라이브러리입니다. 이 패키지는 비정상 신호의 분석 및 분할을 위한 메서드를 제공합니다.
 - Skyline : 수십만 개의 지표를 수동적으로 모니터링할 수 있도록 설계된 실시간 이상 탐지 시스템입니다.
 - SaxPy 는 SAX의 일반적인 구현체이며, 이상 탐지를 위한 HOTSAX도 제공합니다.
-
 
 ### R
 - forecast: ARIMA 및 지수 평활법 등 포괄적인 예측 도구를 제공합니다.
