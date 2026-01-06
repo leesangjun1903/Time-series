@@ -18,9 +18,6 @@
 
 - Diffusion Model for Time Series and Spatio-Temporal Data : https://github.com/yyysjz1997/Awesome-TimeSeries-SpatioTemporal-Diffusion-Model
 
-
-# Optimization
-
 # Application
 ## Anomaly Detection
 - awesome anomaly detection : https://github.com/hoya012/awesome-anomaly-detection
@@ -37,7 +34,7 @@
 - tsflex : 유연하고 효율적인 시계열 특징 추출 및 처리 툴킷입니다. 이 패키지는 다변량, 불규칙 샘플링된 시퀀스 데이터에 대한 스트라이드 윈도우 특징 추출을 지원합니다.
 - tslearn : 시계열 분석을 위한 머신러닝 도구를 제공하는 파이썬 패키지입니다. 이 패키지는 scikit-learn, numpy, scipy 라이브러리를 기반으로 합니다.
 
-### Causal inferenceg
+### Causal inference
 - Tigramite : 인과 시계열 분석을 위한 파이썬 패키지입니다. 이 패키지를 사용하면 고차원 시계열 데이터 세트에서 인과 그래프를 효율적으로 재구성하고, 얻어진 인과 관계를 모델링하여 인과 매개 및 예측 분석을 수행할 수 있습니다.
 - Darts: 고전적인 통계 모델부터 딥러닝 모델까지 다양한 예측 모델을 지원하는 유연한 라이브러리입니다.
 - Prophet: Meta(구 Facebook)에서 개발한 것으로, 계절성 및 공휴일 패턴이 있는 비즈니스 데이터 예측에 강점을 보입니다.
