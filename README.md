@@ -22,6 +22,9 @@
 ## Anomaly Detection
 - awesome anomaly detection : https://github.com/hoya012/awesome-anomaly-detection
 
+## Imputation
+- Awesome_Imputation : https://github.com/WenjieDu/Awesome_Imputation
+
 ## Frameworks, Packages, Libraries
 ### Versatile(Classification, Prediction, Regression...)
 - sktime: scikit-learn과 유사한 API를 제공하여 다양한 시계열 작업(분류, 회귀, 예측 등)을 통합적으로 처리할 수 있습니다.
