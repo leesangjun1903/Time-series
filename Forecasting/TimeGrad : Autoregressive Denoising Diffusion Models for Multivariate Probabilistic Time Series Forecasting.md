@@ -1,4 +1,4 @@
-# Autoregressive Denoising Diffusion Models for Multivariate Probabilistic Time Series Forecasting
+# TimeGrad : Autoregressive Denoising Diffusion Models for Multivariate Probabilistic Time Series Forecasting
 
 ### 1. 핵심 주장 및 주요 기여 요약
 
