@@ -493,25 +493,192 @@ Foundation Model의 강점: [research](https://research.google/blog/time-series-
 ***
 
 ### 참고 자료
+<span style="display:none">[^1_24][^1_25][^1_26][^1_27][^1_28][^1_29][^1_30][^1_31][^1_32][^1_33][^1_34][^1_35][^1_36][^1_37][^1_38][^1_39][^1_40][^1_41][^1_42][^1_43][^1_44][^1_45][^1_46][^1_47][^1_48][^1_49][^1_50][^1_51][^1_52][^1_53][^1_54][^1_55][^1_56][^1_57][^1_58][^1_59][^1_60][^1_61][^1_62][^1_63][^1_64][^1_65][^1_66][^1_67][^1_68][^1_69][^1_70][^1_71][^1_72][^1_73][^1_74][^1_75][^1_76][^1_77][^1_78][^1_79][^1_80][^1_81][^1_82][^1_83][^1_84][^1_85][^1_86][^1_87][^1_88][^1_89][^1_90][^1_91][^1_92][^1_93]</span>
 
- Alexandrov et al. (2019). GluonTS: Probabilistic Time Series Models in Python. arXiv:1906.05264v2 [ppl-ai-file-upload.s3.amazonaws](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/65988149/02359309-88cd-4b2c-95ac-abec700a6031/1906.05264v2.pdf)
- Li et al. (2023). Simple Contrastive Representation Learning for Time Series Forecasting. arXiv:2303.18205 [arxiv](https://arxiv.org/pdf/2303.18205.pdf)
- Deep Learning for Multivariate Time Series Imputation (2025). IJCAI [ijcai](https://www.ijcai.org/proceedings/2025/1187.pdf)
- Olivares et al. (2024). Transferability of Neural Forecast Models. International Journal of Forecasting [forecasters](https://forecasters.org/wp-content/uploads/TransferL_Progress2_2022-SAS_Kin-G.-Olivares.pdf)
- Santos et al. (2025). Deep learning in time series forecasting with transformer. PeerJ Computer Science [sciencedirect](https://www.sciencedirect.com/science/article/pii/S073658452500064X)
- Time Series Forecasting via Direct Per-Step Probability (2025). arXiv [arxiv](https://arxiv.org/pdf/2511.23260.pdf)
- Liu et al. (2024). Multi-Domain Multimodal Dataset for Time Series Analysis. arXiv:2406.08627 [arxiv](https://arxiv.org/pdf/2406.08627.pdf)
- Zhou et al. (2020). Informer: Beyond Efficient Transformer for Long Sequence. AAAI [ojs.aaai](https://ojs.aaai.org/index.php/AAAI/article/view/17325)
- LSTM–Transformer-Based Robust Hybrid Deep Learning Model (2025). MDPI [mdpi](https://www.mdpi.com/2413-4155/7/1/7)
- FreEformer: Frequency Enhanced Transformer (2025). arXiv:2501.13989 [arxiv](https://arxiv.org/abs/2501.13989)
- Patil et al. (2023). A Time Series is Worth 64 Words. ICLR [arxiv](https://arxiv.org/abs/2207.05397)
- Meta-Transformer Networks for Long-term Time-Series (2024). arXiv:2401.13968 [arxiv](https://arxiv.org/pdf/2401.13968.pdf)
- TimePFN: Effective Multivariate Time Series Forecasting (2025). arXiv:2502.16294 [arxiv](https://arxiv.org/pdf/2502.16294.pdf)
- dos Santos et al. (2025). Deep learning in time series forecasting with transformer. Nature [pmc.ncbi.nlm.nih](https://pmc.ncbi.nlm.nih.gov/articles/PMC12453695/)
- Foundation Models for Time Series: A Survey (2024). arXiv:2504.04011 [arxiv](https://arxiv.org/html/2504.04011v1)
- Time series foundation models can be few-shot learners (2025). Google Research [research](https://research.google/blog/time-series-foundation-models-can-be-few-shot-learners/)
- Time Series Foundation Models for Process (2025). arXiv:2512.07624 [arxiv](https://arxiv.org/abs/2512.07624)
- TimelyGPT: Extrapolatable Transformer Pre-training (2023). arXiv:2312.00817 [arxiv](https://arxiv.org/pdf/2312.00817.pdf)
- Manipulating Headlines in LLM-Driven Algorithmic Trading (2025). arXiv:2601.13082 [arxiv](https://arxiv.org/html/2601.13082v1)
- Foundation Models for Time Series Analysis (2024). arXiv:2403.14735 [arxiv](https://arxiv.org/abs/2403.14735)
- Speech Foundation Models Generalize to Time Series (2025). arXiv:2509.00221 [arxiv](https://arxiv.org/abs/2509.00221)
+<div align="center">⁂</div>
+
+[^1_1]: 1906.05264v2.pdf
+
+[^1_2]: https://arxiv.org/html/2504.04011v1
+
+[^1_3]: https://arxiv.org/abs/2403.14735
+
+[^1_4]: https://forecasters.org/wp-content/uploads/TransferL_Progress2_2022-SAS_Kin-G.-Olivares.pdf
+
+[^1_5]: https://arxiv.org/abs/2501.13989
+
+[^1_6]: https://pmc.ncbi.nlm.nih.gov/articles/PMC12453695/
+
+[^1_7]: https://arxiv.org/pdf/2406.08627.pdf
+
+[^1_8]: https://arxiv.org/pdf/2401.13968.pdf
+
+[^1_9]: https://arxiv.org/pdf/2303.18205.pdf
+
+[^1_10]: https://www.ijcai.org/proceedings/2025/1187.pdf
+
+[^1_11]: https://www.sciencedirect.com/science/article/pii/S073658452500064X
+
+[^1_12]: https://arxiv.org/html/2601.13082v1
+
+[^1_13]: https://www.mdpi.com/2413-4155/7/1/7
+
+[^1_14]: https://arxiv.org/abs/2512.07624
+
+[^1_15]: https://www.nature.com/articles/s41467-025-63786-4
+
+[^1_16]: https://arxiv.org/pdf/2312.00817.pdf
+
+[^1_17]: https://arxiv.org/pdf/2511.23260.pdf
+
+[^1_18]: https://arxiv.org/pdf/2502.16294.pdf
+
+[^1_19]: https://arxiv.org/abs/2509.00221
+
+[^1_20]: https://research.google/blog/time-series-foundation-models-can-be-few-shot-learners/
+
+[^1_21]: https://icml.cc/virtual/2025/poster/44262
+
+[^1_22]: https://ojs.aaai.org/index.php/AAAI/article/view/17325
+
+[^1_23]: https://arxiv.org/abs/2207.05397
+
+[^1_24]: http://www.sciencepublishinggroup.com/journal/paperinfo?journalid=146\&doi=10.11648/j.ajtas.20200904.18
+
+[^1_25]: http://link.springer.com/10.1007/s11207-020-1595-3
+
+[^1_26]: https://dl.acm.org/doi/10.1145/3437802.3437827
+
+[^1_27]: http://link.springer.com/10.1007/s12080-020-00451-0
+
+[^1_28]: https://inmateh.eu/volumes/volume-61--no-2--2020/article/61-07-zeying-xu-prediction-model-of-ammonia-concentration-in-yellow-feather-broilers-house-durin
+
+[^1_29]: https://meetingorganizer.copernicus.org/EGU2020/EGU2020-3054.html
+
+[^1_30]: https://www.semanticscholar.org/paper/b0528c13b684547b8a13241a4d212c32f176cbff
+
+[^1_31]: https://www.semanticscholar.org/paper/540ec5368c90c59a0caa81cf11dc547c1a3e7165
+
+[^1_32]: https://pubs.geoscienceworld.org/ssa/srl/article/91/5/2631/587730/California-Historical-Intensity-Mapping-Project
+
+[^1_33]: https://www.ssrn.com/abstract=3574846
+
+[^1_34]: https://arxiv.org/pdf/1906.05264.pdf
+
+[^1_35]: https://arxiv.org/pdf/2402.16516.pdf
+
+[^1_36]: https://arxiv.org/pdf/2310.10688.pdf
+
+[^1_37]: https://arxiv.org/pdf/2401.13912.pdf
+
+[^1_38]: https://arxiv.org/pdf/2307.01616.pdf
+
+[^1_39]: http://arxiv.org/pdf/2405.13522.pdf
+
+[^1_40]: https://arxiv.org/pdf/2312.17100.pdf
+
+[^1_41]: https://dl.acm.org/doi/pdf/10.5555/3455716.3455832
+
+[^1_42]: https://arxiv.org/abs/1906.05264
+
+[^1_43]: https://proceedings.neurips.cc/paper/2020/file/2f2b265625d76a6704b08093c652fd79-Paper.pdf
+
+[^1_44]: https://pmc.ncbi.nlm.nih.gov/articles/PMC10312385/
+
+[^1_45]: https://www.sciencedirect.com/science/article/pii/S2667305325000742
+
+[^1_46]: https://github.com/awslabs/gluonts
+
+[^1_47]: https://journal.hep.com.cn/fcs/EN/10.1007/s11704-025-50947-3
+
+[^1_48]: https://arxiv.org/abs/2306.04901
+
+[^1_49]: https://www.jmlr.org/papers/v21/19-820.html
+
+[^1_50]: https://www.sciencedirect.com/science/article/abs/pii/S0957417425031008
+
+[^1_51]: https://arxiv.org/pdf/2308.13222.pdf
+
+[^1_52]: https://arxiv.org/html/2407.16445v2/
+
+[^1_53]: https://arxiv.org/pdf/2508.11004.pdf
+
+[^1_54]: https://pdfs.semanticscholar.org/7f99/cabdf824b49121275507233165d600f95878.pdf
+
+[^1_55]: https://arxiv.org/pdf/2506.13201.pdf
+
+[^1_56]: https://arxiv.org/html/2407.17877v1
+
+[^1_57]: https://arxiv.org/html/2503.10198v1
+
+[^1_58]: https://arxiv.org/html/2502.17495v1
+
+[^1_59]: https://arxiv.org/html/2510.08202v1
+
+[^1_60]: https://ar5iv.labs.arxiv.org/html/1906.05264
+
+[^1_61]: https://arxiv.org/html/2509.09176
+
+[^1_62]: https://arxiv.org/pdf/2203.09474.pdf
+
+[^1_63]: https://ieeexplore.ieee.org/document/11154197/
+
+[^1_64]: https://www.mdpi.com/1424-8220/25/3/652
+
+[^1_65]: https://www.mdpi.com/2227-7390/13/5/814
+
+[^1_66]: https://ieeexplore.ieee.org/document/10926918/
+
+[^1_67]: https://www.mdpi.com/2571-9394/7/3/41
+
+[^1_68]: https://ieeexplore.ieee.org/document/11168679/
+
+[^1_69]: https://ieeexplore.ieee.org/document/11239713/
+
+[^1_70]: https://arxiv.org/html/2411.01419v1
+
+[^1_71]: https://arxiv.org/pdf/2310.20218.pdf
+
+[^1_72]: http://arxiv.org/pdf/2410.23749.pdf
+
+[^1_73]: http://arxiv.org/pdf/2211.14730v2.pdf
+
+[^1_74]: https://arxiv.org/pdf/2502.13721.pdf
+
+[^1_75]: https://arxiv.org/html/2312.00817v3
+
+[^1_76]: https://peerj.com/articles/cs-3001/
+
+[^1_77]: https://aigrowthclub.kr/ai-term-transformer-아키텍처/
+
+[^1_78]: https://www.sciencedirect.com/science/article/pii/S1574013725001595
+
+[^1_79]: https://www.pricepedia.it/en/magazine/article/2025/11/07/the-arrival-of-foundation-models-in-time-series-forecasting/
+
+[^1_80]: https://zsunn.tistory.com/entry/AI-최신-기술-이해-및-실습-Transformers-Self-Attention-GPT-BERT-등
+
+[^1_81]: https://research.aimultiple.com/time-series-foundation-models/
+
+[^1_82]: https://hyperlab.hits.ai/blog/titans-transformer
+
+[^1_83]: https://www.kjas.or.kr/journal/view.html?doi=10.5351%2FKJAS.2024.37.5.583
+
+[^1_84]: https://www.videns.ai/en-ca/blog/lessor-des-modeles-fondamentaux-dans-les-series-temporelles-un-changement-de-paradigme-ou-juste-un-autre-engouement
+
+[^1_85]: https://calmmimiforest.tistory.com/110
+
+[^1_86]: https://arxiv.org/html/2502.21245v1
+
+[^1_87]: https://www.semanticscholar.org/paper/Explainable-transformers-in-financial-forecasting-Govindaraj-Jaganathan/ab9569490438dbd97729cca6e09e71d8b7ed4e6d
+
+[^1_88]: https://arxiv.org/html/2505.12761v2
+
+[^1_89]: https://arxiv.org/html/2509.22359v2
+
+[^1_90]: https://arxiv.org/abs/2506.15705
+
+[^1_91]: https://arxiv.org/pdf/2509.04162.pdf
+
+[^1_92]: https://arxiv.org/html/2510.00742v3
+
+[^1_93]: https://arxiv.org/html/2310.04948v3
