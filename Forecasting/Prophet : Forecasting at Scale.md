@@ -262,7 +262,7 @@ $$\tilde{y}_t = \frac{y_t - \mu}{\sigma + \epsilon}$$
 **방법**: [peerj](https://peerj.com/articles/cs-1001)
 1. 입력 정규화: $\tilde{y} = (y - \mu) / \sigma$
 2. 모델 학습: 정규화된 스케일
-3. 출력 역정규화: $\hat{y}_{\text{original}} = \hat{y}_{\text{norm}} \times \sigma + \mu$
+3. 출력 역정규화: $\hat{y}\_{\text{original}} = \hat{y}_{\text{norm}} \times \sigma + \mu$
 
 **효과**: 분포 이동 불변성, 로컬 정보 보존 [peerj](https://peerj.com/articles/cs-1001)
 
@@ -364,22 +364,166 @@ Prophet이든 신경망이든, **입력 품질이 최우선**:
 
 ## 참고문헌
 
- Taylor, S. J., & Letham, B. (2017). Forecasting at Scale. PeerJ Preprints. [ppl-ai-file-upload.s3.amazonaws](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/65988149/2a136195-6899-4065-9889-b7c5378995e7/peerj-preprints-3190.pdf)
+<span style="display:none">[^1_11][^1_12][^1_13][^1_14][^1_15][^1_16][^1_17][^1_18][^1_19][^1_20][^1_21][^1_22][^1_23][^1_24][^1_25][^1_26][^1_27][^1_28][^1_29][^1_30][^1_31][^1_32][^1_33][^1_34][^1_35][^1_36][^1_37][^1_38][^1_39][^1_40][^1_41][^1_42][^1_43][^1_44][^1_45][^1_46][^1_47][^1_48][^1_49][^1_50][^1_51][^1_52][^1_53][^1_54][^1_55][^1_56][^1_57][^1_58][^1_59][^1_60][^1_61][^1_62][^1_63][^1_64][^1_65][^1_66][^1_67][^1_68][^1_69][^1_70][^1_71][^1_72][^1_73][^1_74][^1_75][^1_76][^1_77][^1_78][^1_79][^1_80]</span>
 
- Triebe, O., Hewamalage, H., Pilyugina, P., Laptev, N., Bergmeir, C., & Rajagopal, R. (2021). NeuralProphet: Explainable Forecasting at Scale. arXiv:2111.15397. [arxiv](https://arxiv.org/pdf/2111.15397.pdf)
+<div align="center">⁂</div>
 
- Lim, B., Arık, S. Ö., Loeff, N., & Pfister, T. (2021). Temporal Fusion Transformers for Interpretable Multi-horizon Time Series Forecasting. International Journal of Forecasting. [gmd.copernicus](https://gmd.copernicus.org/preprints/gmd-2020-270/gmd-2020-270.pdf)
+[^1_1]: peerj-preprints-3190.pdf
 
- Kim, T., Kim, J., Tae, Y., Shin, C., Hong, S., & Park, N. (2021). Reversible Instance Normalization for Accurate Time-Series Forecasting against Distribution Shift. ICLR 2022. [peerj](https://peerj.com/articles/cs-1001)
+[^1_2]: https://arxiv.org/pdf/2111.15397.pdf
 
- PeerJ (2022). A hybrid forecasting model using LSTM and Prophet for energy consumption with decomposition of time series data. [iieta](https://iieta.org/download/file/fid/106740)
+[^1_3]: https://gmd.copernicus.org/preprints/gmd-2020-270/gmd-2020-270.pdf
 
- Journal (2023). A Novel Hybrid Approach for Daily Tourism Arrival Forecasting: The PROPHET-Bayesian Gaussian Process-Forward Neural Network Model. [pmc.ncbi.nlm.nih](https://pmc.ncbi.nlm.nih.gov/articles/PMC9202617/)
+[^1_4]: https://peerj.com/articles/cs-1001
 
- Park, S., et al. (2022). Assessment of Facebook Prophet-Based Forecast Models for Air Quality Data Analysis. [pmc.ncbi.nlm.nih](https://pmc.ncbi.nlm.nih.gov/articles/PMC12026713/)
+[^1_5]: https://iieta.org/download/file/fid/106740
 
- Impactive AI (2024). 시계열 데이터 증강으로 AI 예측 모델 SOTA 달성 전략. [linkinghub.elsevier](https://linkinghub.elsevier.com/retrieve/pii/S2405844023097529)
+[^1_6]: https://pmc.ncbi.nlm.nih.gov/articles/PMC9202617/
 
- Zeng, A., et al. (2023). Are Transformers Effective for Time Series Forecasting? ICML 2023. [mdpi](https://www.mdpi.com/1660-4601/22/4/562)
+[^1_7]: https://pmc.ncbi.nlm.nih.gov/articles/PMC12026713/
 
- Gunasekaran, S., et al. (2024). A Predictive Approach To Enhance Time-Series Forecasting. arXiv:2410.15217. [journal.kaopg.or](https://journal.kaopg.or.kr/articles/xml/7v7J/)
+[^1_8]: https://linkinghub.elsevier.com/retrieve/pii/S2405844023097529
+
+[^1_9]: https://www.mdpi.com/1660-4601/22/4/562
+
+[^1_10]: https://journal.kaopg.or.kr/articles/xml/7v7J/
+
+[^1_11]: https://discuss.pytorch.kr/t/lstm-vs-gru-vs-transformer/5879
+
+[^1_12]: https://www.impactive-ai.com/tech/how-time-series-data-augmentation-improves-ai-prediction-accuracy
+
+[^1_13]: https://royzero.tistory.com/entry/python-prophet-samsung-stock-forecast
+
+[^1_14]: https://appliedai.skku.edu/appliedailab/journal_pub.do?mode=download\&articleNo=30079\&attachNo=25946
+
+[^1_15]: https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11022689
+
+[^1_16]: https://dining-developer.tistory.com/25
+
+[^1_17]: https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12025186
+
+[^1_18]: https://www.lgresearch.ai/blog/view?seq=427
+
+[^1_19]: https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE09371907
+
+[^1_20]: https://www.manuscriptlink.com/society/kips/conference/ack2025/file/downloadSoConfManuscript/abs/KIPS_C2025B0253F
+
+[^1_21]: https://koreascience.kr/article/JAKO202410772364958.pdf
+
+[^1_22]: https://wikidocs.net/266272
+
+[^1_23]: https://linda284.tistory.com/7
+
+[^1_24]: https://www.businessresearchinsights.com/ko/market-reports/time-series-forecasting-market-114943
+
+[^1_25]: https://pdfs.semanticscholar.org/cabe/c217481d6938952e9853029f74c2d7bbcf93.pdf
+
+[^1_26]: https://pubmed.ncbi.nlm.nih.gov/33180811/
+
+[^1_27]: https://pubmed.ncbi.nlm.nih.gov/38438528/
+
+[^1_28]: https://pubmed.ncbi.nlm.nih.gov/33588711/
+
+[^1_29]: https://arxiv.org/html/2601.05929v2
+
+[^1_30]: https://arxiv.org/html/2508.15369v1
+
+[^1_31]: https://www.semanticscholar.org/paper/Predicting-Customer-Behavior-Using-Prophet-In-A-Liço-Enesi/710b6caeeab68ce9f62826e3176c7eda9c7ebaee
+
+[^1_32]: https://www.arxiv.org/abs/2410.15217
+
+[^1_33]: https://pubmed.ncbi.nlm.nih.gov/35721410/
+
+[^1_34]: https://www.arxiv.org/abs/2505.12761
+
+[^1_35]: https://www.semanticscholar.org/paper/Forecasting-PV-Panel-Output-Using-Prophet-Time-Shawon-Akter/de724d83866c5cb8487eae1b72159e8226fa1b6b
+
+[^1_36]: https://pubmed.ncbi.nlm.nih.gov/41028729/
+
+[^1_37]: https://arxiv.org/html/2504.01509v1
+
+[^1_38]: https://arxiv.org/abs/2505.12761
+
+[^1_39]: https://www.semanticscholar.org/paper/5bd3cf7782dfc5050690230bf8261908b59a7220
+
+[^1_40]: https://www.semanticscholar.org/paper/ad83ae14dda563ae2f1f84999e166637354f4a8d
+
+[^1_41]: https://www.semanticscholar.org/paper/2440572233f965766a672cdb159aea29fc618b65
+
+[^1_42]: https://www.semanticscholar.org/paper/f6748f0351996368218b960e667112901656e6e3
+
+[^1_43]: https://www.semanticscholar.org/paper/01bea86ce1af7b53d3b804f8fc276676cc5f5b39
+
+[^1_44]: https://www.semanticscholar.org/paper/1b8dfcecb68e0daa87e30f85dacdfe13a6ba75b6
+
+[^1_45]: https://www.semanticscholar.org/paper/d8fa62489c246c554e912a71c2a4d67f50f6a7ef
+
+[^1_46]: https://www.semanticscholar.org/paper/b8fe1760b552e8a3c9131614f3a08726ef7a595a
+
+[^1_47]: https://www.semanticscholar.org/paper/2b618b3d13f1a53fbd9251492eae52b98ad259bf
+
+[^1_48]: http://koreascience.or.kr/journal/view.jsp?kj=HHGHHL\&py=2021\&vnc=v59n2\&sp=191
+
+[^1_49]: https://arxiv.org/pdf/2001.04063.pdf
+
+[^1_50]: https://pmc.ncbi.nlm.nih.gov/articles/PMC10912208/
+
+[^1_51]: http://arxiv.org/pdf/2312.09912.pdf
+
+[^1_52]: https://arxiv.org/pdf/2208.05607.pdf
+
+[^1_53]: https://pmc.ncbi.nlm.nih.gov/articles/PMC9712550/
+
+[^1_54]: https://arxiv.org/html/2410.09206
+
+[^1_55]: https://pypi.org/project/neuralprophet/0.2.6/
+
+[^1_56]: http://daddynkidsmakers.blogspot.com/2024/04/blog-post.html
+
+[^1_57]: https://ai.atsit.in/posts/3494940688/
+
+[^1_58]: https://bongholee.com/python-neural-prophet/
+
+[^1_59]: https://doheon.github.io/코드구현/time-series/ci-4.transformer-post/
+
+[^1_60]: https://mods.go.kr/boardDownload.es?bid=11912\&list_no=381837\&seq=1
+
+[^1_61]: https://neuralprophet.com
+
+[^1_62]: https://datascience0321.tistory.com/46
+
+[^1_63]: https://www.youtube.com/watch?v=pplTpneacAE
+
+[^1_64]: https://aboutnlp.tistory.com/55
+
+[^1_65]: https://haeun161.tistory.com/28
+
+[^1_66]: https://velog.io/@parkchansaem/논문리뷰Are-Transformers-Effective-for-Time-Series-Forecasting
+
+[^1_67]: https://codingalzi.github.io/dlp2/fundamentals_of_ml.html
+
+[^1_68]: https://journals.plos.org/plosone/article/file?type=supplementary\&id=10.1371%2Fjournal.pone.0324000.s003
+
+[^1_69]: https://pdfs.semanticscholar.org/b941/621d469a1835518f6f1199d49b219c2b322e.pdf
+
+[^1_70]: https://pdfs.semanticscholar.org/399b/ff5a0102e2d69538b6b8544bbad201667aee.pdf
+
+[^1_71]: https://pubmed.ncbi.nlm.nih.gov/36177230/
+
+[^1_72]: https://pdfs.semanticscholar.org/2ec6/45ee481499ca8e91744756d09b01117542a6.pdf
+
+[^1_73]: https://www.semanticscholar.org/paper/NeuralProphet:-Explainable-Forecasting-at-Scale-Triebe-Hewamalage/979a165d4638d2c329bd6577700e1d88dbc50b97
+
+[^1_74]: https://pdfs.semanticscholar.org/f56c/aea6a7cbe75be459aa1ba3696870054c42dc.pdf
+
+[^1_75]: https://arxiv.org/abs/2111.15397
+
+[^1_76]: https://pdfs.semanticscholar.org/5da5/a48a36faa3b07f15e927cccdede2203f97ef.pdf
+
+[^1_77]: https://pubmed.ncbi.nlm.nih.gov/35258438/
+
+[^1_78]: https://pdfs.semanticscholar.org/147f/358d40775a73035996558f427c25e86b4a48.pdf
+
+[^1_79]: https://pubmed.ncbi.nlm.nih.gov/35194090/
+
+[^1_80]: https://pdfs.semanticscholar.org/3717/c8c86d547af501f5481bec1df58502b1eec1.pdf
