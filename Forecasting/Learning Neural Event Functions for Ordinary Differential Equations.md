@@ -12,6 +12,11 @@
 
 ---
 
+Learning Neural Event Functions for Ordinary Differential Equations는 기존의 신경 상미분 방정식(Neural ODE) 모델을 확장하여, 시스템의 상태가 급격하게 변하는 불연속적인 '이벤트(Event)'를 학습하고 모델링할 수 있게 하는 기술입니다.
+
+- 기존 Neural ODE의 한계: 기존 모델은 시간에 따라 연속적으로 변하는 시스템을 모델링하는 데는 뛰어났으나, 공이 바닥에 튕기거나(충돌) 화학 반응이 시작되는 지점처럼 불연속적이고 순식간에 일어나는 변화를 처리하는 데는 어려움이 있었습니다.
+- 이벤트 함수의 도입: 사용자가 종료 시점을 직접 지정하는 대신, 신경망으로 구현된 이벤트 함수 $(\(g\))$ 를 사용하여 시스템이 특정 조건에 도달했는지를 감시합니다.
+
 ## 2. 문제 정의, 제안 방법, 모델 구조 상세 설명
 
 ### 2.1 해결하고자 하는 문제
@@ -30,19 +35,126 @@ $$ \frac{dz}{dt} = f(t, z(t), \theta) $$
 
 ### 2.2 제안하는 방법: 이벤트 함수와 미분가능한 처리
 
+시스템의 상태 $\(z(t)\)$ 의 변화율을 신경망 $\(f(z(t),t,\theta )\)$ 로 정의했을 때, 솔버는 초기값 $\(z(t_{0})\)$ 부터 목표 시점 $\(t_{1}\)$ 까지의 상태를 다음의 적분 과정을 통해 계산합니다:
+
+$$\(z(t_{1})=z(t_{0})+\int_{t_{0}}^{t_{1}}f(z(t),t,\theta )dt\)$$
+
+즉, 솔버는 연속적인 시간 흐름에 따른 상태의 누적 변화량을 계산하는 도구로 정의됩니다. 
+
+시스템은 신경망 $\(f\)$ 에 의해 정의된 궤적을 따라 연속적으로 움직입니다.
+
+#### 이벤트 발생 조건 (Root-finding)
+
+$$\(t^{\*}=\min \{t\in [t_{0},t_{max}]\mid g(z(t),\phi )=0\}\)$$
+
+솔버는 적분 과정 중에 이벤트 함수 $\(g\)$ 의 부호가 변하는 지점을 감시합니다.  
+$\(g(z(t),\phi )=0\)$ 이 되는 가장 빠른 시간 $\(t^{*}\)$ 를 수치적인 루트 파인딩(Root-finding) 알고리즘(예: Newton's method 또는 Bisection)을 통해 찾아냅니다.
+
 **이벤트 함수 도입**: 기존 ODE 솔버의 이벤트 처리 기능을 차용하여:[1]
 
 ```math
 t^*, z(t^*) = \text{ODESolveEvent}(z_0, f, g, t_0, \theta, \phi)
 ```
 
+```math
+t^{*},z(t^{*}))=\text{ODESolveEvent}(z(t_{0}),f,g,t_{0},t_{max},\theta ,\phi )
+```
+
+- 입력:
+  - $\(z(t_{0})\)$ : 초기 상태 값
+  - $\(f(z(t),t,\theta )\)$ : 시스템의 변화율을 정의하는 신경망 (Dynamics)
+  - $\(g(z(t),\phi )\)$ : 이벤트 발생 여부를 감시하는 신경망 (Event Function)
+  - $\(t_{0},t_{max}\)$ : 계산을 시작할 시간과 강제 종료할 최대 시간
+
+- 출력:
+  - $\(t^{\*}\)$ : 이벤트가 발생한 시각 $(\(g=0\)$ 인 지점)
+  - $\(z(t^{*})\)$ : 이벤트 발생 순간의 시스템 상태 
+
 여기서 $$g(t, z(t), \phi) = 0$$이 되는 시점 $$t^\*$$에서 ODE 풀이가 중단됩니다. 중요한 점은 $$t^*$$이 입력이 아닌 **상태 궤적에 의존하는 함수**라는 것입니다.[1]
 
+#### 이벤트 감지 기능의 통합 (ODESolveEvent) 
+논문에서는 일반적인 솔버에 이벤트 감지 로직이 추가된 ODESolveEvent라는 인터페이스를 정의하여 사용합니다: 
+- 입력: 초기 상태 $(\(z_{0}\))$ , 동역학 함수 $(\(f\))$ , 이벤트 함수 $(\(g\))$ , 시간 범위 $(\(t_{0},t_{1}\))$ 등
+- 출력: 이벤트가 발생한 시점 $(\(t^{\*}\))$ 과 그 시점의 상태 $(\(z(t^{*})\))$
+- 동작: 솔버가 적분을 수행하다가 신경망으로 정의된 이벤트 함수 $\(g(z(t),\phi )\)$ 의 값이 0이 되는 지점을 발견하면, 그 즉시 계산을 멈추고 해당 시점을 반환합니다. 
+
+#### 시점 $(\(t^{\*}\))$의 수치적 탐색 
+ODE 솔버가 상태를 계산하는 동안, 이벤트 함수 $\(g\)$ 의 부호가 바뀌는 지점(예: 양수에서 음수로 변하는 순간)을 감시합니다. 
+- 루트 파인딩(Root-finding): $\(g(z(t^{\*}),\phi )=0\)$ 이 되는 정확한 시간 $\(t^{*}\)$ 를 수치 해석 기법을 통해 찾아냅니다.
+- 자동 감지: 사용자가 "언제"라고 지정하지 않아도, 모델은 $\(g\)$ 가 0이 되는 지점을 이벤트 발생 시점으로 자동 간주합니다.
+
+- 적응형 계산 (Adaptive Computation): 솔버는 문제의 복잡도에 따라 스스로 계산 단계(Step)의 크기를 조절합니다. 간단한 구간은 빠르게 통과하고, 급격한 변화가 있는 구간은 정밀하게 계산하여 효율성을 극대화합니다.
+- 미분 가능성 (Differentiability): 솔버 내부의 수치 해석 과정을 일일이 저장하지 않고도, Adjoint Sensitivity Method를 통해 최종 결과물로부터 모델 파라미터까지의 그래디언트(기울기)를 계산할 수 있도록 설계되었습니다. 이를 통해 메모리 효율성을 유지하며 딥러닝 모델처럼 학습이 가능합니다. 
+
 **수학적 핵심: 암묵 함수 정리(Implicit Function Theorem) 적용**
+
+이 기술의 핵심은 $\(t^{\*}\)$ 에서 미분 값을 구해 파라미터 $\(\theta \)$ 와 $\(\phi \)$ 를 업데이트하는 것입니다.  
+암묵 함수 정리(Implicit Function Theorem, IFT)는 직접적으로 정의되지 않은 함수 관계에서 미분값을 도출하는 수학적 도구입니다.  
+
+- 암시적 종료 조건 학습: 시스템의 상태가 언제 변해야 하는지 사전에 알 필요 없이, 데이터로부터 변화가 일어나는 시점과 그 결과를 스스로 학습합니다.
+- 미분 가능한 이벤트 처리: 이벤트가 발생하는 정확한 시간을 수치적으로 찾아내고, 이 과정을 통해 역전파(Backpropagation)가 가능하도록 설계되어 전체 모델을 끝까지 학습시킬 수 있습니다.
+- 하이브리드 시스템 모델링: 연속적인 움직임과 이산적인 변화가 공존하는 '하이브리드 동역학 시스템'을 완벽하게 재구성하고 외삽(Extrapolation)할 수 있습니다. 
+
+시스템의 사전 지식 없이 데이터만으로 이벤트 발생 시점과 결과를 학습하는 원리는 미분 가능한 이벤트 감지(Differentiable Event Detection) 메커니즘에 있습니다.
+
+모델은 시스템의 상태 $\(z(t)\)$ 를 입력받아 스칼라 값을 출력하는 신경망 $\(g(z(t),\phi )\)$ 를 정의합니다. 이 함수는 시스템이 특정 "임계점"에 도달했는지를 판단하는 기준이 됩니다. 
 
 이벤트 함수를 루트 찾기 문제로 재해석합니다:[1]
 
 $$ g_{\text{root}}(t, z_0, t_0, \theta) = g\left(t, z = \text{ODESolve}(z_0, f, t_0, t, \theta)\right) $$
+
+이 논문에서는 이벤트 발생 조건인 $\(g(z(t^{\*}),\phi )=0\)$ 을 만족하는 이벤트 시점 $\(t^{*}\)$ 의 그래디언트를 구하기 위해 이 정리를 사용합니다. 
+
+우리는 $\(t^{\*}\)$ 가 파라미터 $\(\phi \)$ 에 따라 변한다는 것을 알지만, $\(t^{\*}=\text{어떠한\ 식}(\phi )\)$ 형태의 명시적인 함수로 표현할 수는 없습니다.  
+하지만 이벤트 발생 순간에는 항상 다음의 등식이 성립합니다.
+
+```math
+G(\phi ,t^{*})=g(z(t^{*},\phi ),\phi )=0
+```
+
+이 식의 양변을 파라미터 $\(\phi \)$ 에 대해 전미분(Total Differentiation)하면 다음과 같습니다.
+
+$$\(\frac{\partial g}{\partial \phi }+\frac{\partial g}{\partial z}\frac{\partial z}{\partial \phi }=0\)$$
+
+여기서 $\(z\)$ 는 다시 $\(t^{\*}\)$ 에 의존하므로, 연쇄 법칙을 적용하여 정리하면 최종적으로 이벤트 시점의 변화량 $(\(\partial t^{*}/\partial \phi \))$ 을 구할 수 있는 수식이 도출됩니다:
+
+```math
+\frac{\partial t^{*}}{\partial \phi }=-\left(\underbrace{\frac{\partial g}{\partial z}f(z(t^{*}))+\frac{\partial g}{\partial t^{*}}}_{\text{시간에\ 따른\ g의\ 변화율}}\right)^{-1}\frac{\partial g}{\partial \phi }
+```
+
+<details>
+
+### 1단계: 암묵적 관계식의 전미분 
+이벤트가 발생하는 시점 $\(t^{\*}\)$ 에서 이벤트 함수 $\(g\)$ 는 정의에 의해 항상 $\(0\)$ 입니다.  
+파라미터 $\(\phi \)$ 가 변하더라도 이벤트가 발생하는 "그 순간"의 조건은 유지되어야 하므로, 항등식 $\(g(z(t^{\*},\phi ),t^{\*},\phi )=0\)$ 을 파라미터 $\(\phi \)$ 에 대해 전미분합니다.  
+연쇄 법칙(Chain Rule)을 적용하면 다음과 같습니다.
+
+$`\frac{\partial g}{\partial z}\frac{dz}{d\phi }+\frac{\partial g}{\partial t^{*}}\frac{\partial t^{*}}{\partial \phi }+\frac{\partial g}{\partial \phi }=0`$
+
+### 2단계: ODE 동역학 관계식 대입 
+위 식에서 상태 변수 $\(z\)$ 는 시간 $\(t^{\*}\)$ 에 의존하며, $\(t^{\*}\)$ 는 다시 파라미터 $\(\phi \)$ 에 의존합니다.  
+따라서 $\(z\)$ 의 $\(\phi \)$ 에 대한 변화율은 라이프니츠 규칙에 따라 다음과 같이 표현됩니다.
+
+$`\frac{dz}{d\phi }=\frac{dz}{dt^{*}}\frac{\partial t^{*}}{\partial \phi }`$
+
+이때 상미분 방정식(ODE)의 정의에 따라 $\(\frac{dz}{dt^{*}}=f(z(t^{\*}),t^{\*},\theta )\)$ 이므로, 이를 1단계의 식에 대입합니다.
+
+$`\frac{\partial g}{\partial z}\left(f(z(t^{*}),t^{*},\theta )\frac{\partial t^{*}}{\partial \phi }\right)+\frac{\partial g}{\partial t^{*}}\frac{\partial t^{*}}{\partial \phi }+\frac{\partial g}{\partial \phi }=0`$
+
+### 3단계: 공통항 정리 및 최종식 도출 
+$\(\frac{\partial t^{\*}}{\partial \phi }\)$ 를 공통 인수로 묶어서 정리하면 다음과 같습니다.
+
+$`\left(\frac{\partial g}{\partial z}f(z(t^{*}),t^{*},\theta )+\frac{\partial g}{\partial t^{*}}\right)\frac{\partial t^{*}}{\partial \phi }=-\frac{\partial g}{\partial \phi }`$
+
+이제 좌변의 계수 행렬의 역행렬을 양변에 곱하여 최종적인 변화량 식을 얻습니다.
+
+$`\frac{\partial t^{*}}{\partial \phi }=-\left(\frac{\partial g}{\partial z}f(z(t^{*}),t^{*},\theta )+\frac{\partial g}{\partial t^{*}}\right)^{-1}\frac{\partial g}{\partial \phi }`$
+
+이는 이벤트 함수의 파라미터가 변할 때 이벤트 발생 시간이 얼마나 민감하게 반응하는지를 나타냅니다.
+      
+</details>
+
+이 식을 통해 우리는 이벤트 함수 $(\(g\))$ 가 조금 변했을 때 이벤트 시점 $(\(t^{*}\))$ 이 얼마나 이동하는지를 수학적으로 정확히 계산할 수 있게 됩니다. 
 
 암묵 함수 정리에 의해, 임의의 입력 $$\xi \in \{z_0, t_0, \theta\}$$에 대해:[1]
 
@@ -50,9 +162,19 @@ $$ g_{\text{root}}(t, z_0, t_0, \theta) = g\left(t, z = \text{ODESolve}(z_0, f, 
 \frac{dt^*}{d\xi} = -\left(\frac{dg_{\text{root}}(t^*, z_0, t_0, \theta)}{dt}\right)^{-1} \left(\frac{\partial g(t^*, z(t^*))}{\partial z} \frac{\partial z(t^*)}{\partial \xi}\right)
 ```
 
+로 일반화할 수 있습니다.
+
 **손실 함수의 그래디언트 계산**
 
-손실이 $$L(t^\*, z(t^*))$$에 의존할 때:[1]
+모델의 최종 목적은 예측된 궤적과 실제 데이터 사이의 오차(Loss, $\(L\)$ )를 줄이는 것입니다. 이벤트 시점 $\(t^{*}\)$ 을 포함한 전체 학습 과정에서의 그래디언트 흐름은 다음과 같습니다.
+
+이벤트는 $\(g(t,z(t))=0\)$ 이 되는 시점 $\(t^{\*}\)$ 에서 발생합니다.  
+파라미터 $\(\theta \)$ 가 변함에 따라 이벤트 시점 $\(t^{\*}\)$ 과 상태 $\(z(t^{\*})\)$ 가 모두 변하므로, 항등식 $\(g(t^{\*}(\theta ),z(t^{*}(\theta ),\theta ))=0\)$ 의 양변을 시간 $\(t\)$ 에 대해 미분하여 궤적을 따라가는 $\(g\)$ 의 변화율을 구합니다.  
+이를 전시간 미분이라고 하며 다음과 같이 전개됩니다.
+
+$`\frac{dg}{dt}=\frac{\partial g}{\partial t}+\frac{\partial g}{\partial z}^{T}\frac{dz}{dt}`$
+
+이와 유사하게 Root-finding 시스템으로 이벤트를 찾았을 때의 손실이 $$L(t^\*, z(t^*))$$에 의존할 때:[1]
 
 ```math
 \frac{\partial g_{\text{root}}(t^*, z_0, t_0, \theta)}{dt} = \frac{\partial g(t^*, z(t^*))}{\partial t} + \frac{\partial g(t^*, z(t^*))}{\partial z}^T f^*
@@ -69,6 +191,47 @@ $$ \frac{dL}{d\xi} = v^T \frac{\partial z(t^*)}{\partial \xi} $$
 ```math
 v = \left(\frac{\partial L}{\partial t^*} + \frac{\partial L}{\partial z(t^*)}^T f^*\right) \left(-\frac{dg_{\text{root}}(t^*, z_0, t_0, \theta)}{dt}\right)^{-1} \frac{\partial g(t^*, z(t^*))}{\partial z} + \frac{\partial L}{\partial z(t^*)}
 ```
+
+<details>
+
+최종 그래디언트 $\(\frac{dL}{d\xi }=v^{T}\frac{\partial z(t^{\*})}{\partial \xi }\)$ 는 손실 함수 $\(L(t^{\*},z(t^{*}))\)$ 에 연쇄 법칙을 적용하고, 암묵 함수 정리로부터 얻은 이벤트 시점의 미분값을 대입하여 도출됩니다.  
+여기서 $\(\xi \)$ 는 학습 가능한 파라미터 ( $\(z_{0},\theta \)$ 등)를 의미합니다. 
+
+### 1단계: 손실 함수의 전미분 (Total Derivative) 
+손실 함수 $\(L\)$ 은 $\(t^{\*}\)$ 와 $\(z(t^{\*})\)$ 를 통해 파라미터 $\(\xi \)$ 에 의존합니다.  
+$\(\xi \)$ 에 대한 $\(L\)$ 의 전미분은 다음과 같습니다.
+
+$`\frac{dL}{d\xi }=\frac{\partial L}{\partial t^{*}}\frac{dt^{*}}{d\xi }+\frac{\partial L}{\partial z(t^{*})}^{T}\frac{dz(t^{*})}{d\xi }`$
+
+### 2단계: 상태 변수 $\(z(t^{\*})\)$ 의 전미분 
+이벤트 시점의 상태 $\(z(t^{*})=z(t^{\*}(\xi ),\xi )\)$ 이므로, $\(\xi \)$ 에 대한 전미분은 다음과 같이 전개됩니다.  
+이때 $\(\frac{\partial z}{\partial t}=f^{\*}\)$ 임을 이용합니다.
+
+$`\frac{dz(t^{*})}{d\xi }=\frac{\partial z(t^{*})}{\partial t^{*}}\frac{dt^{*}}{d\xi }+\frac{\partial z(t^{*})}{\partial \xi }=f^{*}\frac{dt^{*}}{d\xi }+\frac{\partial z(t^{*})}{\partial \xi }`$
+
+이를 1단계 식에 대입하여 정리하면 다음과 같습니다.
+
+$`\frac{dL}{d\xi }=\left(\frac{\partial L}{\partial t^{*}}+\frac{\partial L}{\partial z(t^{*})}^{T}f^{*}\right)\frac{dt^{*}}{d\xi }+\frac{\partial L}{\partial z(t^{*})}^{T}\frac{\partial z(t^{*})}{\partial \xi }`$
+
+### 3단계: 이벤트 시점 미분값 $(\(\frac{dt^{\*}}{d\xi }\))$ 대입 
+이전 식에서 유도한 암묵 함수 정리 결과의 일반화된 식에 의해, $\(\frac{dt^{\*}}{d\xi }\)$ 는 다음과 같이 정의됩니다.
+
+$`\frac{dt^{*}}{d\xi }=-\left(\frac{dg_{\text{root}}}{dt}\right)^{-1}\frac{\partial g}{\partial z}^{T}\frac{\partial z(t^{*})}{\partial \xi }`$
+
+이 식을 2단계의 최종식에 대입합니다.
+
+$`\frac{dL}{d\xi }=\left(\frac{\partial L}{\partial t^{*}}+\frac{\partial L}{\partial z(t^{*})}^{T}f^{*}\right)\left(-\frac{dg_{\text{root}}}{dt}\right)^{-1}\frac{\partial g}{\partial z}^{T}\frac{\partial z(t^{*})}{\partial \xi }+\frac{\partial L}{\partial z(t^{*})}^{T}\frac{\partial z(t^{*})}{\partial \xi }`$
+
+### 4단계: 공통항 정리 및 $\(v\)$ 의 도출 
+$\(\frac{\partial z(t^{\*})}{\partial \xi }\)$ 를 공통 인수로 묶어내면 전체 식이 $\(v^{T}\)$ 의 형태로 정리됩니다.
+
+$`\frac{dL}{d\xi }=\underbrace{\left[\left(\frac{\partial L}{\partial t^{*}}+\frac{\partial L}{\partial z(t^{*})}^{T}f^{*}\right)\left(-\frac{dg_{\text{root}}}{dt}\right)^{-1}\frac{\partial g}{\partial z}^{T}+\frac{\partial L}{\partial z(t^{*})}^{T}\right]}_{v^{T}}\frac{\partial z(t^{*})}{\partial \xi }`$
+
+이 괄호 안의 전치(Transpose) 결과가 문제에서 정의된 벡터 $\(v\)$와 일치하게 됩니다.
+
+이 식은 이벤트 시점의 시간적 변화와 상태 변화가 손실 함수에 미치는 영향을 통합하여 파라미터를 업데이트할 수 있게 합니다.
+      
+</details>
 
 **핵심 이점**: 이 계산은 이벤트 함수 $$g$$의 그래디언트만 필요하고, ODE 솔버를 통해 미분할 필요가 없습니다. 따라서 하나의 역방향 ODE 솔버 호출로 완료됩니다.[1]
 
