@@ -113,6 +113,10 @@
 - Chronos: Learning the Language of Time Series | 2024 · 722회 인용
 - In-Context Fine-Tuning for Time-Series Foundation Models | 2024 · 12회 인용
 - Chronos-2: From Univariate to Universal Forecasting | 2025 · 5회 인용
+- High-Dimensional Multivariate Forecasting with Low-Rank Gaussian Copula Processes | 2019 · 328회 인용
+- GluonTS: Probabilistic Time Series Models in Python | 2019 · 128회 인용
+- Prophet : Forecasting at Scale | 2017 · 4146회 인용
+- Temporal Fusion Transformers for Interpretable Multi-horizon Time Series Forecasting | 2019 · 3158회 인용
 
 
 
