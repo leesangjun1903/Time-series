@@ -118,6 +118,7 @@
 - Prophet : Forecasting at Scale | 2017 · 4146회 인용
 - Temporal Fusion Transformers for Interpretable Multi-horizon Time Series Forecasting | 2019 · 3158회 인용
 - Graph WaveNet for Deep Spatial-Temporal Graph Modeling | 2019 · 3602회 인용
+- LLM-ABBA: Understanding time series via symbolic approximation | 2024 · 1회 인용
 
 
 
