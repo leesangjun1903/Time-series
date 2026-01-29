@@ -525,34 +525,188 @@ MTGNN은 단지 하나의 모델이 아니라 시계열 연구의 새로운 방�
 
 ## 참고문헌 및 인용 출처
 
- Wu, Z., Pan, S., Long, G., Jiang, J., Chang, X., & Zhang, C. (2020). Connecting the Dots: Multivariate Time Series Forecasting with Graph Neural Networks. KDD 2020. [ppl-ai-file-upload.s3.amazonaws](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/65988149/60e37a15-43ed-4dfd-8d34-40fe6f0c1aa9/2005.11650v1.pdf)
+<span style="display:none">[^1_18][^1_19][^1_20][^1_21][^1_22][^1_23][^1_24][^1_25][^1_26][^1_27][^1_28][^1_29][^1_30][^1_31][^1_32][^1_33][^1_34][^1_35][^1_36][^1_37][^1_38][^1_39][^1_40][^1_41][^1_42][^1_43][^1_44][^1_45][^1_46][^1_47][^1_48][^1_49][^1_50][^1_51][^1_52][^1_53][^1_54][^1_55][^1_56][^1_57][^1_58][^1_59][^1_60][^1_61][^1_62][^1_63][^1_64][^1_65][^1_66][^1_67][^1_68][^1_69][^1_70][^1_71][^1_72][^1_73][^1_74][^1_75][^1_76][^1_77][^1_78][^1_79][^1_80][^1_81][^1_82][^1_83][^1_84][^1_85][^1_86][^1_87][^1_88][^1_89][^1_90][^1_91]</span>
 
- Pre-training Enhanced Spatial-temporal Graph Neural Network for Multivariate Time Series Forecasting. KDD 2022. [dl.acm](https://dl.acm.org/doi/10.1145/3394486.3403118)
+<div align="center">⁂</div>
 
- Cao, D., Wang, Y., Duan, J., et al. (2020). Spectral Temporal Graph Neural Network for Multivariate Time-series Forecasting. NeurIPS 2020. [semanticscholar](https://www.semanticscholar.org/paper/645054d31fa26b29bbfb0cf73b75f8906c359415)
+[^1_1]: 2005.11650v1.pdf
 
- Multivariate Time Series Forecasting with Transfer Entropy Graph. 2020. [ieeexplore.ieee](https://ieeexplore.ieee.org/document/9837007/)
+[^1_2]: https://dl.acm.org/doi/10.1145/3394486.3403118
 
- Corradini, F. et al. (2024). A Systematic Literature Review of Spatio-Temporal Graph Neural Networks for Time Series. 2024. [arxiv](https://arxiv.org/html/2410.22377v4)
+[^1_3]: https://www.semanticscholar.org/paper/645054d31fa26b29bbfb0cf73b75f8906c359415
 
- TimeGNN: Temporal Dynamic Graph Learning for Time Series Forecasting. 2023. [arxiv](https://arxiv.org/html/2307.14680)
+[^1_4]: https://www.semanticscholar.org/paper/2a8beb7836b4e999e452448220573c0133834a55
 
- Spatial-temporal graph neural networks for groundwater data. Nature Scientific Reports, 2024. [nature](https://www.nature.com/articles/s41598-024-75385-2)
+[^1_5]: https://arxiv.org/html/2307.14680
 
- Multi-Task Time Series Forecasting Based on Graph Neural Networks. 2023. [pmc.ncbi.nlm.nih](https://pmc.ncbi.nlm.nih.gov/articles/PMC10453913/)
+[^1_6]: https://arxiv.org/abs/2307.03595
 
- ForecastGrapher: Redefining Multivariate Time Series Forecasting with Graph Neural Networks. 2024. [arxiv](http://arxiv.org/pdf/2405.18036.pdf)
+[^1_7]: https://arxiv.org/abs/2307.14680
 
- FourierGNN: Rethinking Multivariate Time Series Forecasting from a Pure Graph Perspective. 2023. [arxiv](https://arxiv.org/pdf/2311.06190.pdf)
+[^1_8]: https://arxiv.org/pdf/2311.06190.pdf
 
- SAGDFN: A Scalable Adaptive Graph Diffusion Forecasting Network. 2024. [arxiv](http://arxiv.org/pdf/2406.12282.pdf)
+[^1_9]: https://arxiv.org/pdf/2401.00423.pdf
 
- GEANN: Scalable Graph Augmentations for Multi-Horizon Time Series Forecasting. 2023. [arxiv](https://arxiv.org/abs/2307.03595)
+[^1_10]: https://ieeexplore.ieee.org/document/9837007/
 
- MSGNet: Learning Multi-Scale Inter-Series Correlations for Multivariate Time Series Forecasting. 2023. [arxiv](https://arxiv.org/pdf/2401.00423.pdf)
+[^1_11]: http://arxiv.org/pdf/2406.12282.pdf
 
- Over-squashing in Spatiotemporal Graph Neural Networks. 2024. [arxiv](https://arxiv.org/html/2506.15507v2)
+[^1_12]: https://pmc.ncbi.nlm.nih.gov/articles/PMC10453913/
 
- Towards Expressive Spectral-Temporal Graph Neural Networks for Time Series Forecasting. 2025. [arxiv](https://arxiv.org/html/2305.06587v3)
+[^1_13]: https://arxiv.org/html/2410.22377v4
 
- Xu, N., et al. TimeGNN: Temporal Dynamic Graph Learning for Time Series Forecasting. 2023. [arxiv](https://arxiv.org/abs/2307.14680)
+[^1_14]: https://arxiv.org/html/2305.06587v3
+
+[^1_15]: https://arxiv.org/html/2506.15507v2
+
+[^1_16]: https://www.nature.com/articles/s41598-024-75385-2
+
+[^1_17]: http://arxiv.org/pdf/2405.18036.pdf
+
+[^1_18]: https://linkinghub.elsevier.com/retrieve/pii/S0952197626001521
+
+[^1_19]: https://www.semanticscholar.org/paper/3c90e747017bd2417d24e500f7d9bc37c052ca24
+
+[^1_20]: https://ieeexplore.ieee.org/document/9416768/
+
+[^1_21]: https://www.mdpi.com/1999-5903/18/1/26
+
+[^1_22]: https://www.semanticscholar.org/paper/971602286459a3fee502456403af65e6c008ccae
+
+[^1_23]: https://link.springer.com/10.1007/978-3-030-59419-0_44
+
+[^1_24]: http://www.ije.ir/article_108448.html
+
+[^1_25]: https://arxiv.org/pdf/2307.14680.pdf
+
+[^1_26]: https://arxiv.org/pdf/2206.13816.pdf
+
+[^1_27]: https://arxiv.org/abs/2112.03273
+
+[^1_28]: https://pdfs.semanticscholar.org/fb76/33dcdeb50f0abdd840d44e23e4afa44a2fde.pdf
+
+[^1_29]: https://arxiv.org/pdf/2508.07122.pdf
+
+[^1_30]: https://arxiv.org/list/math/new
+
+[^1_31]: https://arxiv.org/abs/2508.02069
+
+[^1_32]: https://arxiv.org/pdf/2512.08567.pdf
+
+[^1_33]: https://arxiv.org/list/physics/new
+
+[^1_34]: https://arxiv.org/html/2511.05179v1
+
+[^1_35]: https://arxiv.org/html/2307.03759v3
+
+[^1_36]: https://arxiv.org/list/math.PR/new
+
+[^1_37]: https://arxiv.org/abs/2410.22377
+
+[^1_38]: https://peerj.com/articles/cs-3097/
+
+[^1_39]: https://www.biorxiv.org/content/10.1101/2023.05.17.541153v1.full.pdf
+
+[^1_40]: https://ar5iv.labs.arxiv.org/abs/2405.18693v1
+
+[^1_41]: https://www.sciencedirect.com/science/article/abs/pii/S0952197625020822
+
+[^1_42]: https://www.sciencedirect.com/science/article/abs/pii/S0925231225002164
+
+[^1_43]: https://www.research-collection.ethz.ch/entities/publication/1ab7ad0a-0180-4067-8200-e00b4e91c3b2
+
+[^1_44]: https://pmc.ncbi.nlm.nih.gov/articles/PMC11490608/
+
+[^1_45]: https://www.sciencedirect.com/science/article/abs/pii/S0952197623014756
+
+[^1_46]: https://fre.snu.ac.kr/wp-content/uploads/sites/9/2024/04/240426_Graph_Neural_Network_for_Time-series_Forecasting-1.pdf
+
+[^1_47]: https://www.sciencedirect.com/science/article/abs/pii/S0925231225010720
+
+[^1_48]: https://www.youtube.com/watch?v=_uD9ooOFqss
+
+[^1_49]: https://www.sciencedirect.com/science/article/abs/pii/S0306261924021275
+
+[^1_50]: https://arxiv.org/abs/2307.03759
+
+[^1_51]: https://www.sciencedirect.com/science/article/pii/S0952197625003045
+
+[^1_52]: https://preregister.science/papers_20neurips/67_paper.pdf
+
+[^1_53]: https://ieeexplore.ieee.org/document/8663347/
+
+[^1_54]: https://ieeexplore.ieee.org/document/9338393/
+
+[^1_55]: https://www.mdpi.com/2072-4292/12/7/1097
+
+[^1_56]: https://ieeexplore.ieee.org/document/9288309/
+
+[^1_57]: https://ieeexplore.ieee.org/document/9239613/
+
+[^1_58]: https://meetingorganizer.copernicus.org/GSTM2020/GSTM2020-56.html
+
+[^1_59]: https://ieeexplore.ieee.org/document/9353969/
+
+[^1_60]: https://www.semanticscholar.org/paper/591b9bc83fa44fbc9fca1df7ac32e2a00ac34e9e
+
+[^1_61]: https://arxiv.org/pdf/2103.07719.pdf
+
+[^1_62]: http://arxiv.org/pdf/2106.02930.pdf
+
+[^1_63]: https://arxiv.org/pdf/2309.05305.pdf
+
+[^1_64]: https://arxiv.org/pdf/2401.03988.pdf
+
+[^1_65]: https://arxiv.org/pdf/2302.01018.pdf
+
+[^1_66]: https://arxiv.org/pdf/2210.16270.pdf
+
+[^1_67]: https://arxiv.org/pdf/2312.07777.pdf
+
+[^1_68]: https://pdfs.semanticscholar.org/8b84/cf8d293f745c243962b3607767f8c6337536.pdf
+
+[^1_69]: https://arxiv.org/html/2411.05793v1
+
+[^1_70]: https://www.semanticscholar.org/paper/Spectral-Temporal-Graph-Neural-Network-for-Cao-Wang/645054d31fa26b29bbfb0cf73b75f8906c359415
+
+[^1_71]: https://arxiv.org/pdf/2509.23816.pdf
+
+[^1_72]: https://arxiv.org/html/2405.18036v1
+
+[^1_73]: https://arxiv.org/pdf/2312.02159.pdf
+
+[^1_74]: https://arxiv.org/pdf/2302.11313.pdf
+
+[^1_75]: https://arxiv.org/abs/2405.18036
+
+[^1_76]: https://www.semanticscholar.org/paper/A-Multi-View-Multi-Task-Learning-Framework-for-Time-Deng-Chen/c242e09e8c5be4c8ad6ac923cc3b004b102a56b2
+
+[^1_77]: https://arxiv.org/pdf/2405.18036.pdf
+
+[^1_78]: https://arxiv.org/pdf/2301.10569.pdf
+
+[^1_79]: https://www.semanticscholar.org/paper/ForecastGrapher:-Redefining-Multivariate-Time-with-Cai-Wang/60560da7e2483d4f788c228ebd5e226ae1f40002
+
+[^1_80]: https://papers.nips.cc/paper/2020/file/cdf6581cb7aca4b7e19ef136c6e601a5-Paper.pdf
+
+[^1_81]: https://mlg-europe.github.io/2023/papers/215.pdf
+
+[^1_82]: https://www.themoonlight.io/en/review/forecastgrapher-redefining-multivariate-time-series-forecasting-with-graph-neural-networks
+
+[^1_83]: https://proceedings.nips.cc/paper_files/paper/2020/file/cdf6581cb7aca4b7e19ef136c6e601a5-Paper.pdf
+
+[^1_84]: https://grlplus.github.io/papers/58.pdf
+
+[^1_85]: https://www.microsoft.com/en-us/research/publication/spectral-temporal-graph-neural-network-for-multivariate-time-series-forecasting/
+
+[^1_86]: https://www.net.in.tum.de/fileadmin/TUM/NET/NET-2023-11-1/NET-2023-11-1_20.pdf
+
+[^1_87]: https://www.scielo.br/j/cr/a/fTQZddyndYCFXh3sSQpchjG/
+
+[^1_88]: https://emanuelerossi.co.uk/assets/pdf/intel_tgn.pdf
+
+[^1_89]: https://arxiv.org/abs/2103.07719
+
+[^1_90]: https://openreview.net/pdf?id=pHCdMat0gI
+
+[^1_91]: https://dl.acm.org/doi/10.1007/978-981-96-9818-9_15
