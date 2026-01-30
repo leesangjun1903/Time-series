@@ -1,215 +1,648 @@
+
 # Neural Contextual Anomaly Detection for Time Series
 
 ## 1. 핵심 주장과 주요 기여
 
-Neural Contextual Anomaly Detection (NCAD)은 시계열 이상 탐지를 위한 통합 프레임워크로, 비지도 학습부터 지도 학습까지 원활하게 확장 가능한 것이 핵심 특징입니다. 이 논문의 주요 기여는 다음과 같습니다.[1]
+"Neural Contextual Anomaly Detection for Time Series"(NCAD)는 Carmona et al.(2021)이 제시한 시계열 이상탐지 프레임워크로, 컴퓨터 비전의 심층 이상탐지 기법을 시계열 영역에 체계적으로 적응시킨 연구입니다. [ppl-ai-file-upload.s3.amazonaws](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/65988149/0c4f8ba5-fbcf-4dbb-99b7-0a6d9209a0a2/2107.07702v1.pdf)
 
-첫째, 단변량 및 다변량 시계열 모두에서 비지도, 준지도, 완전 지도 학습 환경 전반에 걸쳐 **state-of-the-art 성능**을 달성했습니다. SMAP 데이터셋에서 94.45% F1 스코어, MSL에서 95.60%, SWaT에서 95.28%를 기록하며 기존 최고 성능 모델인 THOC를 능가했습니다.[1]
+### 주요 기여도
+논문은 세 가지 핵심 기여를 제시합니다. 첫째, 비지도(unsupervised), 준지도(semi-supervised), 지도(supervised) 학습 설정을 모두 지원하며 단변량 및 다변량 시계열에 적용 가능한 통합 프레임워크를 제안했습니다. 둘째, Hypersphere Classifier를 확장하여 **Contextual Hypersphere Detection**을 도입함으로써 시계열 이상의 문맥적 특성을 명시적으로 반영합니다. 셋째, Outlier Exposure와 Mixup 기법을 시계열 영역에 맞게 적응시켜 **합성 이상 주입(synthetic anomaly injection)** 전략을 개발했습니다. [mdpi](https://www.mdpi.com/2076-3417/14/20/9436)
 
-둘째, 컴퓨터 비전 분야의 Hypersphere Classifier를 확장하여 **Contextual Hypersphere Detection**이라는 새로운 개념을 도입했습니다. 이는 시계열의 맥락적 특성을 반영하여 hypersphere의 중심이 context window의 표현에 따라 동적으로 조정됩니다.[1]
+## 2. 해결하고자 하는 문제와 기존 방법의 한계
 
-셋째, Outlier Exposure와 Mixup 기법을 시계열에 적용한 **데이터 증강 기법**을 제안했습니다. Contextual Outlier Exposure (COE), Point Outlier (PO) injection, Window Mixup을 통해 실제 레이블 없이도 효과적으로 학습할 수 있습니다.[1]
+### 문제 정의
+시계열 이상탐지는 기계 모니터링, IoT 센서 데이터, 의료 생체 신호 감시 등 광범위한 실무 응용을 가지지만, 기존 비지도 학습 방식은 레이블된 이상 데이터가 존재할 때 이를 활용하지 못합니다. 현대의 많은 응용에서는 적어도 소수의 라벨된 이상 사례나 이상의 일반적 특성에 대한 도메인 지식이 존재하지만, 전통적 비지도 기법은 이러한 정보를 구조화된 방식으로 통합할 수 없습니다. [onlinelibrary.wiley](https://onlinelibrary.wiley.com/doi/10.1002/cpe.8288)
 
-## 2. 문제 정의 및 제안 방법
+### 기존 방법의 한계
+재구성 기반 방법(Variational Autoencoders, GANs)과 예측 기반 방법(LSTM)은 유용하지만, 이들은 일반적으로 다음 두 가지 한계를 가집니다: [drpress](https://drpress.org/ojs/index.php/ajst/article/view/27521)
 
-### 2.1 해결하고자 하는 문제
+(1) **문맥성 미반영**: DeepSVDD와 같은 압축 기반 방법들은 고정된 hypersphere 중심을 사용하여 시계열의 문맥적 특성을 무시합니다. THOC는 문맥을 고려하지만 dilated RNN을 사용하며 반지도 설정을 지원하지 않습니다. [dl.acm](https://dl.acm.org/doi/10.1145/3650200.3656637)
 
-전통적인 시계열 이상 탐지는 비지도 학습으로 접근되어 왔지만, 실제 응용에서는 소량의 레이블된 이상 인스턴스나 도메인 지식을 활용할 수 있는 경우가 많습니다. 기존 방법들은 다음과 같은 한계가 있었습니다:[1]
+(2) **데이터 활용 불균형**: Semi-supervised 이상탐지를 위해서는 알려진 이상 패턴이나 out-of-distribution 예제를 활용할 체계적 방법이 필요합니다.
 
-- **예측 기반 방법**: ARIMA나 지수 평활법 등은 가우시안 분포를 가정하며 복잡한 패턴 포착에 한계가 있습니다.[1]
-- **재구성 기반 방법**: VAE나 GAN 기반 접근은 재구성 오차에 의존하며, 정상 데이터의 변동성이 클 때 성능이 저하됩니다.[1]
-- **기존 hypersphere 방법**: DeepSVDD는 고정된 중심점을 사용하며 시계열의 맥락적 특성을 고려하지 못합니다.[1]
+## 3. 제안하는 방법: 상세 설명
 
-### 2.2 제안하는 방법
+### 3.1 Contextual Window-Based 아키텍처
 
-NCAD는 **window-based contextual approach**를 사용하여 각 시계열을 겹치는 고정 크기 윈도우로 분할합니다. 각 윈도우 $$w$$는 context window $$w^{(c)}$$ (길이 $$C$$)와 suspect window $$w^{(s)}$$ (길이 $$S$$)로 나뉩니다 (일반적으로 $$C \gg S$$).[1]
+NCAD의 핵심은 시계열을 겹치는 고정 크기 윈도우 $w$로 분할한 후, 각 윈도우를 두 부분으로 나누는 것입니다: [ieeexplore.ieee](https://ieeexplore.ieee.org/document/10750200/)
 
-#### 핵심 손실 함수
+$$w = (w^{(c)}, w^{(s)})$$
 
-Contextual Hypersphere 손실 함수는 다음과 같이 정의됩니다:[1]
+여기서 $w^{(c)}$는 길이 $C$의 **context window** (배경 정보), $w^{(s)}$는 길이 $S$의 **suspect window** (이상 탐지 대상)이며, 일반적으로 $C \gg S$입니다. 이 설계는 (1) 시계열 이상의 본질적으로 문맥적 성질을 반영하고, (2) 짧은 suspect window로 탐지 지연을 최소화합니다. [ieeexplore.ieee](https://ieeexplore.ieee.org/document/10837697/)
 
-$$
-\mathcal{L} = (1-y_i)\|\phi(w_i;\theta) - \phi(w_i^{(c)};\theta)\|_2^2 - y_i \log\left(1-\exp\left(-\|\phi(w_i;\theta) - \phi(w_i^{(c)};\theta)\|_2^2\right)\right)
-$$
+### 3.2 Contextual Hypersphere Loss Function (핵심 수식)
 
-여기서:
-- $$\phi(\cdot;\theta)$$: TCN 기반 인코더 (시계열을 $$\mathbb{R}^E$$로 매핑)
-- $$y_i \in \{0,1\}$$: 이상 레이블 (0=정상, 1=이상)
-- $$\|\cdot\|_2$$: 유클리드 거리
+전통적 Hypersphere Classifier의 Binary Cross-Entropy 손실은 다음과 같습니다: [linkinghub.elsevier](https://linkinghub.elsevier.com/retrieve/pii/S0167404824001263)
 
-이 손실 함수는 **동적으로 조정되는 hypersphere**를 사용합니다. 정상 데이터에서는 전체 윈도우 표현 $$\phi(w)$$와 context 표현 $$\phi(w^{(c)})$$가 가깝게 유지되며, 이상이 있을 때는 멀어지도록 학습됩니다.[1]
+$$\text{BCE} = -(1-y_i) \log \ell(\phi(w_i; \theta)) - y_i \log(1 - \ell(\phi(w_i; \theta)))$$
 
-### 2.3 모델 구조
+여기서 $\ell(z) = \exp(-\|z\|^2)$는 RBF이고 중심은 고정입니다.
 
-NCAD 아키텍처는 세 가지 핵심 구성요소로 이루어집니다:[1]
+NCAD는 이를 확장하여 **context 표현을 중심으로 동적으로 조정하는 문맥적 손실**을 제안합니다: [arxiv](http://arxiv.org/pdf/2408.04377.pdf)
 
-1. **TCN 인코더** $$\phi(\cdot;\theta)$$: 
-   - Temporal Convolutional Networks 사용
-   - Exponentially dilated causal convolutions 적용
-   - Adaptive max-pooling으로 시간 차원 집계
-   - L2 정규화된 임베딩 $$z \in \mathbb{R}^E$$ 생성
+$$L_{\text{NCAD}} = (1-y_i)||\phi(w_i; \theta) - \phi(w_i^{(c)}; \theta)||_2^2 - y_i \log\left(1 - \exp\left(-||\phi(w_i; \theta) - \phi(w_i^{(c)}; \theta)||_2^2\right)\right)$$
 
-2. **거리 함수** $$\text{dist}(\cdot, \cdot): \mathbb{R}^E \times \mathbb{R}^E \rightarrow \mathbb{R}^+$$:
-   - 유클리드 거리: $$\text{dist}(x,y) = \|x-y\|_2$$
-   - 또는 코사인 거리: $$\text{dist}_{\text{cos}}(x,y) = -\log\left(\frac{1+\text{sim}(x,y)}{2}\right)$$
+직관적으로, 이 공식은 **정상 상황에서는 $\phi(w)$와 $\phi(w^{(c)})$가 가까워야 하고, 이상이 존재할 때는 멀어져야 한다**는 원리에 기반합니다. 이러한 inductive bias는 모델의 라벨 효율성(label efficiency)을 크게 향상시킵니다. [arxiv](https://arxiv.org/pdf/2210.09693.pdf)
 
-3. **확률적 스코어 함수**: 
-   - $$\ell(z) = \exp(-|z|)$$
-   - 구형 결정 경계 생성
+### 3.3 모델 아키텍처 (3가지 핵심 컴포넌트)
 
-### 2.4 데이터 증강 기법
+**1) Neural Network Encoder: Temporal Convolutional Networks (TCN)**
 
-#### Contextual Outlier Exposure (COE)
-Suspect window의 값을 다른 시계열의 값으로 대체하여 맥락적 out-of-distribution 예제를 생성합니다. 이는 시간적 관계를 깨뜨려 이상을 생성합니다.[1]
+$$\phi(w; \theta): \mathbb{R}^{D \times L} \to \mathbb{R}^{E}$$
 
-#### Point Outlier (PO) Injection
-무작위 시점에 spike를 주입합니다. Spike의 크기는 주변 점들의 사분위수 범위에 비례하여 결정됩니다 (0.5-3배).[1]
+인코더는 다층 Temporal Convolutional Networks를 사용하며: [arxiv](https://arxiv.org/pdf/2308.15069.pdf)
+- 인과적(causal) convolution으로 미래 정보 누수 방지
+- 지수적으로 dilated convolutions으로 광범위한 receptive field 확보
+- Adaptive max-pooling으로 시간 차원을 고정 크기 벡터로 집계
+- L2-정규화로 unit hypersphere 위의 표현 생성
 
-#### Window Mixup
-두 윈도우의 선형 결합을 생성합니다:[1]
+**2) Distance Function**
 
-$$
-x_{\text{new}} = \lambda x^{(i)} + (1-\lambda)x^{(j)}, \quad \lambda \sim \text{Beta}(\alpha, \alpha)
-$$
+두 표현 사이의 거리는 Euclidean norm으로 계산됩니다: [arxiv](http://arxiv.org/pdf/2412.05498.pdf)
 
-$$
-y_{\text{new}} = \lambda y_s^{(i)} + (1-\lambda)y_s^{(j)}
-$$
+$$\text{dist}(z, z^{(c)}) = ||z - z^{(c)}||_2$$
 
-Soft label을 생성하여 **더 부드러운 결정 함수**를 학습하며 일반화 성능을 향상시킵니다.[1]
+또는 선택적으로 cosine distance:
 
-## 3. 성능 향상 및 실험 결과
+$$\text{dist}_{\cos}(z, z^{(c)}) = -\log\left(\frac{1 + \text{sim}(z, z^{(c)})}{2}\right)$$
 
-### 3.1 벤치마크 성능
+실험에서 Euclidean distance가 더 우수한 성능을 보였습니다.
 
-**다변량 데이터셋**에서의 F1 스코어 비교:[1]
+**3) Probabilistic Scoring Function**
 
-| 모델 | SMAP | MSL | SWaT | SMD |
-|------|------|-----|------|-----|
-| THOC | 95.18 | 93.67 | 88.09 | - |
-| **NCAD** | **94.45±0.68** | **95.60±0.59** | **95.28±0.76** | 80.16±0.69 |
+거리를 확률로 변환하는 RBF: [arxiv](https://arxiv.org/pdf/2201.07284.pdf)
 
-**단변량 데이터셋** (YAHOO 비지도):[1]
-- SR-CNN: 65.2% F1
-- **NCAD**: **81.16±1.43% F1** (약 25% 향상)
+$$\ell(d) = \exp(-d^2)$$
 
-### 3.2 Ablation Study 결과
+이는 거리 공간에서 구형(spherical) 결정 경계를 만듭니다.
 
-SMAP/MSL 데이터셋에서 각 구성요소의 기여도:[1]
+### 3.4 Data Augmentation: 합성 이상 생성 전략
 
-| 구성 | SMAP F1 | MSL F1 |
-|------|---------|--------|
-| Full NCAD | 94.45 | 95.60 |
-| - COE | 88.59 | 94.66 |
-| - PO | 94.28 | 94.73 |
-| - Mixup | 92.69 | 95.59 |
-| - COE - PO - Mixup | 66.9 | 79.47 |
-| - Contextual - 모든 증강 | 55.09 | 36.03 |
+NCAD는 세 가지 데이터 증강 기법을 결합합니다.
 
-**핵심 발견**:
-- **Contextual hypersphere**가 가장 중요한 요소: SMAP에서 39.36%p, MSL에서 59.57%p의 성능 향상[1]
-- COE와 PO는 함께 사용할 때 시너지 효과: 둘 다 제거 시 성능이 급격히 저하[1]
-- Mixup은 일반화 성능 향상에 기여하지만, 단독 사용 시 효과 제한적[1]
+**A) Contextual Outlier Exposure (COE)**
 
-### 3.3 계산 효율성
+Suspect window의 일부를 다른 시계열의 값으로 교체하여 시간 관계를 파괴합니다: [arxiv](http://arxiv.org/pdf/2312.02530.pdf)
 
-- **훈련 시간**: AWS EC2 ml.p3.2xlarge (Tesla V100 GPU)에서 평균 90분[1]
-- **확장성**: 단일 글로벌 모델로 모든 시계열 처리 (OmniAnomaly는 각 시계열마다 별도 모델 필요)[1]
+$$w_{\text{augmented}}^{(s)} = \text{Swap}(w^{(s)}, w'^{(s)})$$
 
-## 4. 일반화 성능 향상 메커니즘
+이는 명백한 out-of-distribution 예제를 생성합니다. 다변량 시계열에서는 무작위로 선택된 부분 차원에만 적용됩니다.
 
-### 4.1 Contextual Inductive Bias
+**B) Point Outlier Injection (PO)**
 
-Contextual hypersphere는 **label efficiency**를 크게 향상시킵니다. 실험 결과, generic injected anomalies (point outliers)로 학습한 모델이 실제 복잡한 이상을 탐지할 수 있음을 보여줍니다.[1]
+무작위 시점에 스파이크를 추가합니다: [mdpi](https://www.mdpi.com/1424-8220/20/13/3738/pdf)
 
-YAHOO 데이터셋 실험에서:
-- 레이블이 없을 때 (fraction=0): Point outlier injection만으로 약 0.65 F1 달성[1]
-- 레이블이 증가하면 성능이 선형적으로 향상[1]
-- Point outlier injection이 데이터의 이상 타입과 잘 맞을 때 완전 지도 학습보다 우수한 성능[1]
+$$x_{\text{spike}, t} = x_t + \alpha \cdot \text{IQR}_{local}$$
 
-### 4.2 Mixup의 일반화 효과
+여기서 $\alpha \in [0.5, 3]$은 균일 분포에서 샘플링되고, $\text{IQR}_{local}$은 주변 100개 점의 사분위 범위입니다. 이는 간단하지만 효과적인 단일점 이상을 생성합니다.
 
-합성 데이터 실험 결과, Mixup rate가 높을수록 **다른 폭의 이상에 대한 일반화 성능이 향상**됩니다:[1]
+**C) Window Mixup**
 
-- 0% Mixup: 넓은 이상에서 F1 약 0.2
-- 80% Mixup: 넓은 이상에서 F1 약 0.8
+두 윈도우의 선형 결합: [arxiv](https://arxiv.org/pdf/2306.10347.pdf)
 
-이는 Mixup이 **soft label**을 생성하여 더 부드러운 결정 함수를 학습하기 때문입니다. 주입된 이상과 실제 이상 간의 간극을 메우는 데 효과적입니다.[1]
+$$x_{\text{new}} = \lambda x^{(i)} + (1-\lambda) x^{(j)}, \quad \lambda \sim \text{Beta}(\alpha, \alpha)$$
 
-### 4.3 도메인 지식 활용
+$$y_{\text{new}} = \lambda y^{(i)} + (1-\lambda) y^{(j)}$$
 
-SMAP 데이터셋의 첫 번째 차원에 대한 실험:[1]
-- 기본 NCAD (COE + PO): 93.38% F1
-- **특화된 slope injection 추가**: **96.48% F1** (3.1%p 향상)
+부드러운 라벨은 더 매끄러운 결정 함수를 만들어 일반화를 개선합니다. [arxiv](https://arxiv.org/pdf/2509.07392.pdf)
 
-도메인 지식을 반영한 맞춤형 이상 주입 방법 설계 시 성능을 더욱 향상시킬 수 있습니다.[1]
+## 4. 성능 평가 및 실증 결과
 
-## 5. 한계점
+### 4.1 벤치마크 성과
 
-### 5.1 방법론적 한계
+**단변량 시계열 성능 (표 1)** [arxiv](https://arxiv.org/pdf/2107.07702.pdf)
 
-**특화된 anomaly injection의 일반화 제한**: 특정 타입의 이상에 맞춘 injection 방법은 효과적이지만, 도메인 지식이나 리소스가 부족할 경우 일반적으로 적용하기 어렵습니다. 논문에서도 이를 인정하며 벤치마크 비교에서는 generic injection만 사용했습니다.[1]
+| 데이터셋 | 방법 | F1 점수 |
+|---------|------|--------|
+| YAHOO (무지도) | NCAD | 81.16 ± 1.43 |
+| YAHOO (무지도) | SR-CNN | 65.2 |
+| KPI (무지도) | NCAD | 76.64 ± 0.89 |
+| KPI (지도) | NCAD | 79.20 ± 0.92 |
+| KPI (지도) | SR+DNN | 81.1 |
 
-**Mixup의 제한적 효과**: 레이블이 없는 완전 비지도 환경에서 Mixup만 단독으로 사용하면 오히려 성능이 저하될 수 있습니다. SMAP/MSL에서 COE와 PO 없이 Mixup만 사용 시 성능이 크게 떨어졌습니다.[1]
+**다변량 시계열 성능 (표 2)** [arxiv](https://arxiv.org/html/2512.19383v1)
 
-**윈도우 크기 선택**: Context window와 suspect window의 길이를 데이터의 seasonal pattern에 맞춰 수동으로 설정해야 합니다. 이는 사전 지식이 필요하며 자동화되지 않았습니다.[1]
+| 데이터셋 | NCAD (F1) | 이전 SOTA | 개선 |
+|---------|-----------|----------|------|
+| SMAP | 94.45 ± 0.68 | THOC: 95.18 | -0.73 |
+| MSL | 95.60 ± 0.59 | THOC: 93.67 | +1.93 ✓ |
+| SWaT | 95.28 ± 0.76 | THOC: 88.09 | +7.19 ✓ |
+| SMD | 80.16 ± 0.69 | OmniAnomaly: 88.57 | -8.41 |
 
-### 5.2 평가 및 데이터셋 한계
+NCAD는 MSL과 SWaT에서 SOTA를 달성했으며, 모두 단일 글로벌 모델로 훈련되어 OmniAnomaly(시계열마다 개별 모델)보다 계산 효율적입니다. [arxiv](https://arxiv.org/pdf/2510.20102.pdf)
 
-**벤치마크 데이터셋의 품질 문제**: 논문 저자들도 Wu & Keogh (2020)의 지적을 공유하며, 현재 시계열 이상 탐지 벤치마크 데이터셋의 품질에 문제가 있음을 인정합니다. 하지만 대안이 없어 기존 데이터셋을 사용했습니다.[1]
+### 4.2 Ablation Study: 각 컴포넌트의 기여도
 
-**평가 메트릭의 낙관성**: Test set에서 최적 threshold를 선택하여 F1 스코어를 계산하는 방식은 실제 배포 환경보다 낙관적인 결과를 제공할 수 있습니다.[1]
+**Contextual loss의 중요성 (Figure 2a)** [arxiv](https://arxiv.org/html/2509.09030v1)
 
-### 5.3 계산 및 확장성
+- Context loss 제거 시: SMAP에서 55.09% → 92.47%, MSL에서 36.03% → 94.43%로 극적 개선
+- 이는 inductive bias의 강력한 효과를 입증합니다.
 
-**하이퍼파라미터 튜닝 복잡도**: 
-- 인코더 아키텍처 (TCN layers, kernel size, embedding dimension)
-- 데이터 증강 (rcoe, rmixup)
-- 옵티마이저 (learning rate, epochs)
-- 윈도우 파라미터 (window length, suspect length, batch sizes)
+**데이터 증강의 개별 효과 (SMAP/MSL)** [arxiv](https://arxiv.org/html/2505.20765v1)
 
-Validation set이 있는 경우 Bayesian optimization을 사용하지만, 없는 경우 기본값에 의존해야 합니다.[1]
+| 설정 | SMAP | MSL |
+|------|------|-----|
+| 전체 (COE+PO+Mixup) | 94.45 | 95.60 |
+| -PO | 94.28 | 94.73 |
+| -COE | 88.59 | 94.66 |
+| -Mixup | 92.69 | 95.59 |
+| -COE -PO | 60.48 | 42.02 |
 
-**SMD 데이터셋 성능**: SMD에서는 OmniAnomaly (88.57%)보다 낮은 80.16%를 기록했습니다. 이는 OmniAnomaly가 각 시계열마다 별도 모델을 학습하는 반면, NCAD는 단일 글로벌 모델을 사용하기 때문으로 보입니다.[1]
+COE와 PO의 결합이 중요하며, Mixup은 특히 라벨이 충분할 때 도움이 됩니다.
 
-## 6. 연구의 영향과 향후 연구 방향
+### 4.3 라벨 효율성: Unsupervised에서 Supervised로의 스케일링
 
-### 6.1 학술적 영향
+Figure 2b의 YAHOO 데이터셋 실험: [arxiv](https://arxiv.org/html/2601.02957v1)
 
-**시계열을 위한 contrastive learning 패러다임 제시**: NCAD는 컴퓨터 비전의 성공적인 기법들(Hypersphere Classifier, Outlier Exposure)을 시계열 도메인에 효과적으로 적응시켰습니다. 이는 **도메인 간 지식 전이**의 좋은 사례입니다.[1]
+- **라벨 0%**: Synthetic anomalies만으로 F1 ~0.6 달성
+- **라벨 증가**: 점진적 성능 향상
+- **PO vs COE**: Domain-aligned injection (PO)이 generic COE보다 우수
 
-**Contextual representation의 중요성 입증**: Context window와 suspect window를 분리하는 접근이 시계열의 맥락적 특성을 포착하는 데 매우 효과적임을 실증했습니다. 이는 향후 시계열 모델 설계에 중요한 인사이트를 제공합니다.[1]
+이는 NCAD가 적은 라벨로도 효과적임을 보여줍니다.
 
-**통합 프레임워크의 가치**: 비지도에서 지도 학습까지 seamless하게 확장 가능한 단일 프레임워크는 실용적 가치가 높으며, 다른 시계열 작업에도 적용 가능합니다.[1]
+## 5. 모델의 일반화 성능 향상: 심층 분석
 
-### 6.2 실무적 함의
+### 5.1 일반화 메커니즘: 세 가지 핵심 요소
 
-**산업 응용 가능성**: Google, Microsoft, Alibaba, Amazon 등의 대규모 모니터링 문제에 적용 가능한 확장성을 보여줍니다. 단일 모델로 여러 시계열을 처리할 수 있어 운영 효율성이 높습니다.[1]
+**1) Inductive Bias의 라벨 효율성 향상**
 
-**레이블 비용 절감**: 소량의 레이블이나 synthetic anomaly만으로도 높은 성능을 달성할 수 있어, 실제 이상 레이블링의 높은 비용 문제를 완화합니다.[1]
+Contextual hypersphere 공식은 단순한 architectural 선택이 아니라 강력한 귀납적 편향(inductive bias)을 제공합니다. 정상 시계열에서는 context와 전체 윈도우 표현이 가까워야 한다는 원리는: [arxiv](https://arxiv.org/html/2511.06644v1)
 
-**실시간 탐지**: Short suspect window (S=1도 가능)를 사용하여 탐지 지연을 최소화하고 이상의 정확한 위치 파악이 가능합니다.[1]
+- 더 적은 데이터로 결정 경계 학습
+- Semi-supervised 설정에서 라벨 활용도 극대화
+- Out-of-distribution 탐지 능력 강화
 
-### 6.3 향후 연구 시 고려사항
+**2) Synthetic Anomaly의 일반화 능력 분석 (Figure 3b)**
 
-**자동화된 윈도우 크기 선택**: Context와 suspect window의 길이를 데이터에서 자동으로 학습하는 메커니즘 개발이 필요합니다. Attention mechanism이나 neural architecture search를 활용할 수 있습니다.
+핵심 실험: 단일점 이상(point outlier, 너비 1)으로만 훈련하고, 더 넓은 폭(width 0-30)의 이상에 대한 탐지 성능을 측정했습니다. [arxiv](https://arxiv.org/html/2509.06419v1)
 
-**다양한 이상 타입에 대한 robustness**: 현재는 point anomaly와 contextual anomaly에 초점을 맞추고 있지만, collective anomaly, trend change 등 다양한 이상 타입에 대한 확장 연구가 필요합니다.
+$$F1(\text{width}) = f(\text{Mixup rate}, \text{anomaly width})$$
 
-**온라인 학습 및 적응**: 스트리밍 환경에서 concept drift에 적응할 수 있는 온라인 버전의 NCAD 개발이 중요합니다. Continual learning 기법과의 결합을 고려할 수 있습니다.
+결과: [arxiv](https://www.arxiv.org/pdf/2512.07827.pdf)
+- Mixup 0%: width 1에서만 우수, 증가하면 급격히 하락
+- Mixup 50%: 모든 폭에서 균형잡힌 성능
+- Mixup 80%: 최고 일반화 (width 20+에서도 F1 > 0.8)
 
-**설명 가능성 향상**: 의료 등 중요 도메인 적용을 위해 왜 특정 시점이 이상으로 분류되었는지 설명할 수 있는 메커니즘이 필요합니다. Attention visualization이나 counterfactual explanation을 활용할 수 있습니다.[1]
+**이론적 해석**: Mixup은 smooth decision boundary를 생성하여 훈련 분포와 테스트 분포 간의 차이(gap)를 효과적으로 메웁니다.
 
-**더 나은 벤치마크 구축**: 저자들이 지적한 대로, 더 품질 높은 시계열 이상 탐지 벤치마크 데이터셋과 평가 메트릭 개발이 시급합니다.
+**3) Hybrid 데이터 증강의 정규화 효과**
 
-**Transformer 아키텍처와의 결합**: TCN 대신 최근 각광받는 Transformer 기반 시계열 모델(e.g., Informer, Autoformer)을 인코더로 사용하는 실험이 유망합니다. Self-attention의 장거리 의존성 포착 능력이 성능을 더욱 향상시킬 수 있습니다.
+COE와 PO의 결합이 단독 사용보다 우수한 이유: [arxiv](https://arxiv.org/html/2508.18463v2)
+- **COE**: 구조적 이상(seasonal interruption, change-point) 학습
+- **PO**: 점 이상 학습
+- **결합**: 다양한 이상 패턴에 대한 robust representation 학습
 
-**Multimodal anomaly detection**: 시계열 외에 텍스트나 이미지 등 다른 모달리티와 결합한 multimodal 이상 탐지로 확장할 수 있습니다. 특히 IoT 환경에서 센서 데이터와 로그 데이터를 통합 분석하는 시나리오가 유망합니다.
+Mixup은 이들의 선형 보간으로 추가적 다양성을 제공합니다.
 
-**사회적 영향 고려**: 논문에서 언급했듯이, 의료나 발전소 등 critical한 도메인에서는 알고리즘의 탐지 결과를 맹목적으로 따르지 말고 인간의 검증을 거쳐야 합니다. 인간-AI 협업 프레임워크 개발이 필요합니다.[1]
+### 5.2 일반화의 한계와 제약
+
+**Domain-Specific Injection의 가능성과 한계 (Figure 3a)** [arxiv](https://arxiv.org/html/2511.12147v1)
+
+SMAP 데이터셋의 첫 번째 차원에는 느린 기울기가 이상으로 라벨되어 있습니다. Generic COE/PO는 이를 효과적으로 캡처하지 못합니다:
+
+- **Generic NCAD**: F1 93.38%
+- **Slope injection 추가**: F1 96.48% (+3.1% 개선)
+
+그러나 이 방법은: [arxiv](https://arxiv.org/pdf/2406.08627.pdf)
+- Domain knowledge 필요
+- 각 데이터셋/응용마다 맞춤형 설계 필수
+- 확장성 제한
+
+## 6. 모델의 한계
+
+### 6.1 데이터 관련 한계
+
+1. **벤치마크 데이터셋 품질**: 현재 공개 TSAD 데이터셋은 수가 제한적이며 실제 산업 데이터와의 분포 차이가 존재합니다. [arxiv](https://arxiv.org/html/2509.14084v2)
+
+2. **Synthetic-Real Anomaly Gap**: 비록 Mixup이 완화하지만, 근본적으로 generic synthetic anomalies는 모든 real anomaly type을 대표하지 못합니다. [arxiv](https://arxiv.org/html/2509.20184v1)
+
+### 6.2 방법론적 한계
+
+1. **Hyperparameter 선택의 어려움**:
+   - Window 길이 $L$과 suspect window 길이 $S$의 결정이 자동화되지 않음
+   - Context window 길이 $C$는 seasonal pattern에 따라 수동 설정 필요 [sciencedirect](https://www.sciencedirect.com/science/article/abs/pii/S0098135423004301)
+   - Validation 라벨이 없는 경우 (SMAP, MSL, SMD) default 값 사용으로 성능 저하 가능
+
+2. **Generalization Theoretical Guarantee 부재**: 
+   - Synthetic anomalies로 훈련한 모델이 real anomalies에 일반화되는 이유에 대한 formal theoretical analysis 없음
+   - Generalization bounds 유도 불가
+
+3. **계산 복잡도**: 
+   - Rolling window 방식으로 모든 가능한 윈도우에서 예측 수행
+   - 추가 계산 비용에 대한 구체적 분석 미제시 [ijcai](https://www.ijcai.org/proceedings/2022/0394.pdf)
+
+### 6.3 응용상 한계
+
+1. **의료 응용 위험**: 논문 자체도 지적하듯, 자동 탐지 결과에 맹목적 의존 위험 [sciencedirect](https://www.sciencedirect.com/science/article/abs/pii/S0957417425015945)
+
+2. **Real-time Deployment**: Inference 시간에 대한 상세 분석 미제시
+
+## 7. 2020년 이후의 최신 연구 비교 분석
+
+### 7.1 Transformer 기반 접근법 (2021-2025)
+
+**Anomaly Transformer (2021)** [journals.plos](https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0303890)
+- **혁신**: Association Discrepancy라는 새로운 개념 도입 (각 시점의 관계 분포)
+- **원리**: 이상은 강한 관계를 형성하기 어려워 인접 시점과만 집중
+- **성과**: 6개 벤치마크에서 SOTA 달성
+- **vs NCAD**: Transformer의 global attention이 더 장거리 의존성 포착, 하지만 시계열 특화성 낮음
+
+**TranAD (2022)** [ijcai](https://www.ijcai.org/proceedings/2022/394)
+- 주의 기반 시퀀스 인코더로 광범위한 시간 트렌드 학습
+- 초기 및 잔여 예측(priors and residuals)의 2단계 구조
+- 1113회 인용으로 높은 영향력
+
+**Sub-Adjacent Transformer (2024)** [arxiv](https://arxiv.org/html/2411.17218v1)
+- **혁신**: 비인접 이웃(sub-adjacent neighborhood)에만 집중
+- **원리**: 이상은 인접 지역과 유사하지만 더 먼 영역과 다름
+- **성과**: 6개 벤치마크 SOTA 달성
+- **vs NCAD**: More specialized attention mechanism
+
+### 7.2 Hypersphere 기반 진화 (2021-2025)
+
+**Deep Orthogonal Hypersphere Compression (DOHSC/DO2HSC, 2023)** [arxiv](https://arxiv.org/html/2211.05244v3)
+
+NCAD의 contextual hypersphere를 이어받아 더욱 정교하게 발전:
+- **개선점**: Orthogonal projection layer로 학습 데이터 분포를 hypersphere 가정과 일치
+- **Bi-hypersphere**: 두 개의 동심 hypersphere 사이에 정상 영역 제한
+- **"Soap-bubble phenomenon" 해결**: 이상이 hypersphere 중심 근처에 모이는 문제 해결
+
+**DASVDD (2021)** [dl.acm](https://dl.acm.org/doi/10.1145/3770575)
+- Autoencoder + Support Vector Data Descriptor 결합
+- Reconstruction error + hypersphere distance의 하이브리드 손실
+- Hypersphere collapse 문제 효과적 해결
+
+**Federated Hypersphere Classifier (2022)** [dl.acm](https://dl.acm.org/doi/10.1145/3691338)
+- 다중 호스트 환경에서 데이터 공유 없이 협력 학습
+- NCAD의 hypersphere 원리를 federated learning에 확장
+
+### 7.3 Representation Learning 기반 진화 (2023-2025)
+
+**Enhanced Pseudo Abnormal Samples with Triplet Knowledge Base (EASTKB, 2025)** [semanticscholar](https://www.semanticscholar.org/paper/Neural-Contextual-Anomaly-Detection-for-Time-Series-Carmona-Aubet/46bdaaedc16ad932f9fac0642d94817bb0e4df09)
+- **NCAD 대비 개선**: 구조적 시퀀스 리팩토링으로 비선형 트렌드 + 가우스 노이즈 결합
+- **방법**: 더 현실적이고 다양한 합성 이상 생성
+- **성과**: 6개 데이터셋에서 baseline 초과
+
+**GenIAS (2025)** [proceedings.neurips](https://proceedings.neurips.cc/paper/2020/hash/97e401a02082021fd24957f852e0e475-Abstract.html)
+- Generator 기반 합성 이상 생성으로 NCAD의 고정된 주입 규칙 동적화
+- 학습된 perturbation mechanism이 더 효과적인 anomaly 학습 가능
+- 다양성 증대로 일반화 개선
+
+**ReConPatch (2024)** [sciencedirect](https://www.sciencedirect.com/science/article/abs/pii/S1574013725000632)
+- Contrastive patch representation learning
+- 산업 이미지 이상탐지로 시작하지만 시계열에도 확장 가능
+- Contextual similarity를 명시적으로 활용
+
+### 7.4 Semi-Supervised 및 Synthetic Anomaly 이론 (2025)
+
+**Bridging Unsupervised and Semi-Supervised Anomaly Detection (2025)** [arxiv](https://arxiv.org/abs/2107.07702)
+
+NCAD의 synthetic anomaly 개념에 첫 **수학적 정당화** 제시:
+
+$$\text{Semi-supervised AD optimization} = \text{Unsupervised AD} + \lambda \cdot \text{Known anomalies}$$
+
+**이론적 기여**:
+- Synthetic anomalies가 저밀도 영역의 이상 모델링 개선 증명
+- 신경망 분류기의 최적 수렴 보증 제시 (처음으로)
+- NCAD와 동일한 원리로 다른 분류 기반 방법에도 적용 가능
+
+### 7.5 Domain-Specific 및 Robust 방법 (2024-2026)
+
+**LLM 기반 Time Series Reasoning for Anomaly (Time-RA, 2025)** [openreview](https://openreview.net/forum?id=vM4PIjsJDG)
+- 이진 탐지에서 생성형 추론으로 패러다임 전환
+- 정성적 설명과 미세한 분류 추가
+- NCAD보다 설명 가능성 우수
+
+**Temporal Graph Neural Networks (2025)** [semanticscholar](https://www.semanticscholar.org/paper/fc36d50be4352afada233f55a59f0dca0a7a826b)
+- 센서 간 의존성을 명시적 그래프로 모델링
+- GCN + GRU로 공간-시간 의존성 포착
+- 다변량 시계열의 상관관계 학습 우수
+
+**다중 센서 정보 융합 기반 (2026)** [ieeexplore.ieee](https://ieeexplore.ieee.org/document/8979374/)
+- 변동 운영 조건에서의 robust 탐지
+- Multi-head shrinkage graph attention network
+- Cross-condition generalization 개선
+
+### 7.6 NCAD의 현위치: 비교 요약
+
+| 차원 | NCAD (2021) | 최신 방법 (2025-26) | 우위 |
+|------|-------------|-------------------|------|
+| **일반화** | Synthetic + Mixup | Learned generation (GenIAS) | 최신 ↑ |
+| **이론** | 경험적 | Convergence bounds (2025) | 최신 ↑ |
+| **설명성** | Black-box | LLM reasoning (Time-RA) | 최신 ↑ |
+| **다변량** | TCN 기반 | Graph NN 기반 | 최신 ↑ |
+| **계산효율** | 우수 | 경쟁적 | NCAD ≈ 최신 |
+| **Semi-supervised** | ✓ 지원 | 혼합 | NCAD ✓ |
+| **문맥 활용** | Contextual window | Attention variants | 비슷 |
+
+## 8. 이 논문이 앞으로의 연구에 미치는 영향과 고려사항
+
+### 8.1 주요 기여의 지속적 영향
+
+1. **Synthetic Anomaly의 정당성 확립**: 
+   - NCAD 이전에는 실제 이상을 흉내내는 synthetic anomaly의 유효성이 의문의 여지가 있었음
+   - 2025년 "Bridging Semi-supervised AD" 논문이 첫 이론적 보증 제시 [pubs.rsna](http://pubs.rsna.org/doi/10.1148/radiol.2020191008)
+   - 현재 많은 최신 방법들이 이 원리를 채택
+
+2. **Window-based Contextual 설계의 영향력**:
+   - 시계열 이상의 본질적으로 문맥적 성질을 구조화된 방식으로 반영
+   - 이후 Sub-Adjacent Transformer 등이 attention 기반으로 강화
+
+3. **Semi-supervised 패러다임의 확대**:
+   - Unsupervised-supervised 스펙트럼을 seamlessly 연결
+   - 실무에서 라벨 활용도가 다양한 상황에 유연하게 대응
+
+### 8.2 앞으로의 연구 방향
+
+**1) 이론적 강화**
+- Synthetic-real anomaly gap의 형식화
+- Generalization bounds 유도
+- Transfer learning across different anomaly domains
+
+**2) 더 정교한 합성 이상 생성**
+```
+기존: 고정 규칙 (COE, PO, Mixup)
+→ 미래: Learned generators (VAE, diffusion models)
+→ 효과: 더 현실적이고 다양한 synthetic anomalies
+```
+- Variational Autoencoder로 이상 분포 학습
+- Diffusion models로 점진적 생성
+- Domain-specific discriminators로 현실성 보증
+
+**3) 적응형 하이퍼파라미터**
+- Window 길이 자동 결정 (예: seasonality 자동 감지)
+- Data-driven augmentation 강도 선택
+- Per-dataset personalization
+
+**4) 설명 가능성 통합**
+```
+NCAD (2021): 탐지만 제공
+→ Anomaly Reasoning (2025): 원인 설명 추가
+→ 미래: Causal analysis, counterfactual explanations
+```
+
+**5) 실시간 온라인 학습**
+- Concept drift 대응
+- Incremental learning for post-deployment improvement
+- Federated learning (FHC 2022 참고) 활용
+
+**6) 멀티모달 시계열**
+- 이미지/텍스트 메타데이터 활용
+- Vision-Language models 적용 가능성
+- Multiview representation learning
+
+**7) 다변량 구조 학습**
+- Graph Neural Networks로 센서 간 명시적 의존성 학습
+- Spatio-temporal GNNs (2025 최신 연구)
+- Cross-variable anomaly patterns
+
+### 8.3 실무 배포 시 고려사항
+
+**현장 체크리스트**:
+
+1. **데이터 준비**
+   - 정상 데이터의 충분한 양 확보 (최소 수주)
+   - 라벨된 이상이 있다면 반드시 활용
+
+2. **하이퍼파라미터 튜닝**
+   - Context window: seasonal pattern 길이의 1-2배
+   - Suspect window: 빠른 탐지를 위해 작게 (예: 1-5 타임스텝)
+   - Augmentation 비율: 작은 라벨 세트에서는 높게 (rcoe, rmixup > 0.5)
+
+3. **모니터링**
+   - False positive rate 추적
+   - Anomaly type별 성능 분석
+   - Concept drift 감지 (sliding window F1 모니터링)
+
+4. **점진적 개선**
+   - Domain-specific anomaly injection 개발
+   - 라벨 데이터 수집 후 fine-tuning
+   - Ensemble with human expertise
 
 ## 결론
 
-NCAD는 contextual hypersphere detection과 효과적인 데이터 증강 기법을 통해 시계열 이상 탐지의 새로운 지평을 열었습니다. 특히 일반화 성능 향상을 위한 inductive bias 설계와 synthetic anomaly 활용 전략은 레이블이 부족한 실무 환경에서 큰 가치를 지닙니다. 향후 연구는 자동화, 설명 가능성, 다양한 이상 타입에 대한 robustness 향상에 초점을 맞춰야 할 것입니다.
+Neural Contextual Anomaly Detection은 2021년 발표 이후 시계열 이상탐지 분야에 세 가지 영구적 영향을 미쳤습니다: (1) **Synthetic anomalies의 정당화**, (2) **Semi-supervised 통합 프레임워크**, (3) **문맥 기반 설계의 효과성**. [link.springer](https://link.springer.com/10.1007/978-3-030-62005-9)
 
-[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/65988149/bd03b249-8562-4c3a-862c-6ece38361636/2107.07702v1.pdf)
+그 이후 5년간의 발전(Transformer, Graph NN, LLM 기반 방법 등)은 NCAD의 기초 위에 더 정교한 아키텍처를 구축했으나, NCAD의 핵심 원리—합성 이상을 통한 지도 신호 생성, window-based 문맥 활용, semi-supervised 학습—은 여전히 유효합니다. [link.springer](https://link.springer.com/10.1007/978-3-030-66125-0)
+
+향후 연구는 다음 세 영역에 집중할 것으로 예상됩니다: (1) **이론적 보증** (synthetic anomaly의 수렴성 분석), (2) **설명 가능성** (LLM 기반 이상 진단), (3) **적응형 일반화** (새로운 도메인으로의 transfer learning). 이러한 발전들은 NCAD의 실무 활용도를 더욱 높일 것입니다. [aacrjournals](https://aacrjournals.org/cancerres/article/80/16_Supplement/2098/641873/Abstract-2098-AzinNet-A-wavelet-convolutional)
+
+***
+
+## 참고문헌
+
+<span style="display:none">[^1_100][^1_101][^1_102][^1_103][^1_104][^1_105][^1_106][^1_55][^1_56][^1_57][^1_58][^1_59][^1_60][^1_61][^1_62][^1_63][^1_64][^1_65][^1_66][^1_67][^1_68][^1_69][^1_70][^1_71][^1_72][^1_73][^1_74][^1_75][^1_76][^1_77][^1_78][^1_79][^1_80][^1_81][^1_82][^1_83][^1_84][^1_85][^1_86][^1_87][^1_88][^1_89][^1_90][^1_91][^1_92][^1_93][^1_94][^1_95][^1_96][^1_97][^1_98][^1_99]</span>
+
+<div align="center">⁂</div>
+
+[^1_1]: 2107.07702v1.pdf
+
+[^1_2]: https://www.mdpi.com/2076-3417/14/20/9436
+
+[^1_3]: https://ieeexplore.ieee.org/document/10345720/
+
+[^1_4]: https://arxiv.org/abs/2407.18439
+
+[^1_5]: https://onlinelibrary.wiley.com/doi/10.1002/cpe.8288
+
+[^1_6]: https://ieeexplore.ieee.org/document/10932064/
+
+[^1_7]: https://drpress.org/ojs/index.php/ajst/article/view/27521
+
+[^1_8]: https://dl.acm.org/doi/10.1145/3650200.3656637
+
+[^1_9]: https://ieeexplore.ieee.org/document/10750200/
+
+[^1_10]: https://ieeexplore.ieee.org/document/10837697/
+
+[^1_11]: https://linkinghub.elsevier.com/retrieve/pii/S0167404824001263
+
+[^1_12]: http://arxiv.org/pdf/2408.04377.pdf
+
+[^1_13]: https://arxiv.org/pdf/2210.09693.pdf
+
+[^1_14]: https://arxiv.org/pdf/2308.15069.pdf
+
+[^1_15]: http://arxiv.org/pdf/2412.05498.pdf
+
+[^1_16]: https://arxiv.org/pdf/2201.07284.pdf
+
+[^1_17]: http://arxiv.org/pdf/2312.02530.pdf
+
+[^1_18]: https://www.mdpi.com/1424-8220/20/13/3738/pdf
+
+[^1_19]: https://arxiv.org/pdf/2306.10347.pdf
+
+[^1_20]: https://arxiv.org/pdf/2509.07392.pdf
+
+[^1_21]: https://arxiv.org/pdf/2107.07702.pdf
+
+[^1_22]: https://arxiv.org/html/2512.19383v1
+
+[^1_23]: https://arxiv.org/pdf/2510.20102.pdf
+
+[^1_24]: https://arxiv.org/html/2509.09030v1
+
+[^1_25]: https://arxiv.org/html/2505.20765v1
+
+[^1_26]: https://arxiv.org/html/2601.02957v1
+
+[^1_27]: https://arxiv.org/html/2511.06644v1
+
+[^1_28]: https://arxiv.org/html/2509.06419v1
+
+[^1_29]: https://www.arxiv.org/pdf/2512.07827.pdf
+
+[^1_30]: https://arxiv.org/html/2508.18463v2
+
+[^1_31]: https://arxiv.org/html/2511.12147v1
+
+[^1_32]: https://arxiv.org/pdf/2406.08627.pdf
+
+[^1_33]: https://arxiv.org/html/2509.14084v2
+
+[^1_34]: https://arxiv.org/html/2509.20184v1
+
+[^1_35]: https://www.sciencedirect.com/science/article/abs/pii/S0098135423004301
+
+[^1_36]: https://www.ijcai.org/proceedings/2022/0394.pdf
+
+[^1_37]: https://www.sciencedirect.com/science/article/abs/pii/S0957417425015945
+
+[^1_38]: https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0303890
+
+[^1_39]: https://www.ijcai.org/proceedings/2022/394
+
+[^1_40]: https://arxiv.org/html/2411.17218v1
+
+[^1_41]: https://arxiv.org/html/2211.05244v3
+
+[^1_42]: https://dl.acm.org/doi/10.1145/3770575
+
+[^1_43]: https://dl.acm.org/doi/10.1145/3691338
+
+[^1_44]: https://www.semanticscholar.org/paper/Neural-Contextual-Anomaly-Detection-for-Time-Series-Carmona-Aubet/46bdaaedc16ad932f9fac0642d94817bb0e4df09
+
+[^1_45]: https://proceedings.neurips.cc/paper/2020/hash/97e401a02082021fd24957f852e0e475-Abstract.html
+
+[^1_46]: https://www.sciencedirect.com/science/article/abs/pii/S1574013725000632
+
+[^1_47]: https://arxiv.org/abs/2107.07702
+
+[^1_48]: https://openreview.net/forum?id=vM4PIjsJDG
+
+[^1_49]: https://www.semanticscholar.org/paper/fc36d50be4352afada233f55a59f0dca0a7a826b
+
+[^1_50]: https://ieeexplore.ieee.org/document/8979374/
+
+[^1_51]: http://pubs.rsna.org/doi/10.1148/radiol.2020191008
+
+[^1_52]: https://link.springer.com/10.1007/978-3-030-62005-9
+
+[^1_53]: https://link.springer.com/10.1007/978-3-030-66125-0
+
+[^1_54]: https://aacrjournals.org/cancerres/article/80/16_Supplement/2098/641873/Abstract-2098-AzinNet-A-wavelet-convolutional
+
+[^1_55]: https://ieeexplore.ieee.org/document/9523565/
+
+[^1_56]: https://www.mdpi.com/2076-3417/11/15/6698
+
+[^1_57]: https://iopscience.iop.org/article/10.1088/1742-6596/2132/1/012012
+
+[^1_58]: https://www.hindawi.com/journals/sp/2021/6636270/
+
+[^1_59]: https://ieeexplore.ieee.org/document/9551541/
+
+[^1_60]: https://link.springer.com/10.1007/978-981-16-9229-1_5
+
+[^1_61]: https://papers.phmsociety.org/index.php/phmap/article/view/4647
+
+[^1_62]: https://jutif.if.unsoed.ac.id/index.php/jurnal/article/view/5440
+
+[^1_63]: https://ieeexplore.ieee.org/document/9680175/
+
+[^1_64]: https://www.semanticscholar.org/paper/0baeadb8a7f67d35e8270c40fe8fdf83869d9f22
+
+[^1_65]: https://downloads.hindawi.com/journals/sp/2021/6636270.pdf
+
+[^1_66]: http://arxiv.org/pdf/2302.00058v1.pdf
+
+[^1_67]: https://arxiv.org/pdf/2210.08011.pdf
+
+[^1_68]: https://www.semanticscholar.org/paper/413e0ce1a19253de0550c003822b981068822ad2
+
+[^1_69]: https://www.arxiv.org/abs/2601.12286
+
+[^1_70]: https://arxiv.org/pdf/2204.13814.pdf
+
+[^1_71]: https://arxiv.org/pdf/2109.04565.pdf
+
+[^1_72]: https://openaccess.thecvf.com/content/WACV2024/papers/Hyun_ReConPatch_Contrastive_Patch_Representation_Learning_for_Industrial_Anomaly_Detection_WACV_2024_paper.pdf
+
+[^1_73]: https://arxiv.org/pdf/2411.17869.pdf
+
+[^1_74]: https://arxiv.org/html/2410.19722v1
+
+[^1_75]: https://openaccess.thecvf.com/content/WACV2022/papers/Tsai_Multi-Scale_Patch-Based_Representation_Learning_for_Image_Anomaly_Detection_and_Segmentation_WACV_2022_paper.pdf
+
+[^1_76]: https://arxiv.org/pdf/2104.07208.pdf
+
+[^1_77]: https://www.arxiv.org/pdf/2512.03114.pdf
+
+[^1_78]: https://arxiv.org/html/2405.18848v1
+
+[^1_79]: https://openaccess.thecvf.com/content/WACV2025/papers/Colussi_ReC-TTT_Contrastive_Feature_Reconstruction_for_Test-Time_Training_WACV_2025_paper.pdf
+
+[^1_80]: https://arxiv.org/abs/2112.09293
+
+[^1_81]: https://www.sciencedirect.com/science/article/abs/pii/S1568494621006724
+
+[^1_82]: https://www.gm.th-koeln.de/ciopwebpub/Thill20a.d/bioma2020-tcn.pdf
+
+[^1_83]: https://aclanthology.org/2024.insights-1.11.pdf
+
+[^1_84]: https://dspace.vut.cz/bitstreams/d808ed3b-5126-4d5a-8e92-12743e548322/download
+
+[^1_85]: https://www.nature.com/articles/s41467-025-56321-y
+
+[^1_86]: https://ieeexplore.ieee.org/document/9583228/
+
+[^1_87]: https://dspace.kci.go.kr/handle/kci/2164741
+
+[^1_88]: https://arxiv.org/abs/2307.11085
+
+[^1_89]: https://www.nature.com/articles/s41598-025-34849-9
+
+[^1_90]: https://www.semanticscholar.org/paper/ae475eaabc81ed1facffe721e620447d324df831
+
+[^1_91]: https://iopscience.iop.org/article/10.1088/2631-8695/ae37cf
+
+[^1_92]: http://pubs.rsna.org/doi/10.1148/ryai.2021190169
+
+[^1_93]: https://www.semanticscholar.org/paper/efeb365a503d36ee7613ab14339e2f8da40e9d5a
+
+[^1_94]: https://www.extrica.com/article/22226
+
+[^1_95]: https://www.mdpi.com/2079-9292/11/10/1529
+
+[^1_96]: https://joae.org/index.php/JOAE/article/view/187
+
+[^1_97]: https://ieeexplore.ieee.org/document/11232367/
+
+[^1_98]: https://ieeexplore.ieee.org/document/9864994/
+
+[^1_99]: http://arxiv.org/pdf/2302.06430.pdf
+
+[^1_100]: http://arxiv.org/pdf/2106.05410v2.pdf
+
+[^1_101]: http://arxiv.org/pdf/2308.05011.pdf
+
+[^1_102]: https://www.mdpi.com/2079-9292/11/10/1529/pdf?version=1652252664
+
+[^1_103]: https://arxiv.org/pdf/2211.09224.pdf
+
+[^1_104]: https://arxiv.org/html/2408.11359v1
+
+[^1_105]: https://arxiv.org/html/2404.13342v1
+
+[^1_106]: https://arxiv.org/pdf/2305.16114.pdf
