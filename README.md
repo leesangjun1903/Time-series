@@ -1,5 +1,7 @@
 
 # Awesome Series
+- Time Series Topic Papers : https://scispace.com/topics/time-series-2r9whi0j?paper_year=2020%2C2026&paper_page=2
+
 - Awesome Time Series Forecasting/Prediction Papers : https://github.com/ddz16/TSFpaper
 
 - awesome-TS-anomaly-detection : https://github.com/rob-med/awesome-TS-anomaly-detection
