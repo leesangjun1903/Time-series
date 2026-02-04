@@ -372,3 +372,100 @@ LTG는 4개 핵심 모듈로 구성:
 **종합 평가: 4.0/5.0 ⭐⭐⭐⭐**
 
 시계열 예측의 도메인 일반화 문제에 대한 **창의적이고 효과적인 솔루션**입니다. 잠재 시간 의존성이라는 개념적 프레임과 조건부 β-VAE라는 기술적 구현이 **우수하게 통합**되었습니다. 다만, 다변량 확장과 완전 이질 도메인 검증이 이루어진다면 영향력이 더욱 증대될 것입니다.
+
+<span style="display:none">[^1_1][^1_10][^1_11][^1_12][^1_13][^1_14][^1_15][^1_16][^1_17][^1_18][^1_19][^1_2][^1_20][^1_21][^1_22][^1_23][^1_24][^1_25][^1_26][^1_27][^1_28][^1_29][^1_3][^1_30][^1_31][^1_32][^1_33][^1_34][^1_35][^1_36][^1_37][^1_38][^1_39][^1_4][^1_40][^1_41][^1_42][^1_43][^1_44][^1_45][^1_46][^1_5][^1_6][^1_7][^1_8][^1_9]</span>
+
+<div align="center">⁂</div>
+
+[^1_1]: 2412.11171v1.pdf
+
+[^1_2]: https://pdfs.semanticscholar.org/ae0a/6a2b344e2e11b0d3ea50e05c51a755d4036e.pdf
+
+[^1_3]: https://arxiv.org/html/2306.15282v1
+
+[^1_4]: https://arxiv.org/html/2412.12168v1
+
+[^1_5]: https://arxiv.org/pdf/2203.09474.pdf
+
+[^1_6]: https://arxiv.org/pdf/2504.18819.pdf
+
+[^1_7]: https://arxiv.org/abs/2507.00013
+
+[^1_8]: https://arxiv.org/html/2510.08202v1
+
+[^1_9]: https://arxiv.org/abs/2504.18819
+
+[^1_10]: https://arxiv.org/abs/2505.22474
+
+[^1_11]: https://arxiv.org/html/2407.17877v1
+
+[^1_12]: https://ar5iv.labs.arxiv.org/html/1707.04588
+
+[^1_13]: https://arxiv.org/abs/2502.12213
+
+[^1_14]: https://arxiv.org/pdf/2304.11213.pdf
+
+[^1_15]: https://arxiv.org/abs/2412.11171
+
+[^1_16]: https://arxiv.org/html/2511.00747v1
+
+[^1_17]: https://www.semanticscholar.org/paper/bd4aa5da89b6ee9fdbf68ef1e2a449f4c13b0244
+
+[^1_18]: https://www.semanticscholar.org/paper/985f7740f9e73ec86c9030dd322c3a2cb17d2e8f
+
+[^1_19]: https://dl.acm.org/doi/10.1145/3340531.3412155
+
+[^1_20]: https://ieeexplore.ieee.org/document/11245507/
+
+[^1_21]: https://www.semanticscholar.org/paper/a19c1a4dbb964e8b169af3d86ee0173e3d0f275f
+
+[^1_22]: https://onlinelibrary.wiley.com/doi/10.1002/for.70116
+
+[^1_23]: https://www.mdpi.com/2073-4441/18/2/210
+
+[^1_24]: https://dl.acm.org/doi/10.1145/3443467.3443828
+
+[^1_25]: https://www.nature.com/articles/s41598-026-38475-x
+
+[^1_26]: https://www.semanticscholar.org/paper/389aa0114af5d2bfc287d0494e4c4b559a10423d
+
+[^1_27]: https://arxiv.org/html/2503.01157v1
+
+[^1_28]: https://dl.acm.org/doi/pdf/10.1145/3643035
+
+[^1_29]: http://arxiv.org/pdf/2412.11171.pdf
+
+[^1_30]: https://arxiv.org/html/2310.02473v2
+
+[^1_31]: https://arxiv.org/pdf/2310.10688.pdf
+
+[^1_32]: https://arxiv.org/pdf/2111.03422.pdf
+
+[^1_33]: https://arxiv.org/pdf/2310.09751.pdf
+
+[^1_34]: https://arxiv.org/pdf/2102.06828v2.pdf
+
+[^1_35]: https://colab.ws/articles/10.1109%2Faiot63253.2024.00031
+
+[^1_36]: https://github.com/Matt-Olek/Latent-Space-TS-Augmentation
+
+[^1_37]: https://deem.berlin/publication/domain-generalisation-for-timeseries-forecasting-tkde/
+
+[^1_38]: https://www.emergentmind.com/topics/trend-seasonal-decomposition
+
+[^1_39]: https://www.themoonlight.io/en/review/learning-latent-spaces-for-domain-generalization-in-time-series-forecasting
+
+[^1_40]: https://openreview.net/forum?id=pkdA4gC4p2
+
+[^1_41]: https://www.datacamp.com/tutorial/time-series-decomposition
+
+[^1_42]: https://www.arxiv.org/pdf/2412.11171.pdf
+
+[^1_43]: https://doc.arcgis.com/en/insights/2024.2/analyze/temporal-decomposition-forecasting.htm
+
+[^1_44]: https://dl.acm.org/doi/10.1145/3643035
+
+[^1_45]: https://github.com/tejaslodaya/timeseries-clustering-vae
+
+[^1_46]: https://laurentlsantos.github.io/forecasting/seasonal-and-trend-decomposition-with-loess-forecasting-model-stlf.html
+
