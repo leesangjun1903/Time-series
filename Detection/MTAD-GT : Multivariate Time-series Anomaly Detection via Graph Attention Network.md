@@ -1,13 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Multivariate Time-series Anomaly Detection via Graph Attention Network"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-3. 핵심 주장과 주요 기여(간단 요약)
+# Multivariate Time-series Anomaly Detection via Graph Attention Network
 
 - MTAD-GAT은 다변량 시계열 이상 탐지에서 “변수 간 상관관계”와 “시간적 의존성”을 그래프 어텐션으로 명시적으로 학습해, 기존 방법의 잦은 false alarm 문제를 줄이는 것을 핵심 주장으로 한다.[^1_1][^1_2]
 - 이를 위해 (1) feature‑oriented GAT, (2) time‑oriented GAT, (3) GRU, (4) 예측( forecasting ) + 재구성( reconstruction )을 합친 joint objective, (5) POT 기반 자동 임계값을 결합한 self‑supervised 프레임워크를 제안하고, NASA SMAP/MSL 및 자사 TSA 데이터셋에서 SOTA 대비 F1을 최대 9% 향상시킨다.[^1_2][^1_1]
@@ -92,9 +83,13 @@ $$
 #### (4) Feature‑oriented GAT
 
 - 노드: 각 **변수(채널)** $i \in \{1,\dots,k\}$.
-    - 노드 특징: 해당 변수의 길이 $n$ 시계열 $\mathbf{x}_i = [x_{0,i}, \dots, x_{n-1,i}] \in \mathbb{R}^n$.[^1_1]
+    - 노드 특징: 해당 변수의 길이 $n$ 시계열 $\mathbf{x}\_i = [x\_{0,i}, \dots, x_{n-1,i}] \in \mathbb{R}^n$.
+
+[^1_1]
 - 그래프: 완전 그래프 (모든 변수 쌍 연결).
-- 출력: 변수별 representation 행렬 $\mathbf{H}^{(f)} \in \mathbb{R}^{k \times n}$.[^1_1]
+- 출력: 변수별 representation 행렬 $\mathbf{H}^{(f)} \in \mathbb{R}^{k \times n}$.
+
+[^1_1]
 
 이 층은 CPU–Memory, 입력량–출력량, GC–처리량과 같은 “변수 간 인과/상관”을 학습해, 어떤 변수의 패턴이 normal일 때 다른 변수들이 어떻게 따라야 하는지를 포착한다.[^1_1]
 
@@ -158,7 +153,7 @@ $$
 - Decoder $p_\theta(\mathbf{x}|\mathbf{z})$: 잠재 공간에서 시계열을 재구성.
 - Evidence Lower Bound 기반 VAE loss:
 
-$$
+```math
 \mathcal{L}_{\text{rec}} = 
 - \mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x})}
 \left[
@@ -166,7 +161,7 @@ $$
 \right]
 +
 D_{\text{KL}}\big(q_\phi(\mathbf{z}|\mathbf{x}) \,\|\, p(\mathbf{z})\big)
-$$
+```
 
 [^1_2][^1_1]
 
@@ -188,13 +183,13 @@ $$
 
 논문이 제시한 최종 윈도우 수준 anomaly score:
 
-$$
+```math
 \text{score} = \sum_{i=1}^{k} s_i
 =
 \sum_{i=1}^{k}
 \frac{( \hat{x}_i - x_i )^2
 + \gamma\,(1 - p_i)}{1 + \gamma}
-$$
+```
 
 여기서 $\gamma$는 예측‑오차와 재구성‑확률의 비중을 조절하는 하이퍼파라미터로, 실험에서는 $\gamma=0.8$이 최적.[^1_1]
 
