@@ -1,13 +1,5 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Fast Unsupervised Online Drift Detection Using Incremental Kolmogorov-Smirnov Test"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-3. 핵심 주장과 주요 기여 (간결 요약)
+# Fast Unsupervised Online Drift Detection Using Incremental Kolmogorov-Smirnov Test
+## 1. 핵심 주장과 주요 기여 (간결 요약)
 
 - 스트림 데이터에서 반복적으로 Kolmogorov–Smirnov(KS) 검정을 수행하면 $O(N\log N)$ 비용 때문에 온라인 적용이 비효율적이라는 문제를 지적한다.[^1_1]
 - Treap(랜덤화 이진 탐색 트리)와 lazy propagation을 이용해 “Incremental KS(IKS)”를 제안하여, 샘플의 삽입·삭제는 $O(\log N)$, KS 통계량 계산은 $O(1)$에 수행하는 알고리즘을 제시한다.[^1_1]
