@@ -52,13 +52,13 @@ $$
 - 입력 공간 $\mathcal{U}$를 다차원 정규 격자 $J$개 bin으로 등분: $b_i^j, j=1,\dots, J$.[^1_1]
 - 각 bin과 클래스 $l$에 대해 조건부 확률 추정:
 
-$$
+```math
 \Pr\big(y_i = l \mid \{u_i : u_i^{(k)} \in b_i^j,\ \forall k\}\big)
 =
 \frac{\sum_{k=1}^{K} \mathbf{1}\{u_i^{(k)} \in b_i^j\ \wedge\ y_i^{(k)} = l\}}
      {\sum_{k=1}^{K} \mathbf{1}\{u_i^{(k)} \in b_i^j\}}
 \tag{3}
-$$
+```
 
 (분모가 0인 bin은 smoothing으로 대응; KL 발산 수치 안정성 위해 $\varepsilon>0$ 추가).[^1_1]
 
@@ -67,16 +67,15 @@ $$
 
 - 청크 $S_i$와 $S_t$에 대해, 같은 위치의 bin $b_i^j, b_t^j$의 **조건부 pmf** 차이를 KL로 측정:
 
-$$
+```math
 d_{i,t}^j 
 = KL\!\left(
     \Pr\big(y_i \mid \{u_i: u_i^{(k)} \in b_i^j\}\big)
     \parallel
     \Pr\big(y_t \mid \{u_t: u_t^{(k)} \in b_t^j\}\big)
   \right)
-\tag{4}
-$$
-    - 기본 KL 정의는
+```
+- 기본 KL 정의는
 
 $$
 KL(p \parallel q)=\sum_x p(x)\log\frac{p(x)}{q(x)}.[file:1]
