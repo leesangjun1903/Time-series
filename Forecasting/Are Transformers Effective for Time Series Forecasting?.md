@@ -1,86 +1,337 @@
 # Are Transformers Effective for Time Series Forecasting?
 
-**핵심 주장 및 주요 기여**  
-이 논문은 *Transformer* 아키텍처가 시계열 예측에 기존 RNN/CNN 기반 모델보다 우수하거나, 최소한 경쟁력 있는 성능을 보이는지를 실험적으로 검증하고자 한다. 주요 기여는 다음과 같다.  
-- 표준 *Transformer* 및 변형 모델들을 다양한 시계열 벤치마크(ETTh1, ETTm1, Electricity 등)에서 비교 분석했다.  
-- 기존 모델 대비 예측 정확도, 계산 효율성, 모델 일반화 성능을 종합적으로 평가했다.  
-- 입력 분해, 멀티스케일 어텐션 등 시계열 특화 모듈을 도입해 *Transformer*의 한계를 보완하는 새로운 구조(Informer, Autoformer 등)들을 제안 및 분석했다.
+## 핵심 주장과 주요 기여 (간단 요약)
+
+- 이 논문은 기존 LTSF(Long-Term Series Forecasting) 벤치마크에서 보고된 트랜스포머 계열 모델의 이점이 “트랜스포머 구조 자체”가 아니라, 주로 Direct Multi‑Step(DMS) 전략 덕분이며, 시간 관계를 잘 못 잡는다는 점을 실증적으로 비판한다.[^1_1][^1_2]
+- 시간 축에 대한 단일 선형 계층만 사용하는 **LTSF‑Linear** (Linear / DLinear / NLinear)를 제안하고, 9개 공개 LTSF 벤치마크에서 거의 모든 트랜스포머(Informer, Autoformer, FEDformer, Pyraformer, LogTrans)를 큰 차이로 능가함을 보이며, 트랜스포머의 시간모델링 능력이 과대평가되었음을 주장한다.[^1_2][^1_1]
 
 ***
 
-# 상세 설명
+## 2. 논문이 다루는 문제, 방법, 구조, 성능 및 한계 (상세)
 
-## 1. 해결하고자 하는 문제  
-전통적인 시계열 예측은 RNN(LSTM, GRU) 또는 CNN 기반 모델이 주류였으나,  
-- 긴 시퀀스를 처리할 때의 기울기 소실 문제  
-- 병렬 연산의 어려움  
-- 장기 의존성 모델링의 한계  
-를 가지고 있다.  
-이를 극복하기 위해, 자연어처리에서 성공을 거둔 *Transformer*가 시계열 예측에 적합한지, 또 어떠한 구조적 변형을 거치면 성능이 개선되는지 검증하는 것이 본 논문의 목표이다.
+### 2.1 문제 설정: LTSF에서 트랜스포머의 “진짜 기여”는 무엇인가?
 
-## 2. 제안하는 방법  
-### 2.1 표준 Transformer  
-입력 시계열 $$X \in \mathbb{R}^{L \times d}$$를 위치 임베딩 및 입력 임베딩을 거쳐  
+- 입력: $C$차원 다변량 시계열 $X = \{X_t\}_{t=1}^L$, $X_t \in \mathbb{R}^C$.[^1_1]
+- 목표: 향후 $T$ 스텝의 값 $\hat{X} = \{\hat{X}\_t\}_{t=L+1}^{L+T}$ 예측.[^1_1]
 
-$$
-\mathrm{Attention}(Q,K,V)=\mathrm{softmax}\Bigl(\frac{QK^\top}{\sqrt{d_k}}\Bigr)V
-$$  
+IMS(Iterated Multi‑Step) vs DMS(Direct Multi‑Step):
 
-로 처리하며, 인코더-디코더 구조를 사용한다.
+- IMS: 1‑step 예측기를 학습한 뒤, 이를 반복 적용해 $T$ 스텝을 예측 → 장기 예측 시 오차 누적 심각.[^1_1]
+- DMS: $T$ ‑step 벡터를 한 번에 출력하도록 직접 최적화 → 장기 예측에 상대적으로 유리.[^1_1]
 
-### 2.2 시간 분해(Time Decomposition)  
-시계열을 Trend와 Seasonal 컴포넌트로 분리하여 각각 별도의 어텐션 블록에 입력한다.  
+논문이 비판하는 지점:
 
-$$
-X = X_{\text{trend}} + X_{\text{seasonal}}
-$$  
+1. 기존 트랜스포머 LTSF 논문들은 비‑트랜스포머 baseline으로 주로 IMS 방식을 써서, 트랜스포머+DMS와 불공정 비교를 한다.[^1_1]
+2. 트랜스포머의 self‑attention은 본질적으로 순열 불변(permutation‑invariant)이어서, positional encoding을 써도 시간 순서 정보가 부분적으로만 보존되며, 장기 temporal relation 추출 능력이 제한적일 수 있다.[^1_1]
 
-Trend 블록에는 평균 풀링, Seasonal 블록에는 차분 수행 후 어텐션을 적용한다.
-
-### 2.3 멀티스케일 어텐션(Multi-Scale Attention)  
-다양한 시점 간 상관관계를 포착하기 위해 서로 다른 해상도의 키/값 쌍을 구성하여 어텐션을 수행한다.  
-
-$$
-\mathrm{MSA}(Q, \{K_i, V_i\}) = \sum_i \mathrm{softmax}\Bigl(\frac{QK_i^\top}{\sqrt{d_k}}\Bigr)V_i
-$$  
-
-이를 통해 단기·장기 패턴을 동시에 모델링한다.
-
-## 3. 모델 구조  
-논문에서 비교분석된 주요 모델은 다음과 같다.  
-- **Vanilla Transformer**: 기본 인코더-디코더 구조.  
-- **Informer**: ProbSparse 어텐션으로 계산량 감소.  
-- **Autoformer**: Series decomposition 모듈 내장.  
-- **Reformer, LogTrans**: 해시 기반 또는 로그-스케일 어텐션 변형.  
-
-각 모델은 동일한 예측 창(window size)과 피처 임베딩 차원을 사용해 공정 비교되었다.
-
-## 4. 성능 향상 및 한계  
-- **예측 정확도**: Autoformer가 평균 MAE에서 Vanilla Transformer 대비 10~15% 개선을 보였고, Informer도 대규모 시퀀스에서 효율성을 유지하며 상응하는 정확도를 달성했다.  
-- **계산 효율성**: ProbSparse 어텐션(Informer)과 로그-스케일 어텐션(LogTrans)은 복잡도를 $$O(L^2)$$에서 $$O(L\log L)$$ 또는 $$O(L \sqrt{L})$$로 감소시켰다.  
-- **한계**:  
-  - 계절성과 트렌드가 뚜렷하지 않은 시계열에서는 분해 모듈의 효과가 미미하다.  
-  - 매우 긴 시퀀스($$L>1000$$)에서는 여전히 메모리 병목 현상이 발생한다.  
-  - 모델 일반화 성능이 데이터셋별 편차가 크며, 하이퍼파라미터 민감도가 높다.
+따라서 “트랜스포머가 정말 시간 구조를 잘 배워서 이기는가, 아니면 단지 DMS 전략 덕분인가?”라는 질문을 제기한다.[^1_1]
 
 ***
 
-# 일반화 성능 향상 관점  
-모델의 **일반화 성능**을 높이기 위해 논문에서는 다음 전략을 제안·분석한다.  
-1. **데이터 증강**: 윈도잉(windowing) 기법에 다양한 패치 크기 적용.  
-2. **정규화 기법**: 스케일렛 정규화(scalelet normalization)를 통해 계열 간 분포 차이를 완화.  
-3. **랜덤 어텐션 마스킹**: 훈련 시 일부 어텐션 헤드를 임의 마스킹해 과적합 억제.  
-4. **선형 디코더**: 비선형 디코더 대신 선형 변환만 사용해 학습 안정화 및 일반화 유도.  
+### 2.2 제안 방법: LTSF‑Linear (수식 포함)
 
-이 결과, 모델이 훈련된 도메인을 넘어선 데이터에서도 성능 저하폭이 5% 이내로 유지되는 것을 확인했다.
+#### 2.2.1 기본 Linear (채널 독립, 시간축 선형 회귀)
+
+각 변수 $i\in\{1,\dots,C\}$ 에 대해, 길이 $L$의 과거 시계열 $X_i \in \mathbb{R}^L$ 로 길이 $T$의 미래 $\hat{X}_i \in \mathbb{R}^T$ 를 다음 한 층 선형 계층으로 예측한다:[^1_1]
+
+$$
+\hat{X}_i = W X_i, \quad W \in \mathbb{R}^{T \times L}.
+$$
+
+- $W$는 모든 채널에 공유되고, 채널 간 상관관계는 전혀 모델링하지 않는다(완전 channel‑independent).[^1_1]
+- 이 구조 자체가 곧 DMS forecaster이며, 시계열의 “시간축 선형 회귀”로 볼 수 있다.[^1_1]
+
+
+#### 2.2.2 DLinear: 선형 추세 + 계절성 분해 후 선형
+
+Autoformer/FEDformer 등의 decomposition 아이디어를 선형 계층과 결합한다.[^1_1]
+
+1. 이동평균 커널 $k$ (예: 길이 $K$)로 입력 $X_i$ 를 추세 $T_i$와 잔차(계절/불규칙) $S_i$로 분해:
+
+```math
+T_i = \mathrm{MA}(X_i), \quad S_i = X_i - T_i.
+```
+
+2. 각 성분에 독립 선형 계층 적용:
+
+```math
+\hat{T}_i = W_T T_i,\quad \hat{S}_i = W_S S_i, \quad W_T, W_S \in \mathbb{R}^{T \times L}.
+```
+
+3. 최종 예측:
+
+$$
+\hat{X}_i = \hat{T}_i + \hat{S}_i.
+$$
+
+- 추세와 계절성을 분리해 추세가 뚜렷한 데이터(예: 전력, 교통)에서 선형 모델의 표현력을 약간 늘리는 효과.[^1_1]
+
+
+#### 2.2.3 NLinear: 분포 shift 완화를 위한 간단 정규화
+
+train/test 간 평균 수준이 달라지는 distribution shift를 완화하기 위해 “마지막 시점 값” 기준으로 시계열을 쉬프트한다.[^1_1]
+
+1. 마지막 값 $x_{i,L}$를 기준으로 입력 변환:
+
+$$
+\tilde{X}_i = X_i - x_{i,L} \mathbf{1}.
+$$
+
+2. 선형 계층 적용:
+
+$$
+\hat{Y}_i = W \tilde{X}_i.
+$$
+
+3. 최종 출력에서 shift 복구:
+
+$$
+\hat{X}_i = \hat{Y}_i + x_{i,L} \mathbf{1}.
+$$
+
+- 학습 시 입력을 원점 근처로 옮겨 분포 차이를 줄이고, 특히 ETT/ILI처럼 train‑test 분포가 많이 다른 데이터에서 오차를 크게 줄인다.[^1_1]
 
 ***
 
-# 향후 영향 및 고려 사항  
-이 논문은 시계열 예측 분야에서 *Transformer* 기반 접근의 가능성과 한계를 명확히 제시하여, 다음과 같은 연구 방향에 영향을 미칠 것이다.  
-- **경량화 및 효율화**: 더욱 효율적인 어텐션 변형 연구가 필요하다.  
-- **도메인 적응(Domain Adaptation)**: 훈련 데이터와 분포가 다른 타 도메인에의 전이 학습 기법 개발.  
-- **다변량·이상치 다루기**: 이상치에 강인한 로버스트 어텐션 및 다변량 상관관계 모델링 심화.  
-- **하이퍼파라미터 자동 최적화**: 일반화 성능 민감도를 낮추기 위한 자동 조정 프레임워크 연구.  
+### 2.3 모델 구조의 관점에서 본 특징
 
-이와 같은 방향성을 고려하면, Transformer 기반 시계열 예측 모델의 실제 의료·금융·공정 제어 등 다양한 현장 적용 가능성이 더욱 확대될 것이다.
+#### 2.3.1 구조 단순성
+
+- 입력 전처리: (선택적으로) normalization, DLinear에서 moving average 기반 seasonal‑trend decomposition, NLinear에서 마지막 값 기준 shift.[^1_1]
+- 본체: 시간축에 대한 단일 또는 두 개(추세/잔차 분기)의 fully‑connected layer.
+- 파라미터 수: Linear/NLinear는 $T \times L$, DLinear는 $2TL$ 정도에 불과 (트랜스포머 수천만 파라미터 대비 극도로 작음).[^1_3][^1_1]
+
+
+#### 2.3.2 Temporal relation 관점
+
+- 최대 signal path 길이가 $O(1)$ (입력에서 출력까지 한 번의 선형 변환)이라서, 이론적으로 아주 장기의 상관도 구조상 표현 가능.[^1_3][^1_1]
+- 반대로 self‑attention 기반 트랜스포머는 깊이와 토큰 수에 비례하는 경로 길이를 갖고, 순열 불변 특성 때문에 위치 정보는 별도의 embedding에 의존.[^1_1]
+
+***
+
+### 2.4 성능 분석: 벤치마크, 실험, 발견
+
+#### 2.4.1 벤치마크와 설정
+
+- 9개 공개 LTSF 데이터셋: ETTh1/2, ETTm1/2, Traffic, Electricity, Exchange‑Rate, Weather, ILI.[^1_1]
+- Horizon: 대부분 $T \in \{96,192,336,720\}$, ILI는 $\{24,36,48,60\}$.[^1_1]
+- 비교 대상: FEDformer, Autoformer, Informer, Pyraformer, LogTrans, plus naive Repeat(DMS).[^1_2][^1_1]
+- 평가지표: MSE, MAE.[^1_1]
+
+
+#### 2.4.2 주요 정량 결과
+
+- LTSF‑Linear 계열(Linear/NLinear/DLinear)은 9개 데이터셋 * 4개 horizon의 대부분에서 모든 트랜스포머보다 낮은 MSE/MAE를 달성하며, SOTA FEDformer 대비 20–50% 수준의 에러 감소를 보인다.[^1_2][^1_1]
+- 특히 Exchange‑Rate, ILI 등에서 트랜스포머는 추세를 잘못 예측하거나 noise에 과적합해 naive Repeat보다도 나쁜 결과를 보이지만, LTSF‑Linear는 안정적으로 추세/레벨을 맞춘다.[^1_1]
+- 입력 window $L$을 늘릴수록(예: 24→720) 트랜스포머는 성능이 정체 또는 악화되지만, LTSF‑Linear는 대부분 데이터셋에서 MSE가 꾸준히 감소 → 긴 과거를 더 잘 활용.[^1_4][^1_1]
+
+
+#### 2.4.3 Temporal order / positional embedding 분석
+
+- 입력 시퀀스를 완전히 랜덤 셔플(Shuf)하거나 앞/뒤 절반을 교환(Half‑Ex)하면, LTSF‑Linear의 성능은 크게 악화되지만, 여러 트랜스포머의 MSE는 거의 변하지 않거나 손실이 미미하다.[^1_1]
+    - 이는 트랜스포머가 실제 시간 순서 정보에 크게 의존하지 않고, 통계적/주파수 패턴이나 평균/분산 정도만 사용하고 있음을 시사.
+- FEDformer/Autoformer는 시계열 유도 편향(주파수 도메인, decomposition)을 포함하고 있어서, 특히 ETTh 계열에서 셔플에 좀 더 민감해지는 반면, Informer는 거의 영향을 받지 않는다.[^1_1]
+
+
+#### 2.4.4 효율성과 실용성
+
+- MACs, 메모리, 추론 시간 비교에서 DLinear는 파라미터 수와 연산량이 트랜스포머 대비 여러 자릿수 작고, 추론 시간도 수십 배 빠르다.[^1_3][^1_1]
+- vanilla 트랜스포머의 $O(L^2)$ 복잡도도, 실질적인 LTSF 벤치마크 스케일(예: L=96, T=720)에서는 GPU 메모리/속도 관점에서 “치명적”이지 않으며, 오히려 복잡한 구조 추가로 실측 효율이 더 나빠지는 경우도 보인다.[^1_1]
+
+
+#### 2.4.5 한계 및 저자 스스로 언급하는 부족한 점
+
+- LTSF‑Linear는 “해결책”이 아니라 “도전적 baseline”으로 제시된다:
+    - 비선형 dynamics, regime change, change‑point가 많은 시계열에는 단층 선형 모델이 충분하지 않음.[^1_1]
+    - 채널 간 상관을 전혀 모델링하지 않으므로, 강한 multivariate dependency가 있는 경우 잠재적으로 underfitting.[^1_1]
+- 또한, 현재 LTSF 벤치마크 자체가 상대적으로 추세/주기성이 뚜렷한, “선형 모형에 유리한” 데이터 위주라는 점도 암시한다.[^1_5][^1_1]
+
+***
+
+## 3. 모델 일반화 성능(Generalization) 관점에서의 시사점
+
+### 3.1 단순 선형 모델이 보여준 일반화 특성
+
+1. **작은 모델, 더 나은 OOD 동작**
+    - LTSF‑Linear는 파라미터 수가 매우 작아 과적합 여지가 적고, 긴 look‑back window에서도 성능이 향상되거나 안정적이다.[^1_3][^1_1]
+    - 반면, 복잡한 트랜스포머는 window가 길어지면 노이즈에 과적합하여 오히려 성능이 악화 → 이는 일반화 측면에서 트랜스포머가 “모델 용량에 비해 데이터/벤치마크가 너무 단순”함을 시사.[^1_4][^1_1]
+2. **분포 shift에 대한 robustness**
+    - ETT, ILI 등에서 train/test 분포 차이가 존재하며, NLinear의 단순한 마지막 값 기준 shift 정규화만으로도 큰 성능 향상이 나타난다.[^1_1]
+    - 이는 복잡한 아키텍처 변경보다도, 잘 설계된 입력 정규화/전처리가 일반화 개선에 매우 중요함을 보여준다.
+3. **시간 순서에 대한 민감도**
+    - Linear는 입력 순서를 섞으면 성능이 크게 악화 → 모델이 실제 temporal order에 의존하고 있다는 증거.[^1_1]
+    - 반대로, 일부 트랜스포머는 순서를 섞어도 거의 성능 변화가 없음 → 시간 구조와 무관한 “표면 통계”에 과적합하여, 진짜 장기 temporal generalization이 아니라는 해석이 가능하다.[^1_6][^1_1]
+
+### 3.2 트랜스포머 일반화 성능을 개선하기 위한 시사점
+
+논문 자체는 “트랜스포머를 버리자”가 아니라, 아래 방향의 연구 필요성을 강조한다:[^1_7][^1_1]
+
+1. **강한 시계열 inductive bias 도입**
+    - FEDformer, Autoformer처럼 주파수(FFT/Wavelet), seasonal‑trend decomposition을 결합하면, 셔플 실험에서 시간 구조에 더 민감해지고 성능도 개선.[^1_2][^1_1]
+    - 일반화 향상을 위해서는 self‑attention 자체보다, 시간 도메인에 특화된 구조/손실/전처리가 핵심.
+2. **벤치마크 재설계**
+    - 현재 LTSF 벤치마크는 선형 모델이 너무 잘 되는 데이터에 편향되어 있어, 복잡한 모델의 generalization 특성을 평가하기 어렵다.[^1_5][^1_1]
+    - 더 난이도 높은, 비선형 동역학·변화점·regime switch를 포함한 데이터셋이 필요.
+3. **단순 baseline을 항상 포함**
+    - LTSF‑Linear, DLinear, NLinear 같은 선형 baseline을 포함시키지 않으면, 새로운 트랜스포머 구조가 실제로 generalization을 개선했는지 판단할 수 없다.[^1_8][^1_5][^1_1]
+
+***
+
+## 4. 2020년 이후 관련 최신 연구 동향 및 비교
+
+여기서는 모두 오픈 액세스 논문만 인용한다 (주로 arXiv/PeerJ 등).
+
+### 4.1 Linear 계열 후속 연구
+
+- Zeng et al.(본 논문) 이후, DLinear/NLinear는 사실상 LTSF의 표준 baseline이 되었고, 여러 후속 리뷰/벤치마크에서 “트랜스포머보다 종종 더 낫다”는 결과가 다수 보고되었다.[^1_6][^1_8][^1_4][^1_5]
+- 이후 연구들은 LTSF‑Linear 구조를 확장한 고도화된 선형 모델(예: Enhanced Linear Model, auxiliary linear heads 등)을 제안하여, 여전히 트랜스포머와 동급 또는 상회하는 성능을 보고한다.[^1_9][^1_10][^1_11]
+
+
+### 4.2 Patch 기반·채널 독립 트랜스포머
+
+- PatchTST (“A Time Series is Worth 64 Words”, 2023): 시계열을 짧은 패치 단위 토큰으로 쪼개고, 각 채널을 독립적으로 처리하는 채널‑independent patching을 통해 LTSF‑Linear 및 기존 트랜스포머를 상당 부분 능가.[^1_12][^1_13][^1_5]
+    - Zeng et al.의 비판(채널 독립, 단순 구조, 긴 window 활용)을 수용하여, “트랜스포머를 선형 모델처럼 쓰되, 유연성을 추가”하는 방향.
+- iTransformer (2024): 시간 축이 아니라 채널 축을 토큰으로 보는 inverted Transformer를 제안, 긴 look‑back에서 트랜스포머가 약하다는 비판을 수용해 구조를 뒤집어 장기 의존성을 더 안정적으로 학습.[^1_14]
+
+이들 모델은 LTSF‑Linear보다 더 복잡하지만, carefully designed inductive bias와 patching으로, 일부 벤치마크에서는 선형 모델을 다시 앞지르는 결과를 보이며 “선형 vs 트랜스포머” 논쟁을 보다 정교하게 만든다.[^1_8][^1_5]
+
+### 4.3 대규모 사전학습·메타‑트랜스포머 계열
+
+- Timer / Timer‑XL (2024): 대규모 시계열 코퍼스에 대해 autoregressive next‑token pretraining을 수행한 “시계열 GPT” 스타일 모델을 제안.[^1_15][^1_16][^1_17]
+    - 매우 긴 context(일/월/년 단위)를 사용할 때 linear forecaster보다 더 나은 성능을 보이며, “충분히 큰 데이터·모델·훈련 전략이 주어지면 트랜스포머가 linear를 이길 수 있다”는 반례를 제공.[^1_18][^1_16]
+- Meta‑Transformer Networks(MANTRA, 2024): fast/slow learner 구조로, 시계열 분포가 변화하는 동적 환경에서 meta‑learning을 통해 적응성을 높이는 LTSF 트랜스포머를 제안, generalization과 domain shift에 초점을 둔다.[^1_19]
+
+이 계열은 LTSF‑Linear가 제기한 “기존 벤치마크/스케일에서 트랜스포머가 의미 있게 이기지 못한다”는 결과를 **“스케일과 학습 방식”을 바꿔 해결하려는 시도**로 볼 수 있다.
+
+### 4.4 이론·서베이 관점의 후속 논의
+
+- 여러 서베이 및 이론 논문은 Zeng et al.(2022)을 대표 예로 들며,
+    - 트랜스포머가 입력 window 증가에 따른 성능 개선이 없다거나,
+    - 단순 선형 모델이 MSE 기준으로 종종 우수하다는 사실을 요약한다.[^1_4][^1_6][^1_5][^1_8]
+- 2025년 이론 연구 “Why Do Transformers Fail to Forecast Time Series In‑Depth?”는 특정 설정에서 long‑sequence attention(LSA) 트랜스포머가 기대 MSE 측면에서 고전적 선형 예측기를 근본적으로 넘어설 수 없음을 보이며, Zeng et al.의 경험적 관찰을 이론적으로 뒷받침한다.[^1_20][^1_21]
+- 반대로, PeerJ/Elsevier 등의 응용 연구(예: 기상 예측)에서는 Informer, PatchTST, iTransformer 등이 RNN/T CN 대비 장기 예측에서 더 낮은 오류와 안정성을 갖는다는 결과도 다수 보고되어, **“도메인·세팅에 따라 선형 vs 트랜스포머의 우열이 달라진다”**는 보다 균형 잡힌 그림이 형성되고 있다.[^1_22][^1_23][^1_24]
+
+***
+
+## 5. 앞으로의 연구 영향과 연구 시 고려할 점
+
+### 5.1 이 논문이 준 영향
+
+1. **강력한 선형 baseline의 정착**
+    - 이후 LTSF 연구에서 DLinear/NLinear를 포함하지 않으면 리뷰 단계에서 강한 비판을 받을 정도로, “선형 baseline 필수 시대”를 열었다.[^1_11][^1_5][^1_8]
+2. **트랜스포머 구조 연구의 방향 전환**
+    - 단순히 self‑attention의 복잡도를 줄이거나 변형하는 것보다,
+        - 채널 독립/patching,
+        - decomposition, frequency domain,
+        - meta‑learning, 대규모 pretraining
+등 **inductive bias와 학습 전략**에 초점이 옮겨졌다.[^1_16][^1_12][^1_14][^1_19][^1_15]
+3. **벤치마크·평가 문화의 변화**
+    - LTSF‑Linear는 “기존 벤치마크에서의 SOTA”가 얼마나 모델 구조에 민감한지 보여주며,
+    - 데이터 전처리, horizon 설정, IMS vs DMS 차이를 엄밀히 통제해야 한다는 경각심을 줌.[^1_5][^1_8][^1_1]
+
+### 5.2 앞으로 연구할 때 고려해야 할 구체 포인트
+
+연구자가 향후 모델을 설계·평가할 때 고려해야 할 사항을 정리하면 다음과 같다.
+
+1. **반드시 강한 선형 baseline 포함**
+    - DLinear/NLinear 및 그 변형을 baseline으로 포함하고, 동일한 DMS 설정, 동일한 데이터 전처리, 동일한 horizon에서 비교해야 한다.[^1_8][^1_5][^1_1]
+2. **Temporal order sensitivity를 명시적으로 측정**
+    - 입력 시퀀스를 셔플/부분 교환하는 실험을 통해, 모델이 실제 시간 순서에 얼마나 의존하는지 평가하는 것이 바람직하다.[^1_6][^1_1]
+3. **look‑back window 확장에 대한 성능 곡선 보고**
+    - 단일 $L$에서의 점 성능뿐 아니라, $L$을 넓혀가며 MSE가 어떻게 변하는지 곡선을 제시해야 장기 의존성 학습·일반화 능력을 정량 평가할 수 있다.[^1_4][^1_1]
+4. **도메인 맞춤 inductive bias와 normalization**
+    - 시계열의 추세/주기성/단위/분포 shift 특성에 맞는 decomposition, frequency block, 간단하지만 효과적인 정규화(NLinear 스타일)를 설계하는 것이, 복잡한 attention 변형보다 일반화에 더 중요할 수 있다.[^1_25][^1_6][^1_1]
+5. **벤치마크 다변화 및 real‑world 세팅 반영**
+    - 선형 모델이 쉽게 이기는 데이터뿐 아니라,
+        - 비선형 dynamics,
+        - 외생 변수,
+        - concept drift, distribution shift,
+        - missingness, irregular sampling
+등을 포함한 현실적인 벤치마크를 설계해야 한다.[^1_6][^1_5][^1_1]
+6. **스케일과 학습 전략을 함께 논의**
+    - Timer/TIMER‑XL류의 연구가 보여주듯, 충분한 데이터·모델·pretraining이 주어지면 트랜스포머가 선형 모델을 다시 앞지를 수 있다.[^1_17][^1_15][^1_16]
+    - 따라서 “작은 벤치마크에서의 linear vs transformer” 결과를 대규모 pretraining 환경으로 일반화할 때는 조심할 필요가 있다.
+
+***
+
+위 내용을 종합하면, 이 논문은 “트랜스포머가 시계열에서 항상 더 낫다”는 통념을 강하게 흔들며,
+
+- (1) 선형 모델을 포함한 공정한 baseline 설계,
+- (2) temporal order / look‑back sensitivity 분석,
+- (3) 시계열 특화 inductive bias와 단순 정규화의 중요성,
+- (4) 더 현실적인 벤치마크와 대규모 pretraining 환경에 대한 재고
+를 향후 연구의 핵심 고려사항으로 제시했다고 볼 수 있다.[^1_5][^1_8][^1_4][^1_6][^1_1]
+<span style="display:none">[^1_26][^1_27][^1_28][^1_29][^1_30][^1_31][^1_32][^1_33][^1_34][^1_35]</span>
+
+<div align="center">⁂</div>
+
+[^1_1]: 2205.13504v3.pdf
+
+[^1_2]: https://arxiv.org/pdf/2205.13504.pdf
+
+[^1_3]: https://github.com/cure-lab/LTSF-Linear
+
+[^1_4]: https://arxiv.org/html/2411.05793v1
+
+[^1_5]: https://arxiv.org/html/2502.14045v1
+
+[^1_6]: https://arxiv.org/html/2505.08199v2
+
+[^1_7]: https://arxiv.org/abs/2205.13504
+
+[^1_8]: https://openreview.net/pdf/e923fc8f27c8030abb10d2f2f259a43faab78923.pdf
+
+[^1_9]: https://www.arxiv.org/pdf/2510.03788.pdf
+
+[^1_10]: https://arxiv.org/pdf/2510.08661.pdf
+
+[^1_11]: https://arxiv.org/html/2510.23396v1
+
+[^1_12]: http://arxiv.org/pdf/2211.14730v2.pdf
+
+[^1_13]: https://www.semanticscholar.org/paper/Are-Transformers-Effective-for-Time-Series-Zeng-Chen/5f404dbba07619cc7f28d75d03f124a52290046e
+
+[^1_14]: http://arxiv.org/pdf/2310.06625.pdf
+
+[^1_15]: https://arxiv.org/html/2402.02368v1
+
+[^1_16]: https://arxiv.org/pdf/2410.04803.pdf
+
+[^1_17]: https://arxiv.org/html/2402.02368v3
+
+[^1_18]: https://arxiv.org/html/2410.04803v4
+
+[^1_19]: https://arxiv.org/pdf/2401.13968.pdf
+
+[^1_20]: https://arxiv.org/html/2510.09776v1
+
+[^1_21]: https://arxiv.org/pdf/2510.09776.pdf
+
+[^1_22]: https://pmc.ncbi.nlm.nih.gov/articles/PMC12453695/
+
+[^1_23]: https://www.sciencedirect.com/science/article/pii/S2665963824001040
+
+[^1_24]: https://peerj.com/articles/cs-3001/
+
+[^1_25]: https://arxiv.org/pdf/2202.01381.pdf
+
+[^1_26]: http://arxiv.org/pdf/2408.09723.pdf
+
+[^1_27]: https://arxiv.org/pdf/2310.20218.pdf
+
+[^1_28]: https://arxiv.org/pdf/2502.13721.pdf
+
+[^1_29]: https://arxiv.org/pdf/2106.13008.pdf
+
+[^1_30]: https://arxiv.org/html/2410.04803v2
+
+[^1_31]: https://arxiv.org/html/2310.09488v2
+
+[^1_32]: https://secundo.tistory.com/107
+
+[^1_33]: https://sonstory.tistory.com/119
+
+[^1_34]: https://www.ijcai.org/proceedings/2023/0759.pdf
+
+[^1_35]: https://github.com/mesabo/ltsf-linear
+
