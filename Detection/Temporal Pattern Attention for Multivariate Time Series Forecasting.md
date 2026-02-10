@@ -175,7 +175,8 @@ $$
 $$
 y_{t-1+\Delta} = W_{h'} h'_t + \text{(선형 AR 성분)}
 $$
-    - LSTNet과 유사하게, 전통적 AR(autoregression)을 추가해 neural net 스케일 민감도 문제를 완화합니다.[^1_1]
+
+- LSTNet과 유사하게, 전통적 AR(autoregression)을 추가해 neural net 스케일 민감도 문제를 완화합니다.[^1_1]
 5. **손실 함수 및 학습**
     - 연속값 MTS: 절대 오차 기반 손실(RAE, RSE 등) + Adam 최적화.[^1_1]
     - 다성 음악: 이진(0/1) note on/off를 위해 cross-entropy(negative log-likelihood) 사용.[^1_1]
