@@ -57,7 +57,6 @@ $$
 =
 \frac{\sum_{k=1}^{K} \mathbf{1}\{u_i^{(k)} \in b_i^j\ \wedge\ y_i^{(k)} = l\}}
      {\sum_{k=1}^{K} \mathbf{1}\{u_i^{(k)} \in b_i^j\}}
-\tag{3}
 ```
 
 (분모가 0인 bin은 smoothing으로 대응; KL 발산 수치 안정성 위해 $\varepsilon>0$ 추가).[^1_1]
@@ -79,7 +78,6 @@ d_{i,t}^j
 
 $$
 KL(p \parallel q)=\sum_x p(x)\log\frac{p(x)}{q(x)}.[file:1]
-\tag{1}
 $$
 
 
@@ -89,7 +87,6 @@ $$
 
 $$
 D(S_i, S_t) = \frac{1}{J}\sum_{j=1}^{J} d_{i,t}^j.
-\tag{5}
 $$
 - 제안하는 **가중 평균**: bin별 샘플링 확률 $\gamma_i^j$를 가중치로 사용.
 
@@ -99,7 +96,6 @@ $$
 
 $$
 D(S_i, S_t) = \frac{1}{J}\sum_{j=1}^{J} \gamma_i^j\, d_{i,t}^j.
-\tag{6}
 $$
 - KLD 알고리즘은 인접 청크만 사용하므로 $D(S_k, S_{k+1})$ 시퀀스를 생성:
 
@@ -121,7 +117,6 @@ $$
 
 $$
 l_i \notin [\bar{l} - \alpha\sigma(l),\ \bar{l} + \alpha\sigma(l)]
-\tag{7}
 $$
 
 이면 시간 $i$를 “critical point(컨셉 드리프트 발생)”로 간주하고, 집합 $C$에 추가.[^1_1]
