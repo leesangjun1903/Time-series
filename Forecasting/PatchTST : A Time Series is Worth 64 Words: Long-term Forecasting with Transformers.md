@@ -1,0 +1,529 @@
+# A Time Series is Worth 64 Words: Long-term Forecasting with Transformers
+
+- 이 논문은 “시계열도 이미지처럼 패치 단위로 tokenize 하면 Transformer가 LTSF(long-term time series forecasting)에서 여전히 강력하다”는 것을 보이며, 단순 선형모형(DLinear)이 Transformer를 압도한다는 주장(Zeng et al., 2022)을 반박합니다.[^1_1][^1_2]
+- 핵심 아이디어는 (1) 시계열을 부분 구간 단위 패치로 잘라 토큰으로 쓰는 **patching**, (2) 각 변수(채널)를 독립적인 단변량 시계열로 보고 동일한 Transformer를 공유하지만 채널 간 혼합은 하지 않는 **channel-independence**입니다.[^1_3][^1_1]
+- PatchTST는 8개 멀티변량 벤치마크에서 기존 Transformer(LTsF 계열)와 DLinear 모두를 안정적으로 상회하며, masked patch 복원을 이용한 self-supervised pre-training·transfer에서 SOTA 수준의 성능을 보여 “시계열 foundation model”의 후보가 될 수 있음을 주장합니다.[^1_2][^1_4][^1_1]
+
+***
+
+## 2. 문제 설정, 방법(수식), 모델 구조, 성능·한계 (상세)
+
+### 2.1 해결하고자 하는 문제
+
+1) **Transformer의 LTSF 효과성 논란**
+
+- Informer, Autoformer, FEDformer 등 다양한 구조가 제안되었지만, 최근 DLinear 등 단순 선형 모델이 여러 LTSF 벤치마크에서 이들보다 우수하다는 결과가 보고되었습니다.[^1_1]
+- 저자들은 “Transformer가 정말 LTSF에 부적합한가, 아니면 토큰 설계·채널 처리 방식이 잘못되었는가?”라는 질문에 답하려 합니다.[^1_1]
+
+2) **시계열의 토크나이제이션 문제**
+
+- 기존 시간축 토큰은 “하나의 타임스텝(스칼라 혹은 M차원 벡터)”을 하나의 토큰으로 취급합니다.[^1_1]
+- 텍스트의 단어처럼 명확한 의미 단위가 아니기 때문에, (i) 국소 패턴 정보가 충분히 표현되지 않고, (ii) 긴 시계열에 대해 $O(N^2)$ self-attention 비용이 너무 커서 긴 히스토리를 보지 못하는 문제가 있습니다.[^1_1]
+
+3) **채널 독립 vs 채널 혼합**
+
+- 대부분의 Transformer LTSF 모델은 “채널 혼합(channel-mixing)” 방식으로, 각 타임스텝에서 모든 변수 벡터 $\mathbf{x}_t\in\mathbb{R}^M$를 한 토큰으로 투입합니다.[^1_1]
+- 하지만 CNN·선형모델 쪽 연구는 “채널 독립(channel-independent)”이 더 잘 동작한다는 결과들이 있으며, Transformer에서 이 전략이 제대로 검토되지 않았습니다.[^1_1]
+
+***
+
+### 2.2 제안 방법: PatchTST 수식 중심 설명
+
+#### 2.2.1 문제 정의
+
+멀티변량 시계열 $\{x_t\}_{t=1}^L$, 각 시점에서 $x_t \in \mathbb{R}^{M}$ (M 채널)라 하자.[^1_1]
+목표는 미래 $T$ 스텝 예측입니다.
+
+$$
+\{x_t\}_{t=1}^L \;\longrightarrow\; \{\hat{x}_t\}_{t=L+1}^{L+T}
+$$
+
+각 채널 $i$에 대해 단변량 시계열을
+
+$$
+x^{(i)}_{1:L} = \left(x^{(i)}_1,\dots,x^{(i)}_L\right),\quad i=1,\dots,M
+$$
+
+로 두고, 각 채널별로 독립적으로 $\hat{x}^{(i)}_{L+1:L+T}$를 예측합니다.[^1_1]
+
+***
+
+#### 2.2.2 Patching: 시계열 구간을 패치 토큰으로 변환
+
+각 채널 $i$에 대해, 길이 $L$의 시계열을 길이 $P$의 패치와 stride $S$로 슬라이딩하여 $N$개의 패치를 만듭니다.[^1_1]
+
+$$
+x^{(i)}_{p} \in \mathbb{R}^{P \times N},\quad
+N = \left\lfloor \frac{L - P}{S} \right\rfloor + 2
+$$
+
+마지막 부분은 값 복제 padding으로 채워집니다.[^1_1]
+
+**복잡도 감소:** 원래 토큰 수가 $N=L$인 경우 복잡도는 $O(L^2)$인데, 패치를 쓰면
+
+$$
+N \approx \frac{L}{S} \;\Rightarrow\; O(N^2) \approx O\left(\frac{L^2}{S^2}\right)
+$$
+
+즉 stride $S$만큼 토큰 수를 줄여, 같은 GPU 자원으로 훨씬 더 긴 look-back window를 쓸 수 있습니다.[^1_1]
+
+***
+
+#### 2.2.3 임베딩 및 Transformer 인코더
+
+각 채널 $i$의 패치 행렬 $x_p^{(i)} \in \mathbb{R}^{P \times N}$에 대해, 선형 패치 임베딩과 위치 임베딩을 적용합니다.[^1_1]
+
+- 패치 프로젝션
+
+$$
+W_p \in \mathbb{R}^{D \times P},\quad
+x_d^{(i)} = W_p x_p^{(i)} + W_{\text{pos}}
+$$
+
+여기서 $W_{\text{pos}}\in\mathbb{R}^{D\times N}$는 learnable positional encoding,
+$x_d^{(i)}\in\mathbb{R}^{D\times N}$이 Transformer encoder로 들어가는 입력입니다.[^1_1]
+
+- Multi-head self-attention (head $h$)
+
+$$
+Q_h^{(i)} = \left(x_d^{(i)}\right)^{\top} W_h^Q,\quad
+K_h^{(i)} = \left(x_d^{(i)}\right)^{\top} W_h^K,\quad
+V_h^{(i)} = \left(x_d^{(i)}\right)^{\top} W_h^V
+$$
+
+$$
+\text{Attention}\left(Q_h^{(i)},K_h^{(i)},V_h^{(i)}\right)
+= \text{Softmax}\left(\frac{Q_h^{(i)} {K_h^{(i)}}^{\top}}{\sqrt{d_k}}\right)V_h^{(i)}
+$$
+
+이 결과를 다시 합쳐 multi-head attention과 FFN(두 개의 선형층 + GELU)을 통과해 최종 패치 표현
+
+$$
+z^{(i)} \in \mathbb{R}^{D\times N}
+$$
+
+을 얻습니다.[^1_1]
+
+- 출력 헤드: $z^{(i)}$를 flatten 해서 linear head로 미래 $T$ 스텝을 예측합니다.[^1_1]
+
+$$
+\hat{x}^{(i)}_{L+1:L+T} = f_{\theta}\left(x^{(i)}_{1:L}\right)\in\mathbb{R}^{1\times T}
+$$
+
+***
+
+#### 2.2.4 Loss 및 Instance Normalization
+
+각 채널별 예측에 대해 MSE를 계산하고, M개의 채널에 대해 평균합니다.[^1_1]
+
+$$
+\mathcal{L} = 
+\mathbb{E}_{x}\left[
+  \frac{1}{M}\sum_{i=1}^M 
+  \left\|
+    \hat{x}^{(i)}_{L+1:L+T}
+    - x^{(i)}_{L+1:L+T}
+  \right\|_2^2
+\right]
+$$
+
+**Instance Normalization(IN)**: 각 시계열 인스턴스 $x^{(i)}$를 평균 0, 분산 1로 정규화한 뒤, 예측 단계에서 원래 스케일(평균·표준편차)을 되돌립니다. 분포 시프트(학습/테스트 시기 차이)에 대한 견고성을 높이는 역할입니다.[^1_1]
+
+***
+
+#### 2.2.5 Self-supervised masked patch pre-training
+
+- 입력 길이 $L=512$, patch size $P=12$, non-overlap이 되도록 stride $S=12$로 42개 패치 생성.[^1_1]
+- 전체 패치 중 40%를 랜덤하게 선택하여 값 0으로 마스킹하고, 마스킹된 패치를 복원하도록 MSE 기반 reconstruction loss를 학습합니다.[^1_1]
+
+예를 들어 패치 인덱스 집합 $\mathcal{M}$를 마스크한다고 하면:
+
+$$
+\tilde{x}_p^{(i)}(:,j) = 
+\begin{cases}
+0 & \text{if } j\in\mathcal{M} \\
+x_p^{(i)}(:,j) & \text{otherwise}
+\end{cases}
+$$
+
+Transformer encoder + D×P 선형 복원 헤드로 $\hat{x}_p^{(i)}$를 만들고, 마스크된 위치에 대해
+
+$$
+\mathcal{L}_{\text{MAE}} = 
+\mathbb{E}_x
+\left[
+\frac{1}{M|\mathcal{M}|}
+\sum_{i=1}^M
+\sum_{j\in\mathcal{M}}
+\left\|
+\hat{x}_p^{(i)}(:,j) - x_p^{(i)}(:,j)
+\right\|_2^2
+\right]
+$$
+
+를 최소화합니다.[^1_1]
+
+이 pre-trained encoder를 forecasting에 쓸 때는
+(a) head만 학습하는 linear probing,
+(b) head를 먼저 학습 후 전체를 fine-tuning,
+두 전략을 비교합니다.[^1_1]
+
+***
+
+### 2.3 모델 구조 요약
+
+- **입력 분해**: 멀티변량 $x_{1:L}\in\mathbb{R}^{L\times M}$ → 각 채널별 $x^{(i)}_{1:L}\in\mathbb{R}^{L}$ .[^1_1]
+- **IN + patching** (각 채널별, 공유 하이퍼파라미터 $P,S$)[^1_1]
+- **패치 임베딩 및 포지셔널 임베딩**: $P\times N \to D\times N$.[^1_1]
+- **공유 Transformer encoder**: 모든 채널이 동일 encoder weight를 쓰지만, forward는 채널별로 독립 수행(channel-independence).[^1_1]
+- **Flatten + Linear head**: 채널별 $\hat{x}^{(i)}\_{L+1:L+T}$ 예측 후 다시 모아서 멀티변량 예측 $\hat{x}_{L+1:L+T}\in\mathbb{R}^{T\times M}$.[^1_1]
+
+구현 관점에서는 batch 차원과 채널 차원을 합쳐 $(B\cdot M)$ 배치로 Transformer에 넣어 효율적으로 계산합니다.[^1_1]
+
+***
+
+### 2.4 성능 향상 (정량) 및 한계
+
+#### 2.4.1 LTSF 성능
+
+- 8개 벤치마크(Weather, Traffic, Electricity, ILI, ETTh1/2, ETTm1/2)에서 예측 horizon $T\in\{96,192,336,720\}(ILI는 \{24,36,48,60\})$.[^1_1]
+- PatchTST/42와 /64는 FEDformer, Autoformer, Informer, Pyraformer, LogTrans, DLinear 모두를 평균적으로 상회합니다.[^1_2][^1_1]
+    - Transformer 기반 SOTA 대비: MSE 평균 20% 이상 감소, MAE 약 16% 감소.[^1_2][^1_1]
+    - DLinear 대비: 특히 대형 데이터셋(Weather, Traffic, Electricity)과 ILI에서 명확한 우위.[^1_1]
+
+예: Traffic, horizon 96, $L=336$에서 MSE 비교 (멀티변량, PatchTST/42 기준).[^1_1]
+
+- PatchTST/42: $0.367$
+- DLinear: $0.410$
+- FEDformer: $0.576$
+
+***
+
+#### 2.4.2 긴 look-back window 활용 능력
+
+- 기존 Transformer 기반 LTSF 모델들은 look-back window $L$을 늘려도 오히려 성능이 나빠지는 경우가 많았는데,[^1_1]
+- PatchTST는 $L$을 늘릴수록 거의 모든 데이터셋·horizon에서 MSE가 꾸준히 감소합니다.[^1_2][^1_1]
+    - 예: Weather, $T=96$, $L=24\to 720$에서 MSE가 $\approx 0.222 \to 0.147$까지 감소.[^1_1]
+
+이는 patching으로 토큰 수를 제어하면서도 더 긴 temporal context를 보게 해준 결과입니다.[^1_4][^1_1]
+
+***
+
+#### 2.4.3 Self-supervised·Transfer 성능
+
+- Self-supervised PatchTST (masked patch 복원 후 fine-tuning)는
+    - 같은 아키텍처를 scratch에서 supervised로 학습한 것보다 항상 좋거나 비슷한 성능.[^1_1]
+    - Weather/Traffic/Electricity 대규모 데이터셋에서 특히 이득이 큼.[^1_1]
+- Representation learning 비교 (BTSF, TS2Vec, TNC, TS-TCC 등)에서, ETTh1 forecasting(선형 probing만) 기준 MSE를 34.5–48.8%까지 개선.[^1_1]
+- Electricity에서 pre-train 후 Weather/Traffic 등으로 transfer한 경우, 완전한 동질 데이터 pre-train보다는 약간 떨어지지만, 여전히 다른 supervised baselines보다 상당히 좋은 성능.[^1_1]
+
+이는 “한 데이터셋에서 self-supervised로 pre-train한 PatchTST representation이 다른 도메인의 시계열 forecasting에도 잘 전이된다”는 것을 의미합니다.[^1_1]
+
+***
+
+#### 2.4.4 한계 및 저자 스스로 지적한 포인트
+
+1) **채널 간 상호작용을 직접 모델링하지 않음**
+
+- Channel-independence 설계 덕분에 과적합·데이터 요구량 측면에서는 이득이 있지만, 변수 간 구조적 상관관계(예: 공간적 그래프 구조)를 명시적으로 쓰지 않습니다.[^1_1]
+- 저자들도 “향후 cross-channel dependency를 적절히 모델링하는 확장이 중요하다”고 명시합니다.[^1_1]
+
+2) **시계열의 계층적/다중 해상도 구조 반영은 제한적**
+
+- Patch 길이 $P$와 stride $S$는 고정이며, 한 해상도의 패치 토큰만을 사용합니다.[^1_1]
+- 이후 연구(MTST 등)는 multi-resolution branch를 두거나 다양한 patch size를 병렬로 쓰는 방식으로 이 한계를 보완합니다.[^1_5][^1_6]
+
+3) **Foundation model 수준의 완전한 범용성에는 아직 이르렀음**
+
+- 여러 벤치마크에서 SOTA지만, 시계열 foundation model(예: TimesFM, Chronos, TimeGPT 등)처럼 초대규모 프리트레이닝·다양한 태스크 통합까지는 나아가지 못합니다.[^1_7][^1_8][^1_9]
+- 그럼에도 “patch + channel-independence”가 이후 TS foundation models의 기본 설계 요소로 채택되는 계기가 되었음은 여러 최신 서베이·벤치마크가 지적합니다.[^1_8][^1_10][^1_7]
+
+***
+
+## 3. 일반화 성능 향상 가능성과 관련된 논의
+
+논문 자체와 후속 연구를 종합하면, PatchTST의 설계는 여러 축에서 **일반화(generalization)**를 개선할 여지가 큽니다.
+
+### 3.1 Channel-independence의 일반화 효과
+
+- **적응성(adaptability)**: 각 채널이 같은 encoder를 공유하지만 attention map은 채널별로 별도로 학습됩니다. 이 덕분에 서로 다른 통계적 특성을 가진 변수들이 서로 다른 주의 패턴을 학습할 수 있습니다.[^1_1]
+- **데이터 효율성**: 채널 혼합 모델은 시간·채널을 동시에 모델링해야 해서 많은 데이터가 필요하지만, channel-independent 모델은 시간축 modeling에 집중해 적은 데이터에서도 안정적인 성능을 보입니다.[^1_1]
+- **과적합 감소**: 동일한 패치-Transformer를 수백·수천 개의 채널에 sharing하므로, effective parameter-to-sample ratio가 감소해 overfitting이 줄어듭니다.[^1_1]
+
+이러한 특성 때문에 PatchTST는 작은 데이터셋(ILI, ETT 계열)에서도 안정적으로 성능이 유지되고, 대형 데이터셋에서는 더 크게 이득을 봅니다.[^1_1]
+
+***
+
+### 3.2 Patching의 일반화·견고성 측면 이점
+
+1) **국소 패턴 수준의 의미 단위 학습**
+
+- 한 타임스텝 대신 길이 $P$의 구간을 토큰으로 쓰기 때문에, local trend·seasonality·shape 정보를 하나의 벡터로 압축해 표현합니다.[^1_1]
+- 이는 시계열의 micro-pattern이 다른 시점·다른 시리즈로 반복될 때 재사용 가능한 representation을 학습하게 해, 도메인 변화나 horizon 변화에 대한 일반화를 개선합니다.[^1_4][^1_1]
+
+2) **redundant 시점 축 압축을 통한 노이즈 완화**
+
+- 시계열은 인접 시점 간 상관이 크고, downsampling을 해도 정보 손실이 크지 않은 경우가 많습니다.[^1_1]
+- PatchTST는 downsampling 대신 **집약(aggregation)**을 통해 정보를 모으므로, 고주파 노이즈가 평균화되고 더 안정적인 통계량을 attention이 보게 됩니다. 이는 distribution shift 상황에서도 예측의 분산을 줄이는 역할을 합니다.[^1_4][^1_1]
+
+3) **긴 문맥에서의 일반화**
+
+- look-back window가 늘어날수록 단순 모델은 과적합하거나 gradient 소실 문제를 겪는데, PatchTST는 패치 수를 제한하면서도 창 길이를 늘려 더 global한 패턴을 포착할 수 있습니다.[^1_1]
+- 이 때 self-supervised pre-training으로 전체 데이터셋에서 global 패턴을 사전에 학습해 두면, 새로운 도메인·새로운 forecasting horizon에 fine-tuning할 때도 좋은 초기화를 제공하여 일반화를 강화합니다.[^1_1]
+
+***
+
+### 3.3 Self-supervised masked patch reconstruction과 전이 일반화
+
+- Masked patch pre-training은 “부분 구간이 제거된 시계열을 global context를 이용해 복원”하는 작업으로, 단순 interpolation으로는 해결하기 어려운 추상적 패턴을 학습하도록 유도합니다.[^1_1]
+- 실험적으로,
+    - 동일 데이터셋에서 pre-train 후 fine-tune: scratch 대비 지속적인 MSE·MAE 감소.[^1_1]
+    - 다른 데이터셋으로 transfer: 완전한 도메인 일치보다 약간 떨어지지만, DLinear 및 다른 Transformer 기반 모델들보다 우수한 예측 성능을 유지.[^1_1]
+
+이는 PatchTST representation이 “dataset-agnostic한 local patch 패턴”을 잘 포착한다는 의미로, **도메인 일반화**와 **few-shot 적응** 측면에서 강점을 시사합니다.[^1_4][^1_1]
+
+또한 최근 시계열 foundation model 서베이·벤치마크는 PatchTST류의 patch 기반 encoder가 TSFM의 핵심 빌딩블록이 되고 있음을 보고합니다.[^1_9][^1_7][^1_8]
+
+***
+
+### 3.4 한계 관점에서 본 일반화 이슈
+
+- 채널 독립 덕분에 overfitting·데이터 요구량에 유리하지만, 강한 cross-channel 구조(예: 전력그리드, 교통 네트워크)에서 구조 정보를 활용하지 못해 **표현력 한계 → underfitting**이 발생할 수 있습니다.[^1_1]
+- patch 길이·stride, normalization 방식(IN) 등 하이퍼파라미터에 따라 분포 시프트에 대한 견고성이 달라질 수 있으며, 논문은 비교적 제한된 설정(고정 patch size, 고정 stride)만 탐색합니다.[^1_1]
+- pre-training·transfer는 주로 몇 개의 benchmark 간에서만 검증되었고, 대규모 이질 도메인(금융, 산업 IoT, 의료 등) 전반에서의 일반화는 후속 연구 과제입니다.[^1_7][^1_8][^1_1]
+
+***
+
+## 4. 2020년 이후 관련 최신 연구와의 비교·분석
+
+여기서는 2020년 이후 LTSF·patch 기반·channel-independent·foundation TSFM 계열 연구 중, 주요한 흐름을 중심으로 PatchTST와 비교합니다.
+
+### 4.1 Patch 기반 Transformer 계열
+
+1) **PatchTST (Nie et al., ICLR 2023)**
+
+- 단일 해상도 패치, channel-independent, vanilla encoder-only 구조.[^1_2][^1_1]
+- 장점: 구현 단순, 다양한 데이터셋에서 일관된 SOTA, self-supervised·transfer 모두 양호.[^1_1]
+- 단점: 단일 해상도, 채널 상관 직접 모델링 없음.
+
+2) **PITS / “learning to embed time series patches independently” (Lee et al., 2023)**
+
+- PatchTST의 아이디어를 확장해, encoder에서 patch 간 correlation을 제거하고 MLP 기반 patch 독립 임베딩을 학습하는 방식.[^1_11]
+- Masked modeling을 “마스크된 패치 예측”이 아니라 “비마스크 패치를 재구성” 방식으로 바꾸어, 과도한 패턴 추정을 방지하고 일반화·효율성을 개선.[^1_11]
+- 결과적으로 supervised·SSL 양쪽에서 PatchTST와 경쟁적이면서 계산 효율성을 크게 높입니다.[^1_11]
+
+3) **MTST: Multi-resolution Time-Series Transformer (Zhang et al., 2023/24)**
+
+- 다양한 patch size(짧은 patch: 고주파·local pattern, 긴 patch: 장기 seasonality)를 병렬 branch로 학습하는 multi-resolution 구조.[^1_6][^1_5]
+- PatchTST를 포함한 기존 patch 기반 모델은 하나의 patch 해상도만 사용한다는 한계를 지적하고, multi-branch 구조로 이를 보완해 여러 벤치마크에서 추가적인 성능 향상을 보고합니다.[^1_5][^1_6]
+
+4) **다른 patch 기반·multi-scale LTSF 모델들**
+
+- 예: Multi-Scale Transformer Utilizing Diverse Receptive Fields, MR-Transformer, MTPNet 등은 multi-scale temporal 구조를 이용해 PatchTST류보다 추가 성능 향상을 보고합니다.[^1_12][^1_13]
+
+요약하면, PatchTST는 “patch+channel-independence”의 기본 형태를 제시했고, 이후 연구들은 **multi-resolution**, **더 강한 구조적 bias**, **encoder 효율화(MLP 기반 등)**로 이 프레임워크를 확장·개선하는 방향입니다.[^1_6][^1_5][^1_11]
+
+***
+
+### 4.2 시계열 foundation models와의 관계
+
+2023–2025년 사이에 등장한 TS foundation models(TSFMs)은 대부분 어떤 형태로든 **patch 기반 토크나이제이션**과 self-supervised 학습을 채택합니다.[^1_8][^1_9][^1_7]
+
+- TimesFM, Chronos, TimeGPT, Lag-Llama, MOMENT, UniTS 등은 수십억 시계열을 pre-train하고 다양한 태스크에 zero-shot·few-shot 예측을 수행하는 모델로,[^1_14][^1_9][^1_7][^1_8]
+    - patch-based tokenization,
+    - masked time-series modeling (MTM),
+    - channel-independent 또는 channel-aware 설계,
+    - multi-task·multi-domain pre-training
+등의 아이디어를 사용합니다.
+
+여기서 PatchTST는
+
+- 상대적으로 “작은 규모의 encoder-only patch Transformer + masked patch pre-training”이라는 **프로토타입**으로,
+- TSFM들이 채택한 많은 핵심 설계(패치 토큰, channel independence, masked patch reconstruction)의 초기 근거 역할을 합니다.[^1_3][^1_7][^1_4]
+
+최근 벤치마크는 PatchTST가 foundation models(TimesFM, Chronos 등) 다음으로 강력한 baseline이며, 특히 데이터가 충분하고 전용 fine-tuning이 가능한 환경에서 여전히 매우 경쟁력 있음을 보고합니다.[^1_12][^1_7]
+
+***
+
+### 4.3 “Transformers vs Linear” 논의 갱신
+
+- Zeng et al. (2022)은 LTSF에서 대부분의 Transformer 변형보다 DLinear가 낫다고 주장했지만,
+- 이후 PatchTST·PITS·MTST·DropPatch 등 patch 기반·channel-independent 계열 모델들은 DLinear보다 우수한 성능을 꾸준히 보고하며 이 주장을 상당 부분 뒤집습니다.[^1_15][^1_16][^1_11][^1_1]
+- Tang et al. (2024)의 Patch-based MLP(LTSF용)는 “Transformer도, 선형모델도 아닌, patch 기반 MLP만으로도 강력한 성능을 낼 수 있다”고 주장하며, patch tokenization 자체가 핵심 inductive bias임을 다시 강조합니다.[^1_16][^1_6]
+
+요약하면, 2020년 이후 논의는
+
+- “어떤 아키텍처가 좋은가”보다,
+- “시계열을 어떻게 tokenize(패치), normalize, channel-wise로 처리하고, 어떤 self-supervised objective로 pre-train할 것인가”로 축이 이동했습니다. PatchTST는 이 전환의 대표적인 촉매 역할을 합니다.[^1_10][^1_8][^1_1]
+
+***
+
+## 5. 앞으로의 연구에 미치는 영향과 고려할 점
+
+### 5.1 영향
+
+1) **Patch-based tokenization의 표준화**
+
+- Vision에서 ViT가 16×16 patch를 토큰 표준으로 만들었듯, PatchTST는 “time series는 길이 $P$의 subseries patch가 기본 토큰”이라는 패러다임을 정착시켰습니다.[^1_6][^1_4][^1_1]
+
+2) **Channel-independent 설계의 부활**
+
+- 기존 multivariate modeling은 “채널 혼합”이 당연시되었지만, PatchTST는 “먼저 각 채널을 잘 모델링하고, 필요하면 이후 단계에서 상호작용을 붙인다”는 전략이 더 일반화가 잘 될 수 있음을 보였습니다.[^1_17][^1_8][^1_1]
+
+3) **시계열용 self-supervised pre-training의 실질적 유효성 입증**
+
+- PatchTST는 비교적 단순한 masked reconstruction만으로도 supervised scratch를 지속적으로 능가하고, 타 데이터셋으로의 transfer에서도 이득이 있음을 보였습니다.[^1_1]
+- 이후 TSFM 연구에서 MTM, masked forecasting, contrastive learning 등이 적극 채택되는 데 근거를 제공했습니다.[^1_9][^1_7][^1_8]
+
+***
+
+### 5.2 앞으로 연구 시 고려할 점 (연구 아이디어 관점)
+
+1) **Cross-channel dependency를 어떻게 통합할 것인가**
+
+- Channel-independent encoder 후단에
+    - 그래프 신경망(GNN) 기반 채널 상호작용 레이어,
+    - attention 기반 채널 mixer (TTM, MR-Transformer류),[^1_8][^1_12]
+    - task-specific head에서의 저차원 채널 상호작용
+등을 결합해, **데이터 효율성과 cross-channel modeling을 동시에 달성**하는 구조를 설계하는 것이 유망합니다.[^1_17][^1_1]
+
+2) **Multi-resolution·multi-scale 설계와의 결합**
+
+- MTST, MR-Transformer류처럼 다양한 patch 길이 branch를 두고, channel-independent 패치 encoder를 각 scale에 적용한 뒤 이를 통합하는 구조는 장기 seasonality·단기 패턴을 동시에 포착하는 데 강력할 수 있습니다.[^1_5][^1_12][^1_6]
+
+3) **TS foundation models에서의 위치**
+
+- PatchTST-style encoder를
+    - 대규모 heterogeneous 코퍼스에 MTM/MSM 방식으로 pre-train한 후,
+    - forecasting, anomaly detection, classification 등 multi-task head로 fine-tune하는 TSFM 설계가 자연스러운 확장입니다.[^1_7][^1_9][^1_8]
+- 이 때 normalization 전략(IN, RevIN 등), patch size/stride의 동적 선택, multi-task objective 설계가 generalization 및 calibration에 큰 영향을 줄 것이므로, 체계적 분석이 필요합니다.[^1_8][^1_1]
+
+4) **패치 수준 regularization과 overfitting 제어**
+
+- DropPatch, entropy-guided patch encoder(EntroPE) 등은 PatchTST류 모델이 특정 패치 패턴에 과도하게 적응해 전이 성능이 떨어지는 문제를 지적하며, patch-level dropout·entropy regularization 등으로 일반화를 개선합니다.[^1_15][^1_17]
+- 향후 연구에서는
+    - patch masking 전략(비율·연속 vs 랜덤),
+    - patch-level augmentation,
+    - temporal mixup/cutmix
+등과 결합해 더 강력한 regularization을 설계할 수 있습니다.
+
+5) **이론적 분석 및 스케일링 법칙**
+
+- 최근 “Neural Scaling Laws for TSFM” 계열 연구는 encoder-only vs decoder-only, patch size, 채널 수 등에 따른 스케일링 거동을 분석하려 합니다.[^1_18][^1_19]
+- PatchTST 구조를 이상화한 setting에서
+    - patch 수/길이, channel 수, 데이터 크기, 파라미터 수에 따른 generalization bound,
+    - channel-independent vs channel-mixing의 표현력·sample complexity 비교
+등을 수리적으로 분석하면, 실무 설계 지침에 큰 도움을 줄 수 있습니다.
+
+***
+
+### 5.3 연구자 관점에서의 실천적 조언
+
+- 새로운 LTSF 모델을 설계할 때,
+
+1) **patch-based tokenization**(단일 또는 multi-resolution),
+2) **channel-independent 또는 hybrid channel 처리**,
+3) **IN/RevIN 같은 normalization**,
+4) **masked patch pre-training**
+을 기본 레시피로 삼고, 그 위에 task/domain-specific inductive bias(그래프, 캘린더, 물리 제약 등)를 올리는 전략이 현재 가장 유망합니다.[^1_10][^1_7][^1_8][^1_1]
+- 특히 “일반화 성능”을 중시한다면,
+    - scratch supervised만 보지 말고,
+    - self-supervised pre-training + fine-tuning,
+    - cross-dataset transfer,
+    - distribution shift(계절·정책 변화 등) 시나리오까지 포함한 평가가 필수입니다. PatchTST의 실험 프로토콜은 이러한 평가를 설계할 때 좋은 출발점이 됩니다.[^1_7][^1_1]
+<span style="display:none">[^1_20][^1_21][^1_22][^1_23][^1_24][^1_25][^1_26][^1_27][^1_28][^1_29][^1_30][^1_31][^1_32][^1_33][^1_34][^1_35][^1_36][^1_37][^1_38][^1_39][^1_40][^1_41][^1_42][^1_43][^1_44][^1_45][^1_46]</span>
+
+<div align="center">⁂</div>
+
+[^1_1]: 2211.14730v2.pdf
+
+[^1_2]: https://github.com/yuqinie98/PatchTST
+
+[^1_3]: https://huggingface.co/docs/transformers/model_doc/patchtst
+
+[^1_4]: https://huggingface.co/blog/patchtst
+
+[^1_5]: https://arxiv.org/abs/2311.04147
+
+[^1_6]: https://proceedings.mlr.press/v238/zhang24l/zhang24l.pdf
+
+[^1_7]: https://arxiv.org/html/2410.09487v1
+
+[^1_8]: https://arxiv.org/html/2405.02358v3
+
+[^1_9]: https://arxiv.org/html/2504.04011v1
+
+[^1_10]: https://arxiv.org/abs/2202.07125
+
+[^1_11]: https://arxiv.org/pdf/2312.16427.pdf
+
+[^1_12]: https://bohrium.dp.tech/paper/arxiv/2311.04147
+
+[^1_13]: https://arxiv.org/abs/2408.02279
+
+[^1_14]: https://arxiv.org/html/2508.16641v1
+
+[^1_15]: https://arxiv.org/html/2412.15315v1
+
+[^1_16]: https://arxiv.org/abs/2405.13575
+
+[^1_17]: https://arxiv.org/html/2509.26157v1
+
+[^1_18]: https://arxiv.org/abs/2507.13043
+
+[^1_19]: https://arxiv.org/html/2410.12360v1
+
+[^1_20]: https://www.phdynasty.ru/en/catalog/magazines/infectious-diseases/2024/volume-22-issue-2/153185
+
+[^1_21]: http://medrxiv.org/lookup/doi/10.1101/2024.07.22.24310801
+
+[^1_22]: https://academic.oup.com/ofid/article/doi/10.1093/ofid/ofae695/7908514
+
+[^1_23]: https://esmed.org/MRA/mra/article/view/5389
+
+[^1_24]: https://ijesa.vsrp.co.uk/2024/12/08/واقع-التدريب-الميداني-لطلاب-الإعلام-ب/
+
+[^1_25]: https://www.mdpi.com/2072-6643/16/24/4399
+
+[^1_26]: https://ashpublications.org/blood/article/144/Supplement 1/469/531307/Five-Year-Analysis-of-the-POLARIX-Study-Prolonged
+
+[^1_27]: https://ascopubs.org/doi/10.1200/JCO.2024.42.16_suppl.7511
+
+[^1_28]: http://www.cdc.gov/mmwr/volumes/73/wr/mm7324a4.htm?s_cid=mm7324a4_w
+
+[^1_29]: https://ashpublications.org/blood/article/144/Supplement 1/864/530749/5-Year-Follow-up-Analysis-from-ZUMA-5-A-Phase-2
+
+[^1_30]: https://arxiv.org/pdf/2312.11013.pdf
+
+[^1_31]: https://arxiv.org/pdf/2207.06590.pdf
+
+[^1_32]: http://arxiv.org/pdf/2408.15372.pdf
+
+[^1_33]: https://pmc.ncbi.nlm.nih.gov/articles/PMC9796731/
+
+[^1_34]: https://arxiv.org/pdf/1706.09120.pdf
+
+[^1_35]: https://arxiv.org/abs/2207.11082
+
+[^1_36]: https://pmc.ncbi.nlm.nih.gov/articles/PMC10918504/
+
+[^1_37]: http://arxiv.org/pdf/2310.13076.pdf
+
+[^1_38]: https://arxiv.org/html/2505.12761v1
+
+[^1_39]: https://arxiv.org/html/2407.03185v2
+
+[^1_40]: https://arxiv.org/html/2510.23396v1
+
+[^1_41]: https://huggingface.co/docs/transformers/main/en/model_doc/patchtst
+
+[^1_42]: https://chatpaper.com/paper/127231
+
+[^1_43]: https://www.nature.com/articles/s41598-025-00741-9
+
+[^1_44]: https://huggingface.co/papers/2504.04011
+
+[^1_45]: https://github.com/PatchTST
+
+[^1_46]: https://dl.acm.org/doi/10.24963/ijcai.2023/759
+
