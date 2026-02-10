@@ -1,13 +1,5 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Time-Series Anomaly Detection Service at Microsoft”의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-3. 핵심 주장과 주요 기여 (간단 요약)
+# Time-Series Anomaly Detection Service at Microsoft
+## 핵심 주장과 주요 기여 (간단 요약)
 이 논문은 “레이블이 거의 없는 대규모 산업 환경에서, 여러 형태의 시계열에 잘 일반화되면서도 실시간 처리 가능한 이상 탐지 서비스”를 위해, 시각적 주목(saliency) 기법인 Spectral Residual(SR)을 시계열에 도입하고, 여기에 합성 이상치(synthetic anomalies)로 학습한 CNN을 결합한 **SR‑CNN**을 제안한다.[^1_1][^1_2]
 SR‑CNN은 수식 기반의 SR로 “눈에 띄는 부분(살리언시 맵)”을 뽑고, 이 위에서 간단한 1D‑CNN 분류기를 학습함으로써 완전 비지도(unsupervised) 설정에서 기존 통계·비지도 딥러닝 기법보다 F1‑score를 크게 향상시키고(공개 KPI·Yahoo·Microsoft 내부 데이터셋 기준), 동시에 연산량이 작아 수백만 개의 시계열을 실시간 모니터링하는 서비스에 적용 가능함을 보인다.[^1_2][^1_1]
 
