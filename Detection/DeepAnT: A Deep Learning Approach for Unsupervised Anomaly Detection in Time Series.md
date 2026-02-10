@@ -1,13 +1,5 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+# DeepAnT: A Deep Learning Approach for Unsupervised Anomaly Detection in Time Series
 
-# 1. 당신은 AI 분야의 연구자입니다. "DeepAnT: A Deep Learning Approach for Unsupervised Anomaly Detection in Time Series"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-3. 핵심 주장과 주요 기여 (간단 요약)
 DeepAnT는 “다음 시점 예측용 1D CNN”을 학습한 뒤, 예측값과 실제값의 오차를 이용해 완전 비지도(unsupervised)로 시계열 이상을 검출하는 방법을 제안한다. 이 방식으로 적은 양의 정상 데이터만으로도 점 이상(point), 문맥 이상(contextual), 디스코드(discord)를 효과적으로 검출하며, 10개 벤치마크·433개 시계열에서 기존 15개 방법보다 우수하거나 유사한 성능을 보였다고 주장한다.[^1_1][^1_2]
 
 주요 기여는 다음 네 가지이다.[^1_1]
