@@ -1,13 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Less Is More: Fast Multivariate Time Series Forecasting with Light Sampling-oriented MLP Structures"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-3. 핵심 주장과 주요 기여 (간단 요약)
+# Less Is More: Fast Multivariate Time Series Forecasting with Light Sampling-oriented MLP Structures
 
 - 복잡한 RNN·GNN·Transformer 대신, **순수 MLP + 다운샘플링**만으로도 멀티변량 시계열 예측에서 SOTA 또는 준-SOTA 성능과 높은 효율을 달성할 수 있다는 것을 보인다.[^1_1][^1_2]
 - 연속(continuous)·간격(interval) 샘플링과 IEBlock(Information Exchange Block)이라는 단순하지만 구조적으로 설계된 MLP 블록을 통해, 장·단기 패턴과 변수 간 상호의존성을 효과적으로 포착한다.[^1_1]
@@ -56,9 +47,10 @@ $$
 - 동일한 $X_t$에 대해, 고정 간격으로 $C$개를 샘플링하여 서브시퀀스를 만든다.[^1_1]
 - $j$-번째 열:
 
-$$
+```math
 X^{\text{int}}_{t,\cdot j} = \big\{ x_{t-T+j},\; x_{t-T+j+\lfloor \frac{T}{C} \rfloor},\; \dots,\; x_{t-T+j+(C-1)\lfloor \tfrac{T}{C} \rfloor} \big\} \tag{2}
-$$
+```
+
 - 역시 $X^{\text{int}}_t \in \mathbb{R}^{C \times \frac{T}{C}}$이며, 시퀀스 전체에 걸쳐 고르게 간격을 두고 샘플링한다.[^1_1]
 - 역할: 세밀한 로컬 정보를 희생하는 대신 장기적인 패턴(추세·계절성)을 포착.[^1_1]
 
@@ -90,7 +82,8 @@ $$
 $$
 z^c_{j\cdot} = \text{MLP}_c(z^t_{j\cdot}),\quad \text{MLP}_c: \mathbb{R}^W \to \mathbb{R}^W,\quad j=1,\dots,F' \tag{4}
 $$
-    - 변수(채널) 간 상호정보 교환을 수행.[^1_1]
+
+- 변수(채널) 간 상호정보 교환을 수행.[^1_1]
 3. **Output projection** (다시 열 단위 MLP):
 
 $$
