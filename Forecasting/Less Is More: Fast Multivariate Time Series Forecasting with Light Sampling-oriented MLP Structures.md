@@ -76,6 +76,7 @@ z^t_{\cdot i} = \text{MLP}_t(z_{\cdot i}),\quad \text{MLP}_t: \mathbb{R}^H \to \
 $$
 
 모든 열 $i = 1,\dots,W$에 동일한 가중치 사용.[^1_1]
+
 2. **Channel projection** (행 단위 MLP, 공유 가중치):
     - $z^t_{j\cdot} \in \mathbb{R}^W$에 대해
 
