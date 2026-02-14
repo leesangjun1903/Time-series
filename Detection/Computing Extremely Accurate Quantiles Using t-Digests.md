@@ -1,13 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Computing Extremely Accurate Quantiles Using t-Digests"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-3. 핵심 주장과 주요 기여 (간결 요약)
+# Computing Extremely Accurate Quantiles Using t-Digests
 
 - 이 논문은 스트리밍 환경에서 **극단 분위수(예: 99.9%, 99.99%)까지 상대오차 기준으로 매우 정확하게** 추정할 수 있는 소형 스케치 자료구조 t‑digest를 제안한다.[^1_1][^1_2]
 - t‑digest는 실수값 스트림을 1차원 클러스터(centroid)로 압축하되, 분포의 꼬리(tail) 근처일수록 클러스터를 더 작게 만들어 $q$ 근처에서의 오차를 $q(1-q)$에 비례해 억제한다.[^1_1]
@@ -26,7 +17,7 @@
 - 목표:
 
 1) $q \to 0,1$ 근처에서도 $\max(q,1-q)$에 비례하는 상대오차,
-2) 작은 스케치 크기(요약 메모리 $\Theta(\delta)$),
+2) 작은 스케치 크기(요약 메모리 $\Theta(\delta)$ ),
 3) 스트리밍/병렬 환경에서 merge 가능(mergeable)한 구조를 동시에 달성.[^1_1]
 
 
@@ -83,20 +74,22 @@ $$
 $$
 k_1(q) = \frac{\delta}{2\pi}\sin^{-1}(2q - 1)
 $$
+
 2. 로그 기반 함수들 ($k_2, k_3$; tail에 더 강한 제약)
 
 $$
 k_2(q) = \frac{\delta}{4 \log n/\delta + 24}\log\frac{q}{1-q}
 $$
 
-$$
+```math
 k_3(q) =
 \frac{\delta}{4 \log n/\delta + 21}
 \begin{cases}
 \log(2q), & q \le 1/2\\[3pt]
 -\log(2(1-q)), & q > 1/2
 \end{cases}
-$$
+```
+
 - 이 제약으로 인해 $q$가 0이나 1에 가까운 영역에서는 허용 가능한 $|C|$가 매우 작아지고, 중간 $q\approx 0.5$ 근처에서는 더 큰 $|C|$를 허용한다.[file:1]
 - 이때 $\delta$는 **compression 파라미터**로, 클러스터 개수 $m$은 대략
 
