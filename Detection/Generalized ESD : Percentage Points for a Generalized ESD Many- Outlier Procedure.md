@@ -1,4 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+# Percentage Points for a Generalized ESD Many- Outlier Procedure
 
 ### 1. 핵심 주장과 주요 기여 (간결 요약)
 
@@ -33,7 +33,7 @@ $$
 (“extreme Studentized deviates”)를 정의하고, 각 $R_i$에 대해 같은 백분위수 수준 $\beta$를 쓰도록 설계되어 있습니다. 구체적으로 첫 번째 통계량은[^1_1]
 
 $$
-R_1 \;=\; \frac{\max_i |x_i - \bar{x}|}{s},
+R_1 = \frac{\max_i |x_i - \bar{x}|}{s},
 $$
 
 $\bar{x}$는 표본평균, $s$는 표준편차입니다. 가장 극단값을 제거하고 남은 표본에서 같은 방식으로 $R_2, R_3, \dots$를 계산합니다.
@@ -45,7 +45,7 @@ $$
 $$
 
 $$
-\Pr\left(\bigcup_{i=1}^k \{R_i > \lambda_i(\beta)\} \;\middle|\; H_0\right) = \alpha.
+\Pr\left(\bigcup_{i=1}^k \{R_i > \lambda_i(\beta)\} \middle| H_0\right) = \alpha.
 $$
 
 그러나 이렇게 하면:
@@ -84,8 +84,7 @@ $$
 이때, 논문이 제안하는 **“generalized ESD many‑outlier 절차”**는, 각 $l=0,\dots,k-1$에 대해 임계값 $\lambda_1,\dots,\lambda_k$를 다음을 만족하도록 선택합니다.[^1_1]
 
 $$
-\Pr\left( \bigcup_{i=l+1}^k \{R_i > \lambda_i\} \;\middle|\; H_l\right) = \alpha,\quad l=0,1,\dots,k-1.
-\tag{1}
+\Pr\left( \bigcup_{i=l+1}^k \{R_i > \lambda_i\} \middle| H_l\right) = \alpha,\quad l=0,1,\dots,k-1.
 $$
 
 해석:
@@ -107,9 +106,8 @@ $$
 직접 $\Pr(\bigcup_{i=l+1}^k \{R_i > \lambda_i\}\mid H_l)$를 계산하는 것은 난해하므로, 논문은 다음 **근사 가설**을 둡니다.[^1_1]
 
 $$
-\Pr\left( \bigcap_{i=l+1}^k \{R_i \le \lambda_i\} \;\middle|\; H_l\right) 
+\Pr\left( \bigcap_{i=l+1}^k \{R_i \le \lambda_i\} \middle| H_l\right) 
 \approx \Pr\left(R_{l+1} \le \lambda_{l+1}\mid H_l\right).
-\tag{2}
 $$
 
 즉, 여러 단계의 결합확률이 **실질적으로 첫 번째 새로운 통계량 $R_{l+1}$**에 의해 지배된다고 보는 가정입니다.
@@ -125,7 +123,6 @@ $$
 
 $$
 y_i \sim \frac{t_{n-l-2}\,(n-l-1)}{\sqrt{(n-l-2 + t_{n-l-2}^2)\,(n-l)}}.
-\tag{3}
 $$
 
 여기서 $t_{d}$는 자유도 $d$인 Student $t$-분포입니다.
@@ -141,7 +138,6 @@ $$
 
 $$
 1 - \frac{\alpha}{n-l} = \Pr(y_i \le \lambda_{l+1})
-\tag{4}
 $$
 
 이 됩니다.
@@ -153,7 +149,6 @@ $$
 \frac{t_{n-l-2,\,p}\,(n-l-1)}
 {\sqrt{[\,n-l-2 + t_{n-l-2,\,p}^{2}\,]\,(n-l)}},
 \quad p = 1 - \frac{\alpha}{n-l},
-\tag{5}
 $$
 
 를 얻습니다.[^1_1]
@@ -165,7 +160,6 @@ $$
 \frac{t_{n-l-2,\,p}\,(n-l-1)}
 {\sqrt{[\,n-l-2 + t_{n-l-2,\,p}^{2}\,]\,(n-l)}},
 \quad p = 1 - \frac{\alpha/2}{n-l}.
-\tag{6}
 $$
 
 이 식 (6)이 **generalized ESD 임계값 $\lambda_{l+1}$의 폐형식 근사**이며,
@@ -186,7 +180,7 @@ $$
 
 4. $\bar{x}^{(i-1)}, s^{(i-1)}$ 계산
 5. $R_i = \max_{j\in I_{i-1}} |x_j - \bar{x}^{(i-1)}|/s^{(i-1)}$
-6. 그 최대를 달성하는 지수 $j^*$를 선택, $I_i = I_{i-1}\setminus\{j^*\}$
+6. 그 최대를 달성하는 지수 $j^\*$를 선택, $I_i = I_{i-1}\setminus\{j^*\}$
 7. 식 (6)을 이용해 $\lambda_i$ 계산($l+1=i$로 치환)
 1. **판정**
     - $l = \max\{i : R_i > \lambda_i\}$ (없으면 0)
@@ -217,8 +211,8 @@ $$
 
 결과:
 
-- $n \le 15$에서는 실제 $\hat{\alpha}$가 0.10~0.13 수준까지 올라가
-**이론적 $\alpha=0.05$의 약 2~2.5배** 수준으로 오버슈트합니다.
+- $n \le 15$에서는 실제 $\hat{\alpha}$가 0.10 ~ 0.13 수준까지 올라가
+**이론적 $\alpha=0.05$의 약 2 ~ 2.5배** 수준으로 오버슈트합니다.
 - $n \ge 25$에서는 $\hat{\alpha} \approx 0.05$에 매우 근접하여,
 **type I error가 잘 보정**됩니다.[^1_1]
 
