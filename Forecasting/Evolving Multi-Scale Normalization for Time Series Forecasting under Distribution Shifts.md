@@ -1,6 +1,5 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
 
-# Evolving Multi-Scale Normalization for Time Series Forecasting under Distribution Shifts 논문 분석
+# Evolving Multi-Scale Normalization for Time Series Forecasting under Distribution Shifts
 
 ## 1. 핵심 주장과 주요 기여
 
@@ -103,15 +102,15 @@ EvoMSN 프레임워크는 세 가지 주요 구성 요소로 이루어져 있습
 
 **학습 전략 - 진화적 이중 레벨 최적화:**
 
-$$
+```math
 \min_{\psi} \sum_{n=1}^N L((x_n, y_n), \psi|\omega^*, \theta^*)
-$$
+```
 
 subject to:
 
-$$
+```math
 \omega^*, \theta^* = \arg\min_{\omega,\theta} \sum_{n=1}^N \sum_{i=1}^k L_{\text{stat}}^i((x_n, y_n), \psi, \omega_i, \theta_i)
-$$
+```
 
 **오프라인 2단계 사전학습:**
 
