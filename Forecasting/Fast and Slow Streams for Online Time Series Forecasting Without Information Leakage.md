@@ -1,14 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Fast and Slow Streams for Online Time Series Forecasting Without Information Leakage"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-논문 "Fast and Slow Streams for Online Time Series Forecasting Without Information Leakage"(ICLR 2025)에 대해 상세히 분석하겠습니다.[^1_1]
+# Fast and Slow Streams for Online Time Series Forecasting Without Information Leakage
 
 ## 핵심 주장 및 주요 기여
 
@@ -20,9 +10,9 @@
 
 ### 기존 OTSF 설정의 문제점
 
-기존 연구에서는 시간 $t = i$에서 모델이 $t = i - L - H + 2$부터 $t = i - H + 1$까지의 데이터를 입력받아 $t = i - H + 2$부터 $t = i + 1$까지 예측합니다. 예를 들어, $L = 5$, $H = 4$일 때, $t = 10$에서 $t = 3$~$t = 7$의 데이터로 $t = 8$~$t = 11$을 예측하고, $t = 11$에서 ground truth를 받아 파라미터를 업데이트합니다.[^1_1]
+기존 연구에서는 시간 $t = i$에서 모델이 $t = i - L - H + 2$부터 $t = i - H + 1$까지의 데이터를 입력받아 $t = i - H + 2$부터 $t = i + 1$까지 예측합니다. 예를 들어, $L = 5$, $H = 4$일 때, $t = 10$에서 $t = 3$ ~ $t = 7$의 데이터로 $t = 8$~$t = 11$을 예측하고, $t = 11$에서 ground truth를 받아 파라미터를 업데이트합니다.[^1_1]
 
-이 설정의 문제는 $t = 12$에서 평가할 때 $t = 9$~$t = 11$의 데이터가 이미 $t = 11$에서 역전파에 사용되었다는 점입니다. 이는 편향된 평가 결과를 초래하며 실제 성능을 과대평가합니다.[^1_1]
+이 설정의 문제는 $t = 12$ 에서 평가할 때 $t = 9$ ~ $t = 11$의 데이터가 이미 $t = 11$에서 역전파에 사용되었다는 점입니다. 이는 편향된 평가 결과를 초래하며 실제 성능을 과대평가합니다.[^1_1]
 
 ### 재정의된 OTSF 설정
 
