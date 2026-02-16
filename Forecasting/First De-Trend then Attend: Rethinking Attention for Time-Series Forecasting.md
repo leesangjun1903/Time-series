@@ -1,14 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "First De-Trend then Attend: Rethinking Attention for Time-Series Forecasting"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-이제 논문 "First De-Trend then Attend: Rethinking Attention for Time-Series Forecasting"에 대한 상세 분석을 제공하겠습니다.[^1_1]
+# First De-Trend then Attend: Rethinking Attention for Time-Series Forecasting
 
 ## 1. 핵심 주장과 주요 기여
 
@@ -37,23 +27,29 @@ TDformer(Trend Decomposition Transformer)는 시계열 예측에서 시간 도�
 
 $$
 o(q, k, v) = \sigma\left(\frac{qk^T}{\sqrt{d_q}}\right)v
-$$[^1_1]
+$$
+
+[^1_1]
 
 여기서 $q \in \mathbb{R}^{L \times D}$, $k \in \mathbb{R}^{L \times D}$, $v \in \mathbb{R}^{L \times D}$는 입력으로부터 선형 변환된 쿼리, 키, 값이며, $\sigma(\cdot)$는 활성화 함수입니다.[^1_1]
 
 **푸리에 도메인 Attention**:
 
-$$
+```math
 o(q, k, v) = \mathcal{F}^{-1}\left\{\sigma\left(\frac{\mathcal{F}(q)\mathcal{F}(k)^T}{\sqrt{d_q}}\right)\mathcal{F}(v)\right\}
-$$[^1_1]
+```
+
+[^1_1]
 
 여기서 $\mathcal{F}(\cdot)$와 $\mathcal{F}^{-1}(\cdot)$는 각각 푸리에 변환과 역변환입니다.[^1_1]
 
 **웨이블릿 도메인 Attention**:
 
-$$
+```math
 o(q, k, v) = \mathcal{W}^{-1}\left\{\sigma\left(\frac{\mathcal{W}(q)\mathcal{W}(k^T)}{\sqrt{d_q}}\right)\mathcal{W}(v)\right\}
-$$[^1_1]
+```
+
+[^1_1]
 
 #### 선형 등가성 증명
 
@@ -61,13 +57,17 @@ $$[^1_1]
 
 $$
 W^{-1} = W^H, \quad W^T = W
-$$[^1_1]
+$$
 
-여기서 $W^H$는 Hermitian(켤레 전치)입니다. 선형 attention($\sigma(\cdot) = \text{Id}(\cdot)$)의 경우:
+[^1_1]
+
+여기서 $W^H$는 Hermitian(켤레 전치)입니다. 선형 attention( $\sigma(\cdot) = \text{Id}(\cdot)$ )의 경우:
 
 $$
 o(q, k, v) = W^H[(Wq)(Wk)^T(Wv)] = qk^Tv
-$$[^1_1]
+$$
+
+[^1_1]
 
 따라서 푸리에 도메인과 시간 도메인 선형 attention은 수학적으로 동등합니다. 웨이블릿의 경우도 직교성($W^TW = I$)을 이용하여 동일하게 증명됩니다.[^1_1]
 
@@ -77,7 +77,9 @@ TDformer는 먼저 시계열을 추세와 계절성 성분으로 분해합니다
 
 $$
 x_{\text{trend}} = \sigma(w(x)) * f(x), \quad x_{\text{seasonal}} = x - x_{\text{trend}}
-$$[^1_1]
+$$
+
+[^1_1]
 
 여기서 $\sigma$는 softmax, $w(x)$는 데이터 의존적 가중치, $f(x)$는 평균 필터입니다.[^1_1]
 
@@ -87,29 +89,39 @@ $$[^1_1]
 
 $$
 X_{\text{trend}} = \text{RevIN}(\text{MLP}(\text{RevIN}(x_{\text{trend}})))
-$$[^1_1]
+$$
+
+[^1_1]
 
 **계절성 예측**: $N$개 인코더 레이어:[^1_1]
 
 $$
 X_{en}^{l,1} = \text{Norm}(\text{FA}(X_{en}^{l-1}) + X_{en}^{l-1})
-$$[^1_1]
+$$
+
+[^1_1]
 
 $$
 X_{en}^{l,2} = \text{Norm}(\text{FF}(X_{en}^{l,1}) + X_{en}^{l,1})
-$$[^1_1]
+$$
+
+[^1_1]
 
 여기서 FA는 Fourier Attention:
 
 $$
 o(q, k, v) = \mathcal{F}^{-1}\{\text{softmax}(\mathcal{F}\{q\}\mathcal{F}\{k\}^T)\mathcal{F}\{v\}\}
-$$[^1_1]
+$$
+
+[^1_1]
 
 **최종 예측**:
 
 $$
 X_{\text{final}} = X_{\text{trend}} + X_{de}^M
-$$[^1_1]
+$$
+
+[^1_1]
 
 ## 3. 일반화 성능 향상 가능성
 
