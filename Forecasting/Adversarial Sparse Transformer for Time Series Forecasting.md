@@ -1,16 +1,5 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
 
-# 1. 당신은 AI 분야의 연구자입니다. "Adversarial Sparse Transformer for Time Series Forecasting"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-이제 논문의 상세 내용과 최신 연구들을 종합하여 체계적으로 분석하겠습니다.
-
-# Adversarial Sparse Transformer for Time Series Forecasting 논문 분석
+# Adversarial Sparse Transformer for Time Series Forecasting 
 
 ## 1. 핵심 주장과 주요 기여
 
@@ -60,19 +49,23 @@ $\mathbf{O}_m = \alpha_m \mathbf{V}_m = \alpha\text{-entmax}\left(\frac{\mathbf{
 **Adversarial Training Framework:**
 Generator $G$와 Discriminator $D$ 간의 min-max 최적화:
 
-$\arg\min_G \max_D \lambda \mathcal{L}_{adv}(\Theta_G, \Theta_D) + \mathcal{L}_\rho(\Theta_G)$
+$\arg\min_G \max_D \lambda \mathcal{L}\_{adv}(\Theta_G, \Theta_D) + \mathcal{L}_\rho(\Theta_G)$
 
 여기서 adversarial loss는:
 
-$\mathcal{L}_{adv}(\Theta_G, \Theta_D) = \mathbb{E}[\log(D(\mathbf{Y}_{real}))] + \mathbb{E}[\log(1 - D(\mathbf{Y}_{fake}))]$
+```math
+\mathcal{L}_{adv}(\Theta_G, \Theta_D) = \mathbb{E}[\log(D(\mathbf{Y}_{real}))] + \mathbb{E}[\log(1 - D(\mathbf{Y}_{fake}))]
+```
 
 Quantile loss는:
 
-$\mathcal{L}_\rho(\Theta_G) = \frac{2}{S}\sum_{i=0}\sum_{t=t_0+1}^{t_0+\tau} P_\rho(y_{i,t}, \hat{y}_{i,t})$
+$\mathcal{L}\_\rho(\Theta_G) = \frac{2}{S}\sum_{i=0}\sum_{t=t_0+1}^{t_0+\tau} P_\rho(y_{i,t}, \hat{y}_{i,t})$
 
-$P_\rho(y_{i,t}, \hat{y}_{i,t}) = \Delta y_{i,t}(\rho \mathbb{I}_{\hat{y}_{i,t} > y_{i,t}} - (1-\rho)\mathbb{I}_{\hat{y}_{i,t} \leq y_{i,t}})$
+```math
+P_\rho(y_{i,t}, \hat{y}_{i,t}) = \Delta y_{i,t}(\rho \mathbb{I}_{\hat{y}_{i,t} > y_{i,t}} - (1-\rho)\mathbb{I}_{\hat{y}_{i,t} \leq y_{i,t}})
+```
 
-여기서 $\Delta y_{i,t} = \hat{y}_{i,t} - y_{i,t}$이고, $\mathbf{Y}_{fake} = \mathbf{Y}_{1:t_0} \circ \hat{\mathbf{Y}}_{t_0+1:t_0+\tau}$, $\mathbf{Y}_{real} = \mathbf{Y}_{1:t_0+\tau}$입니다.[^1_1]
+여기서 $\Delta y_{i,t} = \hat{y}\_{i,t} - y_{i,t}$이고, $\mathbf{Y}\_{fake} = \mathbf{Y}\_{1:t_0} \circ \hat{\mathbf{Y}}\_{t_0+1:t_0+\tau}$, $\mathbf{Y}\_{real} = \mathbf{Y}_{1:t_0+\tau}$입니다.[^1_1]
 
 ### 2.3 모델 구조
 
