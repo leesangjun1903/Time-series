@@ -1,4 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+# Persistence Initialization: A novel adaptation of the Transformer architecture for Time Series Forecasting
 
 ## 핵심 주장과 주요 기여
 
@@ -61,7 +61,9 @@ $g(z) = \text{Transformer}(zW_{in})W_{out}$
 각 레이어의 정의:[^1_1]
 
 $X_l = \text{FF}(\text{SA}(X_{l-1}))$
+
 $\text{SA}(X) = X + \alpha_l \cdot \text{SelfAttention}(X)$
+
 $\text{FF}(X) = X + \alpha_l \cdot \text{FeedForward}(X)$
 
 Self-Attention with Rotary encoding:[^1_1]
@@ -74,7 +76,9 @@ $\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{\tilde{Q}\tilde{K}^T}{\sq
 
 모델은 MASE(Mean Absolute Scaled Error)를 손실 함수로 사용합니다:[^1_1]
 
-$\text{mase} = \frac{1}{N}\sum_{i=1}^{N}\frac{\frac{1}{H}\sum_{j=1}^{H}|y_j^{(i)} - \hat{y}_j^{(i)}|}{\frac{1}{T^{(i)}-S^{(i)}}\sum_{j=S^{(i)}+1}^{T^{(i)}}|x_j^{(i)} - x_{j-S^{(i)}}^{(i)}|}$
+```math
+\text{mase} = \frac{1}{N}\sum_{i=1}^{N}\frac{\frac{1}{H}\sum_{j=1}^{H}|y_j^{(i)} - \hat{y}_j^{(i)}|}{\frac{1}{T^{(i)}-S^{(i)}}\sum_{j=S^{(i)}+1}^{T^{(i)}}|x_j^{(i)} - x_{j-S^{(i)}}^{(i)}|}
+```
 
 여기서 $S^{(i)}$는 시계열 $i$의 계절성입니다.[^1_1]
 
