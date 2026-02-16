@@ -1,6 +1,5 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
 
-# Proactive Model Adaptation Against Concept Drift for Online Time Series Forecasting 논문 분석
+# Proactive Model Adaptation Against Concept Drift for Online Time Series Forecasting 
 
 ## 1. 핵심 주장과 주요 기여
 
@@ -17,7 +16,7 @@
 
 ### 해결하고자 하는 문제
 
-기존 온라인 학습 방법(FSNet, OneNet 등)은 시간 $t$에서 사용 가능한 최신 학습 샘플이 $\mathcal{D}_t^- = \{(\mathbf{X}_{t'}, \mathbf{Y}_{t'}) \mid t' \leq t-H\}$임을 간과합니다. 실증 분석 결과, Practical 전략(실제 사용 가능한 데이터 사용)과 Optimal 전략(미래 정보 유출) 간 평균 107%의 성능 차이가 발생했습니다.[^1_1]
+기존 온라인 학습 방법(FSNet, OneNet 등)은 시간 $t$에서 사용 가능한 최신 학습 샘플이 $\mathcal{D}\_t^- = \{(\mathbf{X}\_{t'}, \mathbf{Y}_{t'}) \mid t' \leq t-H\}$ 임을 간과합니다. 실증 분석 결과, Practical 전략(실제 사용 가능한 데이터 사용)과 Optimal 전략(미래 정보 유출) 간 평균 107%의 성능 차이가 발생했습니다.[^1_1]
 
 ### 제안하는 방법
 
@@ -25,7 +24,7 @@ Proceed는 4단계로 구성됩니다:[^1_1]
 
 **1) 온라인 Fine-tuning**
 
-최근 학습 샘플 $(\mathbf{X}_{t-H}, \mathbf{Y}_{t-H})$로 모델 파라미터를 gradient descent로 업데이트:
+최근 학습 샘플 $(\mathbf{X}\_{t-H}, \mathbf{Y}_{t-H})$로 모델 파라미터를 gradient descent로 업데이트:
 
 $$
 \boldsymbol{\theta}_{t-H} \leftarrow \boldsymbol{\theta}_{t-H-1} - \eta \nabla_{\boldsymbol{\theta}} \|\hat{\mathbf{Y}}_{t-H} - \mathbf{Y}_{t-H}\|_2^2
@@ -57,7 +56,7 @@ $$
 [\boldsymbol{\alpha}_t^{(\ell)}, \boldsymbol{\beta}_t^{(\ell)}] = \mathbf{W}_2^{(\ell)\top}\left(\sigma\left(\mathbf{W}_1^{(\ell)\top} \boldsymbol{\delta}_{t-H \to t} + \mathbf{b}^{(\ell)}\right)\right) + 1
 $$
 
-여기서 $\mathbf{W}_1^{(\ell)} \in \mathbb{R}^{r \times d_c}$, $\mathbf{W}_2^{(\ell)} \in \mathbb{R}^{(d_{in} + d_{out}) \times r}$이며, $r$은 작은 bottleneck 차원입니다.[^1_1]
+여기서 $\mathbf{W}\_1^{(\ell)} \in \mathbb{R}^{r \times d_c}$, $\mathbf{W}\_2^{(\ell)} \in \mathbb{R}^{(d_{in} + d_{out}) \times r}$이며, $r$은 작은 bottleneck 차원입니다.[^1_1]
 
 적응된 파라미터는 다음과 같이 계산됩니다:
 
@@ -117,7 +116,7 @@ Proceed는 여러 메커니즘을 통해 일반화 성능을 향상시킵니다:
 
 ### 합성 Concept Drift 학습
 
-역사적 데이터를 무작위로 섞어 다양한 concept drift를 합성합니다. 시각화 분석 결과, 온라인 데이터의 concept drift $\boldsymbol{\delta}_{4 \to 6}$, $\boldsymbol{\delta}_{5 \to 7}$는 학습 데이터의 $\boldsymbol{\delta}_{1 \to 4}$, $\boldsymbol{\delta}_{2 \to 3}$와 유사한 패턴을 보입니다.[^1_1]
+역사적 데이터를 무작위로 섞어 다양한 concept drift를 합성합니다. 시각화 분석 결과, 온라인 데이터의 concept drift $\boldsymbol{\delta}\_{4 \to 6}$, $\boldsymbol{\delta}\_{5 \to 7}$는 학습 데이터의 $\boldsymbol{\delta}\_{1 \to 4}$, $\boldsymbol{\delta}_{2 \to 3}$와 유사한 패턴을 보입니다.[^1_1]
 
 ### 이론적 근거
 
@@ -166,7 +165,7 @@ SOLID의 데이터 샘플링 기법과 Proceed의 proactive adaptation을 결합
 
 **2. 부분 Ground Truth 활용**
 
-$\{\tilde{\mathbf{Y}}_{t-i}\}_{i=1}^{H-1}$의 부분 ground truth를 효율적으로 활용하는 방법 연구가 필요합니다. GPU 메모리 제약을 고려한 경량화 기법 개발이 요구됩니다.[^1_1]
+$\{\tilde{\mathbf{Y}}\_{t-i}\}_{i=1}^{H-1}$의 부분 ground truth를 효율적으로 활용하는 방법 연구가 필요합니다. GPU 메모리 제약을 고려한 경량화 기법 개발이 요구됩니다.[^1_1]
 
 **3. 극단적 Concept Drift 처리**
 
@@ -184,7 +183,7 @@ $\{\tilde{\mathbf{Y}}_{t-i}\}_{i=1}^{H-1}$의 부분 ground truth를 효율적�
 | :-- | :-- | :-- | :-- |
 | **DDG-DA** [^1_2] | 2022 | 데이터 분포 생성 및 예측 | 사후적 데이터 생성, 피드백 지연 미고려 |
 | **OneNet** [^1_3] | 2023 | 온라인 앙상블 | 정보 유출 문제, temporal gap 간과 |
-| **FSNet** [^1_1] | 2023 | Gradient 기반 빠른 적응 | 실제로는 $(\mathbf{X}_{t-1}, \mathbf{Y}_{t-1})$ 사용, 비실용적 |
+| **FSNet** [^1_1] | 2023 | Gradient 기반 빠른 적응 | 실제로는 $(\mathbf{X}\_{t-1}, \mathbf{Y}_{t-1})$ 사용, 비실용적 |
 | **MemDA** [^1_4] | 2023 | 메모리 기반 drift 적응 | 도시 시계열 특화, 일반적 피드백 지연 미해결 |
 | **SOLID** [^1_1] | 2024 | Context 유사도 기반 샘플 선택 | Heuristic 기반, 사전적 적응 부재 |
 | **Proceed** [^1_1] | 2025 | Proactive concept drift 추정 및 적응 | 피드백 지연 명시적 해결, 합성 drift 학습 |
