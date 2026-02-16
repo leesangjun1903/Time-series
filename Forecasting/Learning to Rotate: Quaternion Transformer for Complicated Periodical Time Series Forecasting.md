@@ -1,6 +1,5 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
 
-# Learning to Rotate: Quaternion Transformer 논문 종합 분석
+# Learning to Rotate: Quaternion Transformer for Complicated Periodical Time Series Forecasting
 
 ## 1. 핵심 주장과 주요 기여
 
@@ -158,7 +157,7 @@ Quatformer의 일반화 성능은 여러 측면에서 우수합니다:
 
 **채널 독립성 (Channel-independence)**: 각 변수를 독립적으로 처리하여 다양한 차원의 데이터에 적용 가능. 이는 6개의 서로 다른 도메인(전력, 날씨, 교통, 금융 등)에서 일관된 성능 향상으로 입증됩니다.[^1_1]
 
-**정규화 메커니즘**: $\mathcal{L}_\omega$는 주파수가 천천히 변하도록, $\mathcal{L}_\theta$는 위상 이동이 희소하도록 제약하여 과적합 방지.[^1_1]
+**정규화 메커니즘**: $\mathcal{L}\_\omega$는 주파수가 천천히 변하도록, $\mathcal{L}_\theta$는 위상 이동이 희소하도록 제약하여 과적합 방지.[^1_1]
 
 ### 3.2 전이 학습 가능성
 
