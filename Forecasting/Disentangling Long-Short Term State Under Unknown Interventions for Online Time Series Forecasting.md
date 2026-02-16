@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-## 논문 종합 분석: Disentangling Long-Short Term State Under Unknown Interventions for Online Time Series Forecasting
+# Disentangling Long-Short Term State Under Unknown Interventions for Online Time Series Forecasting
 
 ### 1. 핵심 주장과 주요 기여
 
