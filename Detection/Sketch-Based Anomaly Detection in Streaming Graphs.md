@@ -1,12 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Sketch-Based Anomaly Detection in Streaming Graphs"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
+# Sketch-Based Anomaly Detection in Streaming Graphs
 
 이 논문은 동적 그래프의 에지 스트림에서 “에지 단위”와 “조밀 부분그래프 단위” 이상행동을 동시에, 그리고 상수 시간·상수 메모리로 탐지하기 위해 Count-Min Sketch를 고차원(Higher-order) 스케치로 확장하고, 이를 이용한 4개의 온라인 알고리즘(AnoEdge-G/L, AnoGraph/-K)을 제안하는 것이 핵심이다.[^1_1]
 실험적으로는 네 개의 실제 침입 탐지 데이터셋에서 기존 스트리밍 기반 기법들보다 더 높은 AUC와 빠른 속도를 달성하며, 이론적으로는 스케치 추정 오차와 조밀 부분행렬 탐색에 대한 근사 보장을 제시한다.[^1_1]
@@ -73,7 +65,7 @@ $$
 
 로 정의된다.[^1_1]
 
-Theorem 1은, 각 $h'_j, h''_j$가 pairwise independent한 해시 패밀리에서 선택될 때, 전체 관측 수 $M = \sum_{u,v} y(u,v)$에 대해 다음을 보장한다.[^1_1]
+Theorem 1은, 각 $h'\_j, h''\_j$가 pairwise independent한 해시 패밀리에서 선택될 때, 전체 관측 수 $M = \sum_{u,v} y(u,v)$에 대해 다음을 보장한다.[^1_1]
 
 $$
 \Pr\left[ \hat y(u,v) \le y(u,v) + \epsilon M \right] \ge 1 - \delta
@@ -87,7 +79,7 @@ $$
 스케치 행렬 $M$에서 부분행렬 $(S_x, T_x)$의 밀도는 다음과 같이 정의된다.[^1_1]
 
 $$
-D(M, S_x, T_x) = \frac{\sum_{s \in S_x} \sum_{t \in T_x} M[s,t]}{\sqrt{|S_x|\;|T_x|}} \tag{1}
+D(M, S_x, T_x) = \frac{\sum_{s \in S_x} \sum_{t \in T_x} M[s,t]}{\sqrt{|S_x|\;|T_x|}} 
 $$
 
 이는 Khuller \& Saha(2009)의 directed densest subgraph 정의를 행렬 형태로 옮긴 것으로, 에지 수(분자)를 부분그래프 크기의 기하평균(분모)으로 정규화해, 작은 완전 이분그래프와 큰 희소 그래프 사이의 균형을 잡는다.[^1_1]
@@ -102,7 +94,7 @@ L(M, u, v, S_x, T_x)
 \sum_{(s,t) \in S_x \times \{h(v)\} \;\cup\; \{h(u)\} \times T_x} M[s,t]
 }{
 \left|S_x \times \{h(v)\} \;\cup\; \{h(u)\} \times T_x \right|
-} \tag{2}
+} 
 $$
 
 이는 해당 에지가 속한 행·열 교차부가 현재 조밀 부분행렬의 주변에서 얼마나 큰 값을 갖는지를 평균적으로 측정하며, 값이 클수록 해당 에지가 조밀 이상 서브그래프의 일부일 가능성이 높다고 본다.[^1_1]
