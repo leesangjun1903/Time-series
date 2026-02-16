@@ -1,4 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+# Enhancing the Locality and Breaking the Memory Bottleneck of Transformer on Time Series Forecasting
 
 ## 논문 개요 및 핵심 기여
 
@@ -79,7 +79,7 @@ LSTM 기반 DeepAR과 비교 시, 짧은 의존성($t_0=24$)에서는 유사한 
 | traffic-c (1d) | 0.161/0.099 | 0.122/0.081 | 24.2%/18.2% |
 | traffic-c (7d) | 0.179/0.105 | 0.139/0.094 | 22.3%/10.5% |
 
-($R_{0.5}$/$R_{0.9}$ quantile loss)[^1_1]
+($R_{0.5}$ / $R_{0.9}$ quantile loss)[^1_1]
 
 ### Convolutional Self-Attention 효과
 
@@ -130,7 +130,7 @@ Convolutional self-attention의 지역 맥락 인식 능력은 이상치 구별�
 
 **비교**: LogSparse가 구조적 sparsity(지수 간격)를 사용하는 반면, Informer는 확률적 sparsity로 중요한 query만 선택. Informer는 generative decoder로 multi-step 예측을 병렬화.[^1_2]
 
-**성능**: LogTrans 대비 Informer가 더 낮은 복잡도($O(L \log L)$ vs $O(L(\log L)^2)$)를 달성하나, 실제 성능은 데이터셋 의존적.[^1_3][^1_4]
+**성능**: LogTrans 대비 Informer가 더 낮은 복잡도( $O(L \log L)$ vs $O(L(\log L)^2)$ )를 달성하나, 실제 성능은 데이터셋 의존적.[^1_3][^1_4]
 
 ### Autoformer (NeurIPS 2021)
 
