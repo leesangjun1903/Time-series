@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# Lightweight Online Adaption for Time Series Foundation Model Forecasts 논문 분석
+# Lightweight Online Adaption for Time Series Foundation Model Forecasts
 
 ## 핵심 주장과 주요 기여
 
@@ -29,9 +27,9 @@ ELF는 두 가지 핵심 컴포넌트로 구성됩니다:[^1_1]
 
 **이산 푸리에 변환(DFT)**:
 
-$$
+```math
 \text{DFT}(x)_k := \frac{1}{\sqrt{L}} \sum_{n=0}^{L-1} x_n e^{-2i\pi kn/L}
-$$
+```
 
 **고주파 성분 제거**: 주파수 보존 비율 $\alpha \in [0,1]$에 대해, $k$가 $\lfloor \alpha/2 \rfloor < k/L < \lfloor 1-\alpha/2 \rfloor$를 만족하는 DFT 성분을 제거하여 차원을 $L$에서 $\alpha L$로 축소합니다.[^1_1]
 
@@ -39,9 +37,9 @@ $$
 
 **Ordinary Least Squares (OLS) 해**: 업데이트 스텝 $\tau$에서 가중치 행렬은 다음과 같이 계산됩니다:[^1_1]
 
-$$
+```math
 W := (\tilde{X}^*\tilde{X} + \lambda I)^{-1} \tilde{X}^*\tilde{Y}
-$$
+```
 
 여기서 $\tilde{X}, \tilde{Y}$는 각각 컨텍스트와 타겟의 푸리에 도메인 표현이며, $\lambda$는 정규화 계수입니다.
 
