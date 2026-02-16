@@ -1,6 +1,5 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
 
-# TACTiS: Transformer-Attentional Copulas for Time Series 논문 상세 분석
+# TACTiS: Transformer-Attentional Copulas for Time Series 
 
 ## 1. 핵심 주장과 주요 기여
 
@@ -24,7 +23,7 @@ TACTiS는 실세계 시계열 데이터의 다음과 같은 특성을 모두 처
 2. **비확률적 공변량의 존재**: 정적 또는 시변 조건 변수
 3. **다양한 샘플링 빈도**: 불규칙 샘플링 또는 정렬되지 않은 변수
 4. **임의 결측값**: 임의 시점 및 변수에 대한 결측값 처리
-5. **다양한 도메인**: $\mathbb{R}, \mathbb{R}_+, \mathbb{N}, \mathbb{N}_+, \mathbb{Z}$ 등 왜도와 두터운 꼬리를 가진 주변 분포
+5. **다양한 도메인**: $\mathbb{R}, \mathbb{R}\_+, \mathbb{N}, \mathbb{N}_+, \mathbb{Z}$ 등 왜도와 두터운 꼬리를 가진 주변 분포
 
 기존 ARIMA, LSTM 기반 방법들은 이러한 복잡한 특성을 종합적으로 다루기 어렵고, 완전한 예측 분포를 제공하지 못하는 한계가 있었습니다.[^1_1]
 
@@ -34,7 +33,9 @@ TACTiS는 실세계 시계열 데이터의 다음과 같은 특성을 모두 처
 
 $m$개의 다변량 시계열 $\mathcal{S} = \{X_1, ..., X_m\}$가 주어지고, 각 $X = \{x_i \in \mathbb{R}^{l_i}\}_{i=1}^n$는 길이가 임의인 단변량 시계열들의 집합입니다. 목표는 다음 결합 분포를 추론하는 것입니다:[^1_1]
 
-$P\left(\{x_i^{(m)}\}_{i=1}^n \mid \{x_i^{(o)}, C_i, t_i\}_{i=1}^n\right)$
+```math
+P\left(\{x_i^{(m)}\}_{i=1}^n \mid \{x_i^{(o)}, C_i, t_i\}_{i=1}^n\right)
+```
 
 여기서 $x_i^{(o)}$와 $x_i^{(m)}$는 각각 관측된 요소와 결측된 요소를 나타냅니다.[^1_1]
 
@@ -43,10 +44,12 @@ $P\left(\{x_i^{(m)}\}_{i=1}^n \mid \{x_i^{(o)}, C_i, t_i\}_{i=1}^n\right)$
 Encoder는 표준 Transformer와 유사하지만, 관측 및 결측 토큰을 모두 동시에 인코딩합니다:[^1_1]
 
 **Input Embedding**:
-$e_{ij} = \text{Embed}_{\theta_{emb}}(x_{ij} \cdot m_{ij}, c_{ij}, m_{ij})$
+
+$e_{ij} = \text{Embed}\_{\theta_{emb}}(x_{ij} \cdot m_{ij}, c_{ij}, m_{ij})$
 
 **Positional Encoding**:
-$e'_{ij} = \frac{e_{ij}}{\sqrt{d_{emb}}} + p_{ij}$
+
+$e'\_{ij} = \frac{e_{ij}}{\sqrt{d_{emb}}} + p_{ij}$
 
 여기서 $p_{ij}$는 시간 스탬프 $t_{ij}$에 기반한 위치 인코딩입니다.[^1_1]
 
@@ -62,7 +65,7 @@ $g_{\phi}(x_1^{(m)}, ..., x_{n_m}^{(m)}) = c_{\phi_c}(F_{\phi_1}(x_1^{(m)}), ...
 - $F_{\phi_k}$: $k$번째 변수의 주변 누적분포함수(CDF)
 - $f_{\phi_k}$: $k$번째 변수의 주변 밀도함수
 
-**주변 분포 모델링**: Deep Sigmoidal Flows (DSF)를 사용하여 주변 CDF를 모델링합니다. DSF는 단조증가하고 연속적이며 미분 가능한 함수로, \$\$로 매핑됩니다:[^1_1]
+**주변 분포 모델링**: Deep Sigmoidal Flows (DSF)를 사용하여 주변 CDF를 모델링합니다. DSF는 단조증가하고 연속적이며 미분 가능한 함수로, $[0,1]$로 매핑됩니다:[^1_1]
 
 $\phi_k = \text{MarginalParams}_{\theta_F}(z_k^{(m)})$
 
@@ -75,19 +78,24 @@ $c_{\phi_c^\pi}(u_1, ..., u_{n_m}) = c_{\phi_{c1}^\pi}(u_{\pi_1}) \times c_{\phi
 **Attention 기반 조건화**: 각 조건부 분포의 파라미터는 attention 메커니즘을 통해 얻어집니다. 메모리는 관측 토큰과 순열상 선행하는 결측 토큰의 표현으로 구성됩니다:[^1_1]
 
 $k = \text{Key}_{\theta_k}(z, u)$
+
 $v = \text{Value}_{\theta_v}(z, u)$
-$q = \text{Query}_{\theta_q}(z_{\pi_k}^{(m)})$
+
+$q = \text{Query}\_{\theta_q}(z_{\pi_k}^{(m)})$
 
 Attention 연산 후 최종 파라미터를 얻습니다:[^1_1]
 
-$z'' = \text{LayerNorm}(\text{FeedForward}_{\theta_{FF}}(z') + z')$
-$\phi_{ck}^\pi = \text{DistParams}_{\theta_{dist}}(z'')$
+$z'' = \text{LayerNorm}(\text{FeedForward}\_{\theta_{FF}}(z') + z')$
+
+$\phi_{ck}^\pi = \text{DistParams}\_{\theta_{dist}}(z'')$
 
 #### 학습 절차
 
 모든 순열에 대한 기대 음의 로그 우도를 최소화합니다:[^1_1]
 
-$\arg\min_{\Theta} \mathbb{E}_{\pi \sim \Pi, X \sim \mathcal{S}} \left[-\log g_{\phi^\pi}(x_1^{(m)}, ..., x_{n_m}^{(m)})\right]$
+```math
+\arg\min_{\Theta} \mathbb{E}_{\pi \sim \Pi, X \sim \mathcal{S}} \left[-\log g_{\phi^\pi}(x_1^{(m)}, ..., x_{n_m}^{(m)})\right]
+```
 
 **정리 1 (이론적 보장)**: Attentional copula $c_{\phi_c^\pi}$는 위 목적함수를 최소화하는 파라미터 $\Theta$에서 유효한 코퓰라입니다.[^1_1]
 
