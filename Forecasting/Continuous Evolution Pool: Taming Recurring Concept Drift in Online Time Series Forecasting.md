@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# Continuous Evolution Pool (CEP) 논문 종합 분석
+# Continuous Evolution Pool: Taming Recurring Concept Drift in Online Time Series Forecasting
 
 ## 1. 핵심 주장과 주요 기여
 
