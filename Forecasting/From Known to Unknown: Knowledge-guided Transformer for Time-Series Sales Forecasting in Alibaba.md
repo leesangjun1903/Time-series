@@ -1,4 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+# From Known to Unknown: Knowledge-guided Transformer for Time-Series Sales Forecasting in Alibaba
 
 ## 논문 핵심 요약
 
