@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# TLNets: Transformation Learning Networks 논문 종합 분석
+# TLNets: Transformation Learning Networks for long-range time-series prediction
 
 ## 1. 핵심 주장과 주요 기여
 
