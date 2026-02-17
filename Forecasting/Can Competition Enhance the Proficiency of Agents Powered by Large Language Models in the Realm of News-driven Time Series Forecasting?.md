@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 뉴스 기반 시계열 예측에서 LLM 기반 에이전트의 경쟁 메커니즘 효과 연구 종합 분석
+# Can Competition Enhance the Proficiency of Agents Powered by Large Language Models in the Realm of News-driven Time Series Forecasting?
 
 ## 1. 핵심 주장과 주요 기여
 
@@ -71,7 +69,9 @@ $$
 ID(\delta_u) = good, & \text{if } IR(L_i^{(e+1)'} - \delta_u) \leq IR(L_i^{(e+1)'}) \\
 ID(\delta_u) = bad, & \text{if } IR(L_i^{(e+1)'} - \delta_u) > IR(L_i^{(e+1)'})
 \end{cases}
-$$ (10)
+$$ 
+
+(10)
 
 **3단계**: "bad"로 표시된 부분 재평가 후 최종 논리 결정:[^1_1]
 
@@ -81,7 +81,7 @@ $L_i^{(e+1)} = L_i^{(e+1)'} - \delta_{i,bad}^{(e+1)}$ (5)(11)
 
 $E$번째 라운드 후 $I'$개의 에이전트가 남으면, 최종 예측값은 다음과 같이 계산됩니다:[^1_1]
 
-$\hat{y}_{s,t+1} = \sum_{i=1}^{I'} \frac{M_i^{(E)}}{\sum_j M_j^{(E)}} \times \hat{y}_i^{s,t+1}$ (6)
+$\hat{y}_{s,t+1} = \sum\_{i=1}^{I'} \frac{M_i^{(E)}}{\sum_j M_j^{(E)}} \times \hat{y}_i^{s,t+1}$ (6)
 
 ### 2.3 모델 구조
 
