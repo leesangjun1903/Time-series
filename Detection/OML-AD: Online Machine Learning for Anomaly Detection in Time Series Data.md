@@ -1,14 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "OML-AD: Online Machine Learning for Anomaly Detection in Time Series Data"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-이제 논문에 대한 상세한 분석을 제공하겠습니다.
+# OML-AD: Online Machine Learning for Anomaly Detection in Time Series Data
 
 ## 1. 핵심 주장과 주요 기여
 
@@ -23,7 +13,8 @@ OML-AD는 **비정상(non-stationary) 시계열 데이터에서 개념 변화(co
 
 ### 해결하고자 하는 문제
 
-OML-AD는 **개념 변화(concept drift) 환경에서의 이상 탐지**라는 핵심 문제를 다룹니다. 개념 변화는 시간에 따라 예측 대상 변수의 통계적 특성이 변화하는 현상으로, 수식으로 표현하면 시간 $t$에서의 입력 $X$와 출력 $y$의 결합 확률 분포 $P_t(X, y)$가 변화하는 것을 의미합니다.[^1_1]
+OML-AD는 **개념 변화(concept drift) 환경에서의 이상 탐지**라는 핵심 문제를 다룹니다.  
+개념 변화는 시간에 따라 예측 대상 변수의 통계적 특성이 변화하는 현상으로, 수식으로 표현하면 시간 $t$에서의 입력 $X$와 출력 $y$의 결합 확률 분포 $P_t (x,y)$ 가 변화하는 것을 의미합니다.[^1_1]
 
 전통적인 배치 학습 모델은 다음과 같은 한계를 가집니다:[^1_1]
 
@@ -48,9 +39,9 @@ OML-AD는 모듈화된 프레임워크로 다음 구성요소를 포함합니다
 
 온라인 SARIMA는 다음과 같은 형태입니다:[^1_1]
 
-$$
+```math
 \Delta^d X_t = \phi_1 \Delta^d X_{t-1} + \phi_2 \Delta^d X_{t-2} + \cdots + \phi_p \Delta^d X_{t-p} + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \theta_2 \varepsilon_{t-2} + \cdots + \theta_q \varepsilon_{t-q}
-$$
+```
 
 여기서 $\Delta$는 차분 연산자 $\Delta X_t = X_t - X_{t-1}$이며, $\Delta^d$는 $d$번 적용을 의미합니다.[^1_1]
 
