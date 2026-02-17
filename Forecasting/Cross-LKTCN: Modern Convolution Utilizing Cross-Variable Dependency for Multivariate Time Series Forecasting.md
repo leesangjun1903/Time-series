@@ -1,14 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Cross-LKTCN: Modern Convolution Utilizing Cross-Variable Dependency for Multivariate Time Series Forecasting"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-이제 첨부하신 논문과 최신 연구들을 바탕으로 상세한 분석을 제공하겠습니다.
+# Cross-LKTCN: Modern Convolution Utilizing Cross-Variable Dependency for Multivariate Time Series Forecasting
 
 ## 1. 핵심 주장과 주요 기여
 
@@ -49,9 +39,9 @@ $Z_{i+1} = \text{Block}(Z_i) + Z_i$
 
 **1) Depth-wise Large Kernel Convolution** (Cross-time Dependency 포착):[^1_1]
 
-$Z^{time1}_i = \text{BN}(\text{DW1Conv1d}(Z_i))_{\text{kernel size=large size, groups}=(M \times D)}$
+$Z^{time1}\_i = \text{BN}(\text{DW1Conv1d}(Z_i))_{\text{kernel size=large size, groups}=(M \times D)}$
 
-$Z^{time2}_i = \text{BN}(\text{DW2Conv1d}(Z_i))_{\text{kernel size=small size, groups}=(M \times D)}$
+$Z^{time2}\_i = \text{BN}(\text{DW2Conv1d}(Z_i))_{\text{kernel size=small size, groups}=(M \times D)}$
 
 $Z^{time}_i = Z^{time1}_i + Z^{time2}_i$
 
@@ -61,19 +51,19 @@ Structural Re-parameterization 기법을 활용하여 대형 커널의 최적화
 
 첫 번째 ConvFFN (각 변수의 독립적인 표현 학습):
 
-$Z^{variable1'}_i = \text{Drop}(\text{PW1}_1\text{Conv1d}(Z^{time}_i))_{\text{kernel size}=1, \text{groups}=M}$
+$Z^{variable1'}\_i = \text{Drop}(\text{PW1}\_1\text{Conv1d}(Z^{time}\_i))_{\text{kernel size}=1, \text{groups}=M}$
 
 $Z^{variable1'}_i = \text{GELU}(Z^{variable1'}_i)$
 
-$Z^{variable1}_i = \text{Drop}(\text{PW1}_2\text{Conv1d}(Z^{variable1'}_i))_{\text{groups}=M}$
+$Z^{variable1}\_i = \text{Drop}(\text{PW1}\_2\text{Conv1d}(Z^{variable1'}\_i))_{\text{groups}=M}$
 
 두 번째 ConvFFN (교차 변수 의존성 포착):
 
-$Z^{variable2'}_i = \text{Drop}(\text{PW2}_1\text{Conv1d}(Z^{variable2}_i))_{\text{kernel size}=1, \text{groups}=D}$
+$Z^{variable2'}\_i = \text{Drop}(\text{PW2}\_1\text{Conv1d}(Z^{variable2}\_i))_{\text{kernel size}=1, \text{groups}=D}$
 
 $Z^{variable2'}_i = \text{GELU}(Z^{variable2'}_i)$
 
-$Z^{variable}_i = \text{Drop}(\text{PW2}_2\text{Conv1d}(Z^{variable2'}_i))_{\text{groups}=D}$
+$Z^{variable}\_i = \text{Drop}(\text{PW2}\_2\text{Conv1d}(Z^{variable2'}\_i))_{\text{groups}=D}$
 
 채널 수 변화: $(D \times M) \rightarrow (r \times D \times M) \rightarrow (D \times M)$, 여기서 $r$은 FFN ratio입니다.[^1_1]
 
