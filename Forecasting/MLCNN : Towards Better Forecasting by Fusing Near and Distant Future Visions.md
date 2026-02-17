@@ -1,4 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+# Towards Better Forecasting by Fusing Near and Distant Future Visions
 
 ## 1. 핵심 주장과 주요 기여
 
@@ -39,26 +39,43 @@ $\{X_{t+h-2}, X_{t+h-1}, X_{t+h}, X_{t+h+1}, X_{t+h+2}\}$
 다층 CNN을 사용하여 서로 다른 추상화 수준의 구성물(construals)을 생성합니다:
 
 $C_{t+h-2} = f_1(X_t^{-p})$
+
 $C_{t+h-1} = f_2(C_{t+h-2})$
+
 $C_{t+h} = f_3(C_{t+h-1})$
+
 $C_{t+h+1} = f_4(C_{t+h})$
+
 $C_{t+h+2} = f_5(C_{t+h+1})$
 
 여기서 $X_t^{-p} = [X_{t-p+1}; X_{t-p+2}; ...; X_t] \in \mathbb{R}^{p \times n}$는 입력 행렬이고, $f_i$는 Conv1D 레이어입니다. 각 필터의 출력은 다음과 같이 계산됩니다:[^1_1]
 
 $c_k = \text{Act}(W_k * X + b_k)$
 
-여기서 LeakyReLU 활성화 함수가 사용됩니다: $\text{LeakyReLU}(x) = \begin{cases} x & x \geq 0 \\ \alpha x & \text{otherwise} \end{cases}$ ($\alpha = 0.01$).[^1_1]
+여기서 LeakyReLU 활성화 함수가 사용됩니다: 
+
+```math
+\text{LeakyReLU}(x) = \begin{cases} x & x \geq 0 \\ \alpha x & \text{otherwise} \end{cases}
+```
+
+( $\alpha = 0.01$ ).
+
+[^1_1]
 
 #### (3) 공유 순환 컴포넌트 (Fusion Encoder)
 
 공유 LSTM은 모든 예측 과제에 대한 구성물을 순차적으로 처리하여 미래 비전을 융합합니다. 시간 $\tau$에서 $k$번째 구성물에 대한 LSTM의 상태는 다음과 같이 계산됩니다:
 
 $i_k^{(\tau)} = \sigma(W_{ii}C_k^{(\tau)} + b_{ii} + W_{hi}h_k^{(\tau-1)} + b_{hi})$
+
 $f_k^{(\tau)} = \sigma(W_{if}C_k^{(\tau)} + b_{if} + W_{hf}h_k^{(\tau-1)} + b_{hf})$
+
 $g_k^{(\tau)} = \tanh(W_{ig}C_k^{(\tau)} + b_{ig} + W_{hg}h_k^{(\tau-1)} + b_{hg})$
+
 $o_k^{(\tau)} = \sigma(W_{io}C_k^{(\tau)} + b_{io} + W_{ho}h_k^{(\tau-1)} + b_{ho})$
+
 $c_k^{(\tau)} = f_k^{(\tau)} \odot c_k^{(\tau-1)} + i_k^{(\tau)} \odot g_k^{(\tau)}$
+
 $h_k^{(\tau)} = o_k^{(\tau)} \odot \tanh(c_k^{(\tau)})$
 
 여기서 $k \in \{t+h-2, t+h-1, ..., t+h+2\}$이고, $\odot$는 원소별 곱셈입니다.[^1_1]
