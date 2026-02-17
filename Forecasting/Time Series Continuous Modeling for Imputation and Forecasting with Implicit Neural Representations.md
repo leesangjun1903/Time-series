@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# Time Series Continuous Modeling for Imputation and Forecasting with Implicit Neural Representations - 심층 분석
+# Time Series Continuous Modeling for Imputation and Forecasting with Implicit Neural Representations
 
 ## 1. 핵심 주장과 주요 기여
 
@@ -53,15 +51,19 @@
 
 $$
 z^{(j)} \leftarrow z^{(j)} - \alpha \nabla_{z^{(j)}} \mathcal{L}_{T^{(j)}_{in}}(f_{\theta, h_w(z^{(j)})}, x^{(j)})
-$$[^1_1]
+$$
+
+[^1_1]
 
 **Outer Loop** (공유 파라미터 업데이트):
 
 $$
 [\theta, w] \leftarrow [\theta, w] - \eta \nabla_{[\theta,w]} \frac{1}{|B|} \sum_{j \in B} [\mathcal{L}_{T^{(j)}_{in}}(f_{\theta, h_w(z^{(j)})}, x^{(j)}) + \lambda \mathcal{L}_{T^{(j)}_{out}}(f_{\theta, h_w(z^{(j)})}, x^{(j)})]
-$$[^1_1]
+$$
 
-손실 함수: $\mathcal{L}_T(x_t, \tilde{x}_t) := \mathbb{E}_{t \sim T}[(x_t - \tilde{x}_t)^2]$[^1_1]
+[^1_1]
+
+손실 함수: $\mathcal{L}\_T(x_t, \tilde{x}\_t) := \mathbb{E}_{t \sim T}[(x_t - \tilde{x}_t)^2]$[^1_1]
 
 ### 모델 구조
 
