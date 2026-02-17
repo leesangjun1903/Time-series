@@ -1,14 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Surrogate Modeling for Explainable Predictive Time Series Corrections"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-논문의 핵심은 “해석 가능한 시계열 ‘기저(base) 모델’ 위에 올려진 블랙박스 보정 모델의 작용을, 기저 모델 파라미터가 전·후로 어떻게 변하는가(=서로게이트 모델)로 설명하자”는 것입니다. 이를 위해 저자들은 기존 BAPC(Before-and-After Prediction Parameter Comparison)를 시계열로 확장한 SBAPC(Sequential BAPC)를 제안하고, 통합 그래디언트(Integrated Gradients)를 파라미터 공간에 적용해 “어떤 물리·통계적 파라미터가 얼마만큼 보정에 기여했는지”를 정량화합니다.[^1_1]
+# Surrogate Modeling for Explainable Predictive Time Series Corrections
 
 ***
 
