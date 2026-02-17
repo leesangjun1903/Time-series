@@ -1,6 +1,5 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
 
-# DeepGLO 논문 분석: 고차원 시계열 예측을 위한 전역-지역 딥러닝 접근법
+# Think Globally, Act Locally: A Deep Neural Network Approach to High-Dimensional Time Series Forecasting
 
 ## 1. 핵심 주장과 주요 기여
 
@@ -32,7 +31,7 @@ TCN의 간단한 초기화 방식으로, 모든 필터 가중치를 $1/k$ (k는 
 
 **Proposition 1**: 필터 크기가 $k=2$이고 $d$개 레이어를 가진 TCN에서 LeveledInit를 적용하면, 모든 활성화 함수가 ReLU이고 입력이 비음수일 때, 출력 예측값 $\hat{y}_j$는 과거 $l$ 시점의 평균과 같습니다:[^1_1]
 
-$\hat{y}_j = \mu(y_J) = \frac{1}{l} \sum_{i \in J} y_i$
+$\hat{y}\_j = \mu(y_J) = \frac{1}{l} \sum_{i \in J} y_i$
 
 여기서 $J = \{j-l, ..., j-1\}$이고 $l = 2(k-1)2^{d-1}$입니다.[^1_1]
 
