@@ -1,14 +1,7 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+# DAM: Towards A Foundation Model for Time Series Forecasting
 
-# 1. 당신은 AI 분야의 연구자입니다. "DAM: Towards A Foundation Model for Time Series Forecasting"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-3. 핵심 주장과 주요 기여 (간결 요약)
 DAM은 “단일 범용(time-series) 기초 모델”을 목표로, 불규칙 샘플링·다양한 해상도·다양한 예측 시점(가변 horizon)을 동시에 다룰 수 있는 시계열 **forecasting** 모델을 제안한다.[^1_1]
+
 핵심 아이디어는 (1) 과거를 확률적으로 길게 샘플링하는 History Sampling Regime(HSR)과 (2) 연속 시간 $t$에 대해 값을 주는 basis function 조합 $f(t)$의 계수를 Transformer가 출력하게 하여, “하나의 단일 univariate 모델”로 여러 데이터셋에서 장기 예측·제로샷 전이·매우 장기 예측·결측 보간을 모두 잘 수행한다는 것이다.[^1_1]
 
 ***
@@ -38,10 +31,13 @@ p_{\mathrm{hsr}}(x) \propto \frac{1}{1 + \left(\frac{x}{\sigma}\right)^2}, \quad
 $$
 
 와 같은 꼴의 long-tail 분포(논문에서는 $\sigma$를 HSR 폭으로 사용).[^1_1]
-    - 최근 과거일수록 샘플 확률이 크지만, 먼 과거도 유의미한 확률로 샘플되어 “글로벌한 장기 패턴”을 저비용으로 관찰 가능.[^1_1]
-    - 학습·추론 시 둘 다 HSR을 사용하며, context 길이와 $\sigma$는 사후에 조정(tuning) 가능.
+
+- 최근 과거일수록 샘플 확률이 크지만, 먼 과거도 유의미한 확률로 샘플되어 “글로벌한 장기 패턴”을 저비용으로 관찰 가능.[^1_1]
+- 학습·추론 시 둘 다 HSR을 사용하며, context 길이와 $\sigma$는 사후에 조정(tuning) 가능.
+
 2. **Basis function composition에 의한 연속 시간 예측**
-    - 모델의 출력은 미래 시계열 값을 직접 주는 벡터가 아니라, 연속 시간 함수
+
+- 모델의 출력은 미래 시계열 값을 직접 주는 벡터가 아니라, 연속 시간 함수
 
 $$
 f(t; \theta)
@@ -55,8 +51,10 @@ f(t; \theta) = \mathrm{IQR}\cdot \sum_{\omega} \left(\theta_{\omega,1}\sin(2\pi 
 $$
 
 여기서 $\mathrm{MED}$와 $\mathrm{IQR}$은 각 시계열에 대해 온라인으로 계산되는 중앙값과 사분위수 범위, $\theta_{\omega,1},\theta_{\omega,2}$는 DAM이 예측하는 basis 계수이다.[^1_1]
-    - 시간 단위(초 기준)를 day, week, year 스케일에 맞춰서 주파수들을 구성해, 1분~10년까지의 period를 커버.[^1_1]
-    - 이 구조 덕분에 horizon을 고정하지 않고 “임의의 시간 $t$”에 대해 예측 가능하며, 매우 장기 forecasting·과거 재구성(backcasting)·imputation에 공통 메커니즘을 사용한다.[^1_1]
+
+- 시간 단위(초 기준)를 day, week, year 스케일에 맞춰서 주파수들을 구성해, 1분~10년까지의 period를 커버.[^1_1]
+- 이 구조 덕분에 horizon을 고정하지 않고 “임의의 시간 $t$”에 대해 예측 가능하며, 매우 장기 forecasting·과거 재구성(backcasting)·imputation에 공통 메커니즘을 사용한다.[^1_1]
+
 3. **Transformer backbone + 두 종류의 토큰**
     - 입력:
         - HSR로 샘플된 time-value 쌍 $(t_i, v_i)$ → TV-token.
