@@ -1,13 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Learning Deep Time-index Models for Time Series Forecasting"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-3. 핵심 주장과 주요 기여 (간결 요약)
+# Learning Deep Time-index Models for Time Series Forecasting
 
 - 이 논문은 “시간 인덱스(time-index)”에만 의존하는 딥러닝 모델은 표현력은 높지만 **귀납적 편향 부재로 미래 시점 일반화에 실패한다**는 한계를 지적하고, 메타-최적화(meta-optimization)를 통해 이를 해결하는 DeepTime(DeepTIMe) 프레임워크를 제안한다.[^1_1][^1_2]
 - DeepTime은 암묵적 신경 표현(Implicit Neural Representation, INR)과 닫힌형 해(closed-form) Ridge 회귀를 결합한 2단계(내·외부 루프) 메타 학습 구조로, 긴 시계열 예측(LSTF)에서 Transformer 계열 SOTA와 견줄 정도의 정확도와 높은 효율성을 달성한다.[^1_3][^1_1]
@@ -19,12 +10,14 @@
 ### 1.1 문제 설정: 시간-인덱스 모델의 일반화 실패
 
 - 전통적 시계열 예측은
-    - 히스토리 기반 모델:
+
+- 히스토리 기반 모델:
 
 $$
 \hat{y}_{t+1} = f(y_t, y_{t-1}, \dots)
 $$
-    - 시간-인덱스 모델:
+
+- 시간-인덱스 모델:
 
 $$
 \hat{y}_{t+1} = f(\tau_{t+1})
@@ -39,7 +32,8 @@ $$
 
 형태로 추세 $g$, 계절성 $s$, 이벤트 $h$를 **선형/다항/조각 선형** 등 단순한 함수로 미리 정해두지만, 복잡한 시계열에는 표현력이 부족하다.[^1_1]
 - 자연스러운 확장으로 $f(\tau_t)$를 신경망으로 파라미터화한 “딥 시간-인덱스 모델”을 생각할 수 있으나, 일반적인 지도학습으로 학습하면 **훈련 구간 $[0, T']$에는 과적합하지만 $[T', T]$ 미래 구간으로는 외삽(extrapolation)을 못 하는 문제**가 발생한다.[^1_1]
-    - 이는 고전 모델에 존재하던 “선형 추세, 주기성” 같은 강한 **귀납적 편향(inductive bias)**가 사라지기 때문이라고 분석한다.[^1_1]
+
+- 이는 고전 모델에 존재하던 “선형 추세, 주기성” 같은 강한 **귀납적 편향(inductive bias)**가 사라지기 때문이라고 분석한다.[^1_1]
 
 
 ### 1.2 DeepTime의 기본 아이디어
@@ -51,7 +45,8 @@ DeepTime은 다음 질문에 답하려 한다.[^1_2][^1_1]
 해결 전략은 **시간-인덱스 INR + 메타-최적화(이중 루프)**이다.[^1_4][^1_1]
 
 1. **INR 기반 시간-인덱스 모델**
-    - 좌표 기반 MLP $f_\theta : \mathbb{R}^c \to \mathbb{R}^m$를 사용:
+
+- 좌표 기반 MLP $f_\theta : \mathbb{R}^c \to \mathbb{R}^m$를 사용:
 
 $$
 \begin{aligned}
@@ -63,13 +58,16 @@ $$
 
 여기서 $\tau$는 시간 인덱스, $m$은 다변량 시계열 차원이다.[^1_1]
     - MLP의 **spectral bias**를 완화하기 위해 Fourier feature layer를 앞단에 추가한다.[^1_1]
+
 2. **Concatenated Fourier Features (CFF)**
-    - 기존 Random Fourier Features:
+
+- 기존 Random Fourier Features:
 
 $$
 \gamma(\tau) = [\sin(2\pi B \tau), \cos(2\pi B \tau)]^\top, \quad B \sim \mathcal{N}(0, \sigma^2)
 $$
-    - 이 논문은 여러 스케일 $\{\sigma_s\}_{s=1}^S$를 동시에 사용하는 CFF를 제안:
+
+- 이 논문은 여러 스케일 $\{\sigma_s\}_{s=1}^S$를 동시에 사용하는 CFF를 제안:
 
 $$
 \gamma(\tau) = [\sin(2\pi B_1\tau), \cos(2\pi B_1\tau), \dots, \sin(2\pi B_S\tau), \cos(2\pi B_S\tau)]^\top
@@ -132,7 +130,6 @@ $$
 
 $$
 \theta_t^\* = \arg\min_{\theta} \sum_{j=-L}^{-1} L\big( f(\tau_{t+j}; \theta, \phi),\, y_{t+j} \big)
-\tag{3}
 $$
 
 즉, 현재 lookback window에 대해 $\theta$만 최적화한다.
@@ -140,7 +137,6 @@ $$
 
 $$
 \phi^\* = \arg\min_{\phi} \sum_{t=L+1}^{T-H+1} \sum_{i=0}^{H-1} L\big( f(\tau_{t+i}; \theta_t^\*, \phi),\, y_{t+i} \big)
-\tag{2}
 $$
 
 여러 lookback–horizon 쌍에서 공통의 메타 파라미터 $\phi$를 학습해, 다양한 “국소적 추세”에 대해 잘 외삽하는 **귀납적 편향**을 구축한다.[^1_1]
@@ -181,7 +177,6 @@ $$
 $$
 W_t^{(K)\*} 
 = (Z_{t-L:t}^\top Z_{t-L:t} + \lambda I)^{-1} Z_{t-L:t}^\top Y_{t-L:t}
-\tag{4}
 $$
 
 예측은
@@ -235,7 +230,7 @@ $$
 
 $$
 \begin{aligned}
-er(Q) \le &\;
+er(Q) \le &
 \frac{c_1 c_2}{(1-e^{-c_1})(1-e^{-c_2})}
 \cdot \frac{1}{n} \sum_{k=1}^n \hat{er}(Q, S_k) \\
 &+ \frac{c_1}{1-e^{-c_1}} \cdot
@@ -243,7 +238,6 @@ er(Q) \le &\;
 &+ \frac{c_1 c_2}{(1-e^{-c_2})(1-e^{-c_1})}
 \cdot \frac{\mathrm{KL}(Q\|P) + \log \frac{2n}{\delta}}{(H+L) c_2}
 \end{aligned}
-\tag{5}
 $$
 
 와 같은 형태의 경계를 얻는다.[^1_1]
