@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# LightCTS 논문 종합 분석
+# LightCTS: A Lightweight Framework for Correlated Time Series Forecasting
 
 ## 1. 핵심 주장 및 주요 기여
 
