@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# Domain-Oriented Time Series Inference Agents 논문 분석
+# Domain-Oriented Time Series Inference Agents for Reasoning and Automated Analysis
 
 ## 1. 핵심 주장과 주요 기여
 
