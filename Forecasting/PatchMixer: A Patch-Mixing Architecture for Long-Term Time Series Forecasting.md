@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# PatchMixer: 장기 시계열 예측을 위한 패치 기반 CNN 아키텍처 종합 분석
+# PatchMixer: A Patch-Mixing Architecture for Long-Term Time Series Forecasting
 
 ## 1. 핵심 주장과 주요 기여
 
