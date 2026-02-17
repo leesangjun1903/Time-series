@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# "Forecasting Time Series with Constraints" 논문 분석
+# Forecasting Time Series with Constraints
 
 ## 핵심 주장과 주요 기여
 
@@ -43,9 +41,9 @@ $$
 
 **WeaKL 최소화기**:
 
-$$
+```math
 \hat{\theta} = \left[\left(\sum_{j=1}^{n} \Phi_{t_j}^* \Lambda^* \Lambda \Phi_{t_j}\right) + nM^*M\right]^{-1} \sum_{j=1}^{n} \Phi_{t_j}^* \Lambda^* \Lambda Y_{t_j}
-$$
+```
 
 여기서 $\Phi_t$는 $d_2 \times \dim(\theta)$ 블록 대각 특징 행렬입니다.[^1_1]
 
@@ -55,7 +53,7 @@ $$
 
 - **가법 모델**: $f^{\star}(x_1, \ldots, x_{d_1}) = \sum_{\ell=1}^{d_1} g_{\ell}^{\star}(x_{\ell})$[^1_1]
 - **온라인 적응**: $f^{\star}(t, x_1, \ldots, x_{d_1}) = h_0^{\star}(t) + \sum_{\ell=1}^{d_1} (1 + h_{\ell}^{\star}(t))g_{\ell}^{\star}(x_{\ell})$[^1_1]
-- **Fourier 맵**: $\phi_{\ell}(x) = (\exp(i\langle x, k\rangle/2))_{\|k\|_{\infty} \leq m}^{\top}$[^1_1]
+- **Fourier 맵**: $\phi_{\ell}(x) = (\exp(i\langle x, k\rangle/2))\_{\|k\|_{\infty} \leq m}^{\top}$[^1_1]
 
 **2. 학습 제약(Learning Constraints)**:
 
@@ -84,23 +82,23 @@ $$
 L(\theta) = \frac{1}{n} \sum_{j=1}^{n} |\langle \phi_1(t_j, X_{t_j}), \theta \rangle - W_{t_j}|^2 + \|M\theta\|_2^2
 $$
 
-여기서 $W_t = Y_t - \sum_{\ell=1}^{d_1} \hat{g}_{\ell}(X_{\ell,t})$입니다.[^1_1]
+여기서 $W_t = Y_t - \sum_{\ell=1}^{d_1} \hat{g}\_{\ell}(X_{\ell,t})$입니다.[^1_1]
 
 ### WeaKL-BU (Bottom-Up)
 
 계층적 예측의 하향식 접근법:
 
-$$
+```math
 \hat{\theta} = \left[\left(\sum_{j=1}^{n} \Phi_{t_j}^* S^* \Lambda^* \Lambda S \Phi_{t_j}\right) + nM^*M\right]^{-1} \sum_{j=1}^{n} \Phi_{t_j}^* \Lambda^* \Lambda Y_{t_j}
-$$
+```
 
 ### WeaKL-T (Transfer Learning)
 
 전이 학습을 결합한 계층적 예측:
 
-$$
+```math
 \hat{\theta} = \left[\left(\sum_{j=1}^{n} \Phi_{t_j}^* S^* \Lambda^* \Lambda S \Phi_{t_j}\right) + n\lambda\Pi_J^*(I_{D|J|} - P_J)\Pi_J + nM^*M\right]^{-1} \sum_{j=1}^{n} \Phi_{t_j}^* \Lambda^* \Lambda Y_{t_j}
-$$
+```
 
 여기서 $P_J$는 직교 투영 행렬입니다.[^1_1]
 
