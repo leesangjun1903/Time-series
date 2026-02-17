@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# DSANet: Dual Self-Attention Network for Multivariate Time Series Forecasting 상세 분석
+# DSANet: Dual Self-Attention Network for Multivariate Time Series Forecasting
 
 ## 1. 핵심 주장과 주요 기여
 
@@ -67,7 +65,7 @@ Local temporal convolution 이후의 자기 주의 모듈도 유사한 절차를
 
 **최종 예측 생성:**
 
-먼저 dense layer를 사용하여 두 자기 주의 모듈의 출력을 결합하여 자기 주의 기반 예측 $\hat{X}_{T+h}^D \in \mathbb{R}^D$를 얻습니다. DSANet의 최종 예측 $\hat{X}_{T+h}$는 자기 주의 기반 예측 $\hat{X}_{T+h}^D$와 AR 예측 $\hat{X}_{T+h}^L$을 합산하여 얻습니다.[^1_1]
+먼저 dense layer를 사용하여 두 자기 주의 모듈의 출력을 결합하여 자기 주의 기반 예측 $\hat{X}\_{T+h}^D \in \mathbb{R}^D$를 얻습니다. DSANet의 최종 예측 $\hat{X}\_{T+h}$는 자기 주의 기반 예측 $\hat{X}\_{T+h}^D$와 AR 예측 $\hat{X}_{T+h}^L$을 합산하여 얻습니다.[^1_1]
 
 ### 학습 방법
 
