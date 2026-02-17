@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-## WaveBound: 시계열 예측의 안정적 학습을 위한 동적 오차 한계
+# WaveBound: Dynamic Error Bounds for Stable Time Series Forecasting
 
 WaveBound는 시계열 예측 모델의 과적합 문제를 해결하기 위해 훈련 손실에 동적 오차 한계를 도입한 정규화 기법입니다. 이 방법은 각 시간 단계와 특징마다 개별적으로 오차 한계를 조정하여 모델이 예측 불가능한 패턴에 과도하게 적합되는 것을 방지합니다.[^1_1]
 
@@ -35,7 +33,7 @@ $$
 R(g) = \frac{1}{MK} \sum_{j,k} R_{jk}(g), \quad \hat{R}(g) = \frac{1}{MK} \sum_{j,k} \hat{R}_{jk}(g)
 $$
 
-여기서 $R_{jk}(g) := \mathbb{E}_{(u,v) \sim p(u,v)} [||g_{jk}(u) - v_{jk}||^2]$이고, $\hat{R}_{jk}(g) := \frac{1}{N} \sum_{i=1}^N ||g_{jk}(x_i) - (y_i)_{jk}||^2$입니다[^1_1].
+여기서 $R_{jk}(g) := \mathbb{E}\_{(u,v) \sim p(u,v)} [||g_{jk}(u) - v_{jk}||^2]$ 이고, $\hat{R}\_{jk}(g) := \frac{1}{N} \sum_{i=1}^N ||g_{jk}(x_i) - (y_i)_{jk}||^2$입니다[^1_1].
 
 ### Wave Empirical Risk
 
@@ -69,19 +67,19 @@ WaveBound의 핵심 메커니즘은 다음과 같습니다:[^1_1]
 2. **동적 오차 한계 추정**: 타겟 네트워크가 각 시간 단계와 특징에 대한 적절한 오차 하한을 추정하여, 소스 네트워크가 해당 한계 이하로 손실을 낮추려 할 때 그래디언트 상승을 수행하도록 합니다[^1_1]
 3. **미니배치 최적화**: Jensen 부등식에 의해 다음이 성립합니다:[^1_1]
 
-$$
+```math
 \hat{R}^{wb}_{jk}(g) \leq \frac{1}{T} \sum_{t=1}^T (|\hat{R}_t)_{jk}(g) - (\hat{R}_t)_{jk}(g^*) + \epsilon| + (\hat{R}_t)_{jk}(g^*) - \epsilon)
-$$
+```
 
 ## 이론적 보장: MSE 감소
 
 **Theorem 1**: 다음 두 조건이 만족될 때 $\text{MSE}(\hat{R}(g)) \geq \text{MSE}(\hat{R}^{wb}(g))$가 성립합니다:[^1_1]
 
-(a) 모든 $(i,j), (k,l) \in I$에 대해 $(i,j) \neq (k,l)$일 때, $\hat{R}_{ij}(g) - \hat{R}_{ij}(g^*) \perp \hat{R}_{kl}(g)$
+(a) 모든 $(i,j), (k,l) \in I$에 대해 $(i,j) \neq (k,l)$일 때, $\hat{R}\_{ij}(g) - \hat{R}\_{ij}(g^*) \perp \hat{R}_{kl}(g)$
 
-(b) $J(X)$의 모든 $(i,j)$에 대해 $\hat{R}_{ij}(g^*) < R_{ij}(g) + \epsilon$ (거의 확실하게)
+(b) $J(X)$의 모든 $(i,j)$에 대해 $\hat{R}\_{ij}(g^*) < R_{ij}(g) + \epsilon$ (거의 확실하게)
 
-이 정리는 네트워크 $g^*$가 충분한 표현력을 가지고 각 출력 변수에서 $g$와 $g^*$ 간의 손실 차이가 다른 출력 변수의 손실과 무관할 때, wave empirical risk 추정기의 MSE가 경험적 위험 추정기의 MSE보다 작을 수 있음을 보여줍니다.[^1_1]
+이 정리는 네트워크 $g^\*$가 충분한 표현력을 가지고 각 출력 변수에서 $g$와 $g^*$ 간의 손실 차이가 다른 출력 변수의 손실과 무관할 때, wave empirical risk 추정기의 MSE가 경험적 위험 추정기의 MSE보다 작을 수 있음을 보여줍니다.[^1_1]
 
 ## 성능 향상
 
