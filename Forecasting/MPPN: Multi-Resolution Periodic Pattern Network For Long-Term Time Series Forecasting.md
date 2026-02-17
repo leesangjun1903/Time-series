@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# MPPN: Multi-Resolution Periodic Pattern Network 상세 분석
+# MPPN: Multi-Resolution Periodic Pattern Network For Long-Term Time Series Forecasting
 
 ## 1. 핵심 주장과 주요 기여
 
@@ -298,10 +296,6 @@ MPPN은 2020년 이후 연구들과 비교하여 다음과 같은 차별점을 �
 - **Foundation Model**: 사전 학습된 패턴 지식 활용[^1_5]
 
 ***
-
-**참고**: 수식 표기와 관련하여, 시스템 표준에 따라 인라인 수식은 $$, 블록 수식은 $$
-
-$$를 사용했습니다. LaTeX 렌더링 시 적절히 표시될 것입니다.
 
 <span style="display:none">[^1_14][^1_15][^1_16][^1_17][^1_18][^1_19][^1_20][^1_21][^1_22][^1_23][^1_24][^1_25][^1_26][^1_27][^1_28][^1_29][^1_30][^1_31][^1_32][^1_33][^1_34][^1_35][^1_36][^1_37][^1_38][^1_39]</span>
 
