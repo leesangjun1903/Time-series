@@ -1,16 +1,5 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
 
-# 1. 당신은 AI 분야의 연구자입니다. "Curse of Attention: A Kernel-Based Perspective for Why Transformers Fail to Generalize on Time Series Forecasting and Beyond"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-이제 논문의 핵심 내용과 최신 연구 비교를 바탕으로 한국어로 상세한 답변을 작성하겠습니다.
-
-# "Curse of Attention: A Kernel-Based Perspective for Why Transformers Fail to Generalize on Time Series Forecasting and Beyond" 논문 분석
+# Curse of Attention: A Kernel-Based Perspective for Why Transformers Fail to Generalize on Time Series Forecasting and Beyond
 
 ## 1. 핵심 주장과 주요 기여
 
@@ -108,7 +97,13 @@ $t \geq \Omega\left(\frac{m}{\eta\lambda v_{\min}}\right)$일 때:
 - $\Pr[w_r(t) > 0 | a_r = 1] \geq 1 - \delta$
 - $\Pr[w_r(t) < 0 | a_r = -1] \geq 1 - \delta$
 
-여기서 $v_{\min} := \min\left\{\frac{1}{d}\sum_{k=1}^{d}(x_{i,k} - \bar{x}_i)^2\right\}_{i=1}^{n}$입니다.[^1_1]
+여기서 
+
+```math
+v_{\min} := \min\left\{\frac{1}{d}\sum_{k=1}^{d}(x_{i,k} - \bar{x}_i)^2\right\}_{i=1}^{n}
+```
+
+입니다.[^1_1]
 
 **핵심 통찰**: 은닉층 가중치 $w_r$가 출력층 파라미터 $a_r$의 방향으로 업데이트되는 경향이 있습니다. 이는 vanilla Attention에서 $W_Q$와 $W_K$의 가중치가 $W_V$ 방향으로 업데이트됨을 의미합니다.[^1_1]
 
@@ -160,7 +155,7 @@ $$
 
 즉, attention은 OOD 리스크를 충분히 낮은 수준으로 줄일 수 없습니다.[^1_1]
 
-**Part 2 (Linear의 성공)**: 유일한 $w_{\text{lin}}^*$가 존재하여 $\sum_{k=1}^{d-1} w_{\text{lin},k}^* \cdot P_k = P_{d+1} - P_d$를 만족하며:
+**Part 2 (Linear의 성공)**: 유일한 $w\_{\text{lin}}^\*$가 존재하여 $\sum_{k=1}^{d-1} w_{\text{lin},k}^* \cdot P_k = P_{d+1} - P_d$를 만족하며:
 
 $$
 R(f_{\text{lin}}) \leq \tilde{O}(\sigma^2)
@@ -219,10 +214,13 @@ $$
 $$
 
 여기서 $\lambda \in (0,1)$은 학습 가능한 파라미터이며, $S_1 := \text{softmax}(XW_1X)$, $S_2 := \text{softmax}(XW_2X)$입니다. 이는 관련 컨텍스트에 대한 attention을 증폭시키면서 노이즈를 제거하여 asymmetric learning을 완화할 수 있습니다.[^1_1]
+
 2. **Patching**:
 시계열 $x \in \mathbb{R}^T$를 $P(x) \in \mathbb{R}^{L \times d}$로 reshape하는 변환으로, Transformer가 정확한 feature를 포착하는 능력을 향상시킵니다.[^1_1]
+
 3. **Rotary Position Embedding (RoPE)**:
 RoPE의 long-term decay 특성으로 인해 attention이 local feature에 더 큰 값을 할당하도록 강제합니다. 이는 time-varying inductive bias의 중요성을 강조합니다.[^1_1]
+
 4. **Gradient Correction, Regularization, Weight Decay**:
 보정 또는 정규화 항을 활용하여 Case 2의 상황을 완화할 수 있습니다. 예를 들어, Adam optimizer가 SGD보다 Transformer 학습에서 더 나은 성능을 보입니다.[^1_1]
 
