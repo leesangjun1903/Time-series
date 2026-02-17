@@ -1,5 +1,8 @@
 # Surrogate Modeling for Explainable Predictive Time Series Corrections
 
+논문의 핵심은 “해석 가능한 시계열 ‘기저(base) 모델’ 위에 올려진 블랙박스 보정 모델의 작용을, 기저 모델 파라미터가 전·후로 어떻게 변하는가(=서로게이트 모델)로 설명하자”는 것입니다.  
+이를 위해 저자들은 기존 BAPC(Before-and-After Prediction Parameter Comparison)를 시계열로 확장한 SBAPC(Sequential BAPC)를 제안하고, 통합 그래디언트(Integrated Gradients)를 파라미터 공간에 적용해 “어떤 물리·통계적 파라미터가 얼마만큼 보정에 기여했는지”를 정량화합니다.[^1_1]
+
 ***
 
 ## 1. 논문의 핵심 주장과 주요 기여
