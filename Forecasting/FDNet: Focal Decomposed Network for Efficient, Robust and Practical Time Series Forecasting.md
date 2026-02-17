@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# FDNet: Focal Decomposed Network 논문 심층 분석
+# FDNet: Focal Decomposed Network for Efficient, Robust and Practical Time Series Forecasting
 
 FDNet은 시계열 예측에서 기존의 전역 특징 추출 패러다임을 깨고, 지역 세밀 특징만으로도 효과적인 예측이 가능함을 이론적·실증적으로 입증한 2023년 연구입니다. 본 모델은 6개 실세계 벤치마크에서 13개 SOTA 모델 대비 평균 38.4% MSE 감소를 달성했습니다.[^1_1]
 
@@ -40,8 +38,6 @@ FDNet은 시계열 예측에서 기존의 전역 특징 추출 패러다임을 �
 
 
 ### 제안하는 방법 (수식 포함)
-
-**참고**: 시스템 설정에 따라 LaTeX 수식은 $$ 형식으로 제공됩니다.
 
 #### 분해된 예측 공식 (Decomposed Forecasting Formula)
 
@@ -163,7 +159,9 @@ ETTh1 단변량 예측에서 FEDformer, ETSformer가 더 나은 성능:[^1_1]
 
 FDNet은 KS(Kolmogorov-Smirnov) 테스트를 통해 실세계 시계열의 비정상성을 입증했습니다:[^1_1]
 
-KS 통계량: $$
+KS 통계량: 
+
+$$
 D = \sup_x |F(\{x_i\}_{i=m}^{m+n_1}) - F(\{x_i\}_{i=n}^{n+n_1})|
 $$
 
