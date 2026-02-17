@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# LSEAttention 기반 시계열 예측 모델 상세 분석
+# LATST : LSEAttention is All You Need for Time Series Forecasting
 
 ## 1. 핵심 주장과 주요 기여
 
