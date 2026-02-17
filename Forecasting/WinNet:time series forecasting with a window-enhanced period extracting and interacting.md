@@ -1,6 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# WinNet: 시계열 예측을 위한 창 기반 주기 추출 및 상호작용 모델
+# WinNet:time series forecasting with a window-enhanced period extracting and interacting
 
 ## 1. 핵심 주장 및 주요 기여
 
@@ -41,7 +39,7 @@ $$
 X^{\text{col}}_{2D} = \text{Transpose}(X^{\text{row}}_{2D})
 $$
 
-여기서 $X_{1D} \in \mathbb{R}^{sl \times c}$는 원본 시퀀스, $X^{\text{row}}_{2D} \in \mathbb{R}^{c \times n \times w}$는 행이 주기 창을 나타내는 intra-period, $X^{\text{col}}_{2D} \in \mathbb{R}^{c \times w \times n}$는 열이 주기 창을 나타내는 inter-period입니다.[^1_1]
+여기서 $X_{1D} \in \mathbb{R}^{sl \times c}$는 원본 시퀀스, $X^{\text{row}}\_{2D} \in \mathbb{R}^{c \times n \times w}$는 행이 주기 창을 나타내는 intra-period, $X^{\text{col}}_{2D} \in \mathbb{R}^{c \times w \times n}$는 열이 주기 창을 나타내는 inter-period입니다.[^1_1]
 
 #### Two-Dimensional Period Decomposition (TDPD)
 
