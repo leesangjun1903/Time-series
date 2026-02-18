@@ -1,12 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "TKAN: Temporal Kolmogorov-Arnold Networks"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
+# TKAN: Temporal Kolmogorov-Arnold Networks
 
 TKAN 논문의 핵심 주장은 “KAN의 표현력·해석력 + LSTM의 장기 메모리”를 결합한 새로운 순환 구조로, 특히 장기 multi-step 시계열 예측에서 GRU/LSTM보다 더 높은 정확도와 더 안정적인 일반화(작은 분산, 과적합 감소)를 달성한다는 것입니다.[^1_1][^1_2]
 
@@ -55,13 +47,13 @@ KAN 레이어에서는 노드 간의 “엣지”마다 1차원 활성함수 $\p
 하나의 KAN 레이어 $l$에 대해, 입력 벡터 $\mathbf{x}^{(l)} \in \mathbb{R}^{n_l}$, 출력 $\mathbf{x}^{(l+1)} \in \mathbb{R}^{n_{l+1}}$라 하면
 
 $$
-x^{(l+1)}_j = \sum_{i=1}^{n_l} \phi_{l,j,i}\!\big(x^{(l)}_i\big), \quad j=1,\dots,n_{l+1} \tag{1}
+x^{(l+1)}_j = \sum_{i=1}^{n_l} \phi_{l,j,i}\!\big(x^{(l)}_i\big), \quad j=1,\dots,n_{l+1} 
 $$
 
 이고, 행렬 형태로는
 
 $$
-\mathbf{x}^{(l+1)} = \Phi_l(\mathbf{x}^{(l)}), \tag{2}
+\mathbf{x}^{(l+1)} = \Phi_l(\mathbf{x}^{(l)}), 
 $$
 
 여기서 $\Phi_l$은 각 엣지의 B‑스플라인 함수 집합으로 정의된 “함수 행렬”입니다.[^1_3][^1_1]
@@ -80,7 +72,7 @@ $$
 레이어 $l$에서 시점 $t$의 입력을 $x_t \in \mathbb{R}^d$, 레이어 별 서브메모리 벡터를 $h_{l,t} \in \mathbb{R}^{\text{KANout}}$이라 두면,
 
 $$
-s_{l,t} = W_{l,x} x_t + W_{l,h} h_{l,t-1}, \tag{3}
+s_{l,t} = W_{l,x} x_t + W_{l,h} h_{l,t-1}, 
 $$
 
 여기서
@@ -91,13 +83,13 @@ $$
 이전 단계에서 정의한 KAN 레이어 $\mathcal{K}_l$를 적용해
 
 $$
-o_{l,t} = \mathcal{K}_l(s_{l,t}), \tag{4}
+o_{l,t} = \mathcal{K}_l(s_{l,t}), 
 $$
 
 그리고 레이어 내부 메모리 업데이트를
 
 $$
-h_{l,t} = W_{hh} h_{l,t-1} + W_{hz} o_{l,t}, \tag{5}
+h_{l,t} = W_{hh} h_{l,t-1} + W_{hz} o_{l,t}, 
 $$
 
 형태로 정의해, 과거 은닉 상태와 현재 KAN 출력을 선형 결합하는 구조를 취합니다.[^1_1]
@@ -116,32 +108,32 @@ $$
 먼저 $L$개의 RKAN 레이어 출력 $s_{1,t},\dots,s_{L,t}$를
 
 $$
-r_t = \text{Concat}\big( s_{1,t},\dots,s_{L,t} \big) \tag{6}
+r_t = \text{Concat}\big( s_{1,t},\dots,s_{L,t} \big) 
 $$
 
 로 결합합니다.[^1_1]
 
 LSTM 게이트는 전형적인 형태를 따릅니다(논문에서는 활성함수 기호를 생략하고 “activation vector”로 지칭):[^1_1]
 
-$$
+```math
 \begin{aligned}
-f_t &= W_f x_t + U_f h_{t-1} + b_f, \tag{7} \\
-i_t &= W_i x_t + U_i h_{t-1} + b_i, \tag{8} \\
-o_t &= W_o r_t + b_o, \tag{9}
+f_t &= W_f x_t + U_f h_{t-1} + b_f, \\
+i_t &= W_i x_t + U_i h_{t-1} + b_i, \\
+o_t &= W_o r_t + b_o, 
 \end{aligned}
-$$
+```
 
 여기서 $f_t, i_t, o_t$는 각각 forget, input, output 게이트 활성 벡터입니다.[^1_1]
 
 셀 상태와 최종 은닉 상태는
 
-$$
+```math
 \begin{aligned}
-\tilde c_t &= W_c x_t + U_c h_{t-1} + b_c, \tag{10} \\
-c_t &= f_t \odot c_{t-1} + i_t \odot \tilde c_t, \tag{11} \\
-h_t &= o_t \odot \tanh(c_t), \tag{12}
+\tilde c_t &= W_c x_t + U_c h_{t-1} + b_c,  \\
+c_t &= f_t \odot c_{t-1} + i_t \odot \tilde c_t,  \\
+h_t &= o_t \odot \tanh(c_t),
 \end{aligned}
-$$
+```
 
 로 업데이트됩니다.[^1_1]
 
