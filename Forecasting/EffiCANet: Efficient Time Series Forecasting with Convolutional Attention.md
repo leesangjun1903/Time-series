@@ -1,18 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "EffiCANet: Efficient Time Series Forecasting with Convolutional Attention"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-이제 논문의 상세 내용과 최신 관련 연구들에 대한 충분한 정보를 갖추었습니다. 아래에 포괄적인 분석 답변을 작성합니다.
-
-***
-
-# EffiCANet: 심층 연구 분석 보고서
+# EffiCANet: Efficient Time Series Forecasting with Convolutional Attention
 
 > **Xinxing Zhou et al., "EffiCANet: Efficient Time Series Forecasting with Convolutional Attention"**, arXiv:2411.04669v1 (2024)[^1_1][^1_2]
 
@@ -44,7 +30,9 @@ EffiCANet은 **정확도와 계산 효율성의 균형**이라는 기존 딥러�
 
 입력 다변량 시계열 $\mathbf{X} \in \mathbb{R}^{M \times T}$에 대해, 모델 $\mathcal{F}$는 과거 $H$-스텝 윈도우로부터 미래 $\tau$-스텝을 예측합니다:
 
-$\hat{\mathbf{X}}_{t_0:t_0+\tau} = \mathcal{F}_\Phi(\mathbf{X}_{t_0-H:t_0}) \tag{1}$
+```math
+\hat{\mathbf{X}}_{t_0:t_0+\tau} = \mathcal{F}_\Phi(\mathbf{X}_{t_0-H:t_0}) 
+```
 
 여기서 $\Phi$는 모델 파라미터를 나타냅니다.[^1_1]
 
@@ -56,7 +44,9 @@ $\hat{\mathbf{X}}_{t_0:t_0+\tau} = \mathcal{F}_\Phi(\mathbf{X}_{t_0-H:t_0}) \tag
 
 입력 데이터는 **패칭 및 임베딩** → **$L$개의 스택 블록 (TLDC → IVGC → GTVA)** → **예측 헤드(Predict Head)** 순서로 처리됩니다. 각 블록의 출력은 다음과 같이 정의됩니다:[^1_1]
 
-$\mathbf{Z}^{(l)} = f^{(l)}_{\text{Block}}(\mathbf{Z}^{(l-1)}), \quad \mathbf{Z}^{(0)} = \mathbf{X}_{\text{emb}} \tag{2}$
+```math
+\mathbf{Z}^{(l)} = f^{(l)}_{\text{Block}}(\mathbf{Z}^{(l-1)}), \quad \mathbf{Z}^{(0)} = \mathbf{X}_{\text{emb}}
+```
 
 ***
 
@@ -66,15 +56,21 @@ $\mathbf{Z}^{(l)} = f^{(l)}_{\text{Block}}(\mathbf{Z}^{(l-1)}), \quad \mathbf{Z}
 
 **1단계 - 깊이별 합성곱 (DW Conv):** 지역 단기 의존성 포착
 
-$\mathbf{X}_{\text{local}} = \text{DW-Conv}(\mathbf{X}_{\text{emb}}) \tag{3}$
+```math
+\mathbf{X}_{\text{local}} = \text{DW-Conv}(\mathbf{X}_{\text{emb}})
+```
 
 **2단계 - 깊이별 팽창 합성곱 (DW-D Conv):** 팽창률 $d$를 활용한 장기 의존성 확장
 
-$\mathbf{X}_{\text{dilated}} = \text{DW-D-Conv}(\mathbf{X}_{\text{local}}) \tag{4}$
+```math
+\mathbf{X}_{\text{dilated}} = \text{DW-D-Conv}(\mathbf{X}_{\text{local}})
+```
 
 **요소별 합산으로 단·장기 특징 결합:**
 
-$\mathbf{X}_{\text{combined}} = \mathbf{X}_{\text{dilated}} + \mathbf{X}_{\text{local}} \tag{5}$
+```math
+\mathbf{X}_{\text{combined}} = \mathbf{X}_{\text{dilated}} + \mathbf{X}_{\text{local}}
+```
 
 **계산 복잡도 비교:**
 
@@ -84,7 +80,7 @@ $\mathbf{X}_{\text{combined}} = \mathbf{X}_{\text{dilated}} + \mathbf{X}_{\text{
 | 표준 대형 커널 | $(M \times D)(K+1)$ | $2MDK N$ |
 | TLDC | $MD(2d+1+\lceil K/d \rceil)$ | $2MD(2d-1+\lceil K/d \rceil)N$ |
 
-복잡도 감소 비율은 팽창률에 반비례($O(1/d)$)하며, $K=55$, $d=5$ 조건에서 파라미터 **61% 감소**, FLOPs **64% 감소**.[^1_1]
+복잡도 감소 비율은 팽창률에 반비례( $O(1/d)$ )하며, $K=55$, $d=5$ 조건에서 파라미터 **61% 감소**, FLOPs **64% 감소**.[^1_1]
 
 ***
 
@@ -94,13 +90,19 @@ $\mathbf{X}_{\text{combined}} = \mathbf{X}_{\text{dilated}} + \mathbf{X}_{\text{
 
 **패딩 길이 계산:**
 
-$N_{\text{pad1}} = \begin{cases} 0 & \text{if } N \equiv 0 \pmod{W} \\ W - (N \bmod W) & \text{otherwise} \end{cases} \tag{13}$
+```math
+N_{\text{pad1}} = \begin{cases} 0 & \text{if } N \equiv 0 \pmod{W} \\ W - (N \bmod W) & \text{otherwise} \end{cases}
+```
 
-$N_{\text{left\_pad2}} = \lfloor W/2 \rfloor, \quad N_{\text{right\_pad2}} = W - \lfloor W/2 \rfloor + N_{\text{pad1}} \tag{14}$
+```math
+N_{\text{left\_pad2}} = \lfloor W/2 \rfloor, \quad N_{\text{right\_pad2}} = W - \lfloor W/2 \rfloor + N_{\text{pad1}} 
+```
 
 **두 경로의 그룹 합성곱 후 합산:**
 
-$\mathbf{Y} = \text{Conv}(\mathbf{Y}_{\text{padded1}} + \mathbf{Y}_{\text{padded2}}) \tag{16}$
+```math
+\mathbf{Y} = \text{Conv}(\mathbf{Y}_{\text{padded1}} + \mathbf{Y}_{\text{padded2}})
+```
 
 ***
 
@@ -110,23 +112,35 @@ SE(Squeeze-and-Excitation) 원리를 **시간 어텐션**과 **변수 어텐션*
 
 **시간 어텐션:**
 
-$\mathbf{T}_{\text{pool}} = \text{AvgPool}(\mathbf{Y}_{\text{temp}}) \in \mathbb{R}^{N \times D} \tag{17}$
+```math
+\mathbf{T}_{\text{pool}} = \text{AvgPool}(\mathbf{Y}_{\text{temp}}) \in \mathbb{R}^{N \times D} 
+```
 
-$\mathbf{T}_{\text{atten}} = \sigma\!\left(\mathbf{W}_2 \cdot \text{ReLU}(\mathbf{W}_1 \cdot \mathbf{T}_{\text{pool}})\right) \tag{18}$
+```math
+\mathbf{T}_{\text{atten}} = \sigma\!\left(\mathbf{W}_2 \cdot \text{ReLU}(\mathbf{W}_1 \cdot \mathbf{T}_{\text{pool}})\right)
+```
 
 **변수 어텐션:**
 
-$\mathbf{V}_{\text{pool}} = \text{AvgPool}(\mathbf{Y}_{\text{var}}) \in \mathbb{R}^{M \times D} \tag{19}$
+```math
+\mathbf{V}_{\text{pool}} = \text{AvgPool}(\mathbf{Y}_{\text{var}}) \in \mathbb{R}^{M \times D}
+```
 
-$\mathbf{V}_{\text{atten}} = \sigma\!\left(\mathbf{W}_4 \cdot \text{ReLU}(\mathbf{W}_3 \cdot \mathbf{V}_{\text{pool}})\right) \tag{20}$
+```math
+\mathbf{V}_{\text{atten}} = \sigma\!\left(\mathbf{W}_4 \cdot \text{ReLU}(\mathbf{W}_3 \cdot \mathbf{V}_{\text{pool}})\right)
+```
 
 **이중 어텐션 결합 (Hadamard 곱):**
 
-$\mathbf{Y}_{\text{out}} = \sigma(\mathbf{T}_{\text{atten}} \odot \mathbf{V}_{\text{atten}} \odot \mathbf{Y}) \tag{21}$
+```math
+\mathbf{Y}_{\text{out}} = \sigma(\mathbf{T}_{\text{atten}} \odot \mathbf{V}_{\text{atten}} \odot \mathbf{Y})
+```
 
 **블록 간 피드백 연결 (잔차와 달리 곱셈 방식):**
 
-$\mathbf{X}'_{\text{emb}} = \mathbf{Y}_{\text{out}} \odot \mathbf{X}_{\text{emb}} \tag{22}$
+```math
+\mathbf{X}'_{\text{emb}} = \mathbf{Y}_{\text{out}} \odot \mathbf{X}_{\text{emb}}
+```
 
 ***
 
