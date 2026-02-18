@@ -1,19 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "xPatch: Dual-Stream Time Series Forecasting with Exponential Seasonal-Trend Decomposition"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-논문의 전체 내용을 충분히 확보했습니다. 이제 상세한 답변을 작성하겠습니다.
-
-***
-
-# xPatch: 장기 시계열 예측을 위한 이중 스트림 아키텍처 완전 분석
-
+# xPatch: Dual-Stream Time Series Forecasting with Exponential Seasonal-Trend Decomposition
 
 ***
 
@@ -50,7 +35,9 @@ xPatch(eXponential Patch)는 KAIST의 Artyom Stitsyuk, Jaesik Choi가 제안한 
 SMA 대신 EMA를 사용하여 패딩 없이 지수적으로 감쇠하는 가중치로 트렌드를 추출합니다.[^1_1]
 
 $s_0 = x_0$
+
 $s_t = \alpha x_t + (1 - \alpha)s_{t-1}, \quad t > 0$
+
 $X_T = \text{EMA}(X), \quad X_S = X - X_T \tag{2}$
 
 여기서 $\alpha \in (0,1)$은 스무딩 계수이며, $X_T$는 트렌드, $X_S$는 계절성 성분입니다. 논문은 $\alpha = 0.3$이 가장 안정적임을 실험으로 확인했고, 학습 가능한 파라미터로 설정해도 성능 향상이 미미하면서 훈련 시간만 증가한다고 보고합니다.[^1_1]
@@ -58,6 +45,7 @@ $X_T = \text{EMA}(X), \quad X_S = X - X_T \tag{2}$
 EMA의 전개식을 벡터 내적으로 변환하여 O(n) → **O(1) 시간 복잡도**로 최적화합니다:[^1_1]
 
 $\hat{w} = [(1-\alpha)^t,\ (1-\alpha)^{t-1}\alpha,\ \ldots,\ (1-\alpha)\alpha,\ \alpha]$
+
 $s_t = \hat{w} \cdot x \tag{28}$
 
 ### 3.2 이중 스트림 네트워크
@@ -76,20 +64,27 @@ $\hat{x}^{(i)}_{\text{lin}} = \text{Linear}(x^{(i)}) \tag{4}$
 패치 $x^{(i)}_p \in \mathbb{R}^{N \times P}$ (패치 수 $N = \lfloor \frac{L-P}{S} \rfloor + 2$, P=16, S=8) 생성 후:
 
 $x^{N \times P^2}_p = \text{BatchNorm}(\sigma(\text{Embed}(x^{(i)}_p))) \tag{5}$
-$x^{N \times P}_p = \text{Conv}_{N \to N}(x^{N \times P^2}_p,\ k=P,\ s=P,\ g=N) \tag{6}$
+
+$x^{N \times P}\_p = \text{Conv}_{N \to N}(x^{N \times P^2}_p,\ k=P,\ s=P,\ g=N) \tag{6}$
+
 $x^{N \times P}_p = \text{DepthwiseConv}(x^{N \times P^2}_p) + x^{N \times P^2}_p \tag{8}$
-$x^{N \times P}_p = \text{Conv}_{N \to N}(x^{N \times P}_p,\ k=1,\ s=1,\ g=1) \tag{9}$
+
+$x^{N \times P}\_p = \text{Conv}_{N \to N}(x^{N \times P}_p,\ k=1,\ s=1,\ g=1) \tag{9}$
+
 $\hat{x}^{(i)}_{\text{nonlin}} = \text{Linear}(\sigma(\text{Linear}(\text{Flatten}(x^{N \times P}_p)))) \tag{11}$
 
 **최종 출력 (두 스트림 결합):**
 
-$\hat{x}^{(i)} = \text{Linear}(\text{concat}(\hat{x}^{(i)}_{\text{lin}},\ \hat{x}^{(i)}_{\text{nonlin}})) \tag{12}$
+```math
+\hat{x}^{(i)} = \text{Linear}(\text{concat}(\hat{x}^{(i)}_{\text{lin}},\ \hat{x}^{(i)}_{\text{nonlin}})) 
+```
 
 ### 3.3 아크탄젠트 손실 함수
 
 기존 CARD 모델의 신호 감쇠 손실 $\rho_{\text{CARD}}(i) = i^{-\frac{1}{2}}$는 감쇠가 너무 빠르다는 문제가 있어, 보다 완만한 아크탄젠트 스케일링 계수를 도입합니다:[^1_1]
 
-$\mathcal{L}_{\text{arctan}} = \frac{1}{T} \sum_{i=1}^{T} \rho_{\text{arctan}}(i) \| \hat{x}^{(i)}_{1:T} - x^{(i)}_{1:T} \| \tag{16}$
+$\mathcal{L}\_{\text{arctan}} = \frac{1}{T} \sum_{i=1}^{T} \rho_{\text{arctan}}(i) \| \hat{x}^{(i)}\_{1:T} - x^{(i)}_{1:T} \| \tag{16}$
+
 $\rho_{\text{arctan}}(i) = -\arctan(i) + \frac{\pi}{4} + 1 \tag{17}$
 
 예측 지평 $i = 720$에서 $\rho_{\text{CARD}}(720) \approx 0.037$인 반면 $\rho_{\text{arctan}}(720) \approx 0.428$로, 원거리 예측에 더 균형 잡힌 가중치를 부여합니다.[^1_1]
