@@ -1,18 +1,5 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
 
-# 1. 당신은 AI 분야의 연구자입니다. "ModernTCN: A Modern Pure Convolution Structure for General Time Series Analysis"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-논문을 충분히 읽었으므로, 이제 상세한 분석 답변을 작성하겠습니다.
-
-***
-
-# ModernTCN: A Modern Pure Convolution Structure for General Time Series Analysis — 심층 분석
+# ModernTCN: A Modern Pure Convolution Structure for General Time Series Analysis
 
 **ICLR 2024에 게재된 이 논문은**, 컨볼루션 기반 모델이 Transformer·MLP 기반 모델에 밀리던 시계열 분석 분야에서, 컨볼루션 자체를 현대화(modernize)하는 방식으로 5가지 주류 분석 태스크에서 일관된 SOTA를 달성한 순수 컨볼루션 아키텍처입니다.[^1_1][^1_2]
 
@@ -46,7 +33,7 @@ ModernTCN은 세 가지 핵심 기여를 제시합니다.[^1_1]
 
 입력 시계열 $\mathbf{X}_{in} \in \mathbb{R}^{M \times L}$ ($M$: 변수 수, $L$: 시퀀스 길이)를 패치 크기 $P$, 스트라이드 $S$로 $N = L // S$ 개의 패치로 분할 후, 변수별로 독립적으로 $D$차원에 임베딩합니다:[^1_1]
 
-$\mathbf{X}_{emb} = \text{Embedding}(\mathbf{X}_{in}), \quad \mathbf{X}_{emb} \in \mathbb{R}^{M \times D \times N}$
+$\mathbf{X}\_{emb} = \text{Embedding}(\mathbf{X}\_{in}), \quad \mathbf{X}_{emb} \in \mathbb{R}^{M \times D \times N}$
 
 각 변수를 독립적으로 임베딩함으로써 **변수 차원을 명시적으로 유지**합니다. RGB 3채널을 단일 임베딩으로 묶는 CV 방식과 달리, 시계열 변수 간 분포 차이가 훨씬 크기 때문에 변수별 독립 처리가 필수적입니다.[^1_1]
 
@@ -65,7 +52,9 @@ ModernTCN 블록은 세 모듈로 구성되어, 각각 시간·피처·변수 �
 
 $\mathbf{Z}_{i+1} = \text{Block}(\mathbf{Z}_i) + \mathbf{Z}_i$
 
-$\mathbf{Z}_i = \begin{cases} \mathbf{X}_{emb}, & i = 1 \\ \text{Block}(\mathbf{Z}_{i-1}) + \mathbf{Z}_{i-1}, & i > 1 \end{cases}$
+```math
+\mathbf{Z}_i = \begin{cases} \mathbf{X}_{emb}, & i = 1 \\ \text{Block}(\mathbf{Z}_{i-1}) + \mathbf{Z}_{i-1}, & i > 1 \end{cases}
+```
 
 백본 전체 출력 표현은:
 
@@ -83,7 +72,7 @@ $\hat{\mathbf{X}} = \text{Head}(\text{Flatten}(\mathbf{Z})), \quad \hat{\mathbf{
 
 순수 컨볼루션 모델에서 ERF는 이론적으로 $O(k_s \times \sqrt{n_l})$에 비례합니다:[^1_1]
 
-$\text{ERF} \propto O\!\left(k_s \times \sqrt{n_l}\right)$
+$\text{ERF} \propto O \left(k_s \times \sqrt{n_l}\right)$
 
 여기서 $k_s$는 커널 크기, $n_l$은 레이어 수입니다. ERF가 커널 크기에는 **선형**으로, 레이어 수에는 **준선형(sub-linear)** 으로 증가하므로, 레이어 적층보다 대형 커널 확대가 ERF 증가에 훨씬 효과적입니다.[^1_1]
 
@@ -91,13 +80,17 @@ $\text{ERF} \propto O\!\left(k_s \times \sqrt{n_l}\right)$
 
 장기 예측의 경우:[^1_1]
 
-$\text{MSE} = \frac{1}{T}\sum_{i=0}^{T}(\hat{X}_i - X_i)^2, \quad \text{MAE} = \frac{1}{T}\sum_{i=0}^{T}\left|\hat{X}_i - X_i\right|$
+```math
+\text{MSE} = \frac{1}{T}\sum_{i=0}^{T}(\hat{X}_i - X_i)^2, \quad \text{MAE} = \frac{1}{T}\sum_{i=0}^{T}\left|\hat{X}_i - X_i\right|
+```
 
 단기 예측은 SMAPE와 OWA를 사용합니다:[^1_1]
 
 $\text{SMAPE} = \frac{200}{T}\sum_{i=1}^{T}\frac{|X_i - \hat{X}_i|}{|X_i| + |\hat{X}_i|}$
 
-$\text{OWA} = \frac{1}{2}\left(\frac{\text{SMAPE}}{\text{SMAPE}_{\text{Naïve2}}} + \frac{\text{MASE}}{\text{MASE}_{\text{Naïve2}}}\right)$
+```math
+\text{OWA} = \frac{1}{2}\left(\frac{\text{SMAPE}}{\text{SMAPE}_{\text{Naïve2}}} + \frac{\text{MASE}}{\text{MASE}_{\text{Naïve2}}}\right)
+```
 
 ***
 
