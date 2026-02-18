@@ -1,18 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "TVNet: A Novel Time Series Analysis Method Based on Dynamic Convolution and 3D-Variation"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-논문을 충분히 분석했습니다. 아래에 상세한 답변을 작성합니다.
-
-***
-
-# TVNet: Dynamic Convolution과 3D-Variation 기반 시계열 분석 방법론 심층 분석
+# TVNet: A Novel Time Series Analysis Method Based on Dynamic Convolution and 3D-Variation
 
 ## 1. 핵심 주장과 주요 기여 요약
 
@@ -66,13 +52,13 @@ $\alpha_i = G(X_{emb}) = 1 + F(v_{inter}) + F(v_{intra}) \tag{3}$
 
 $v_{intra} = \text{AdaptiveAvgPool3d}(X_{emb}) \in \mathbb{R}^{C_m \times N} \tag{4}$
 
-$F_{intra}(v_{intra}) = \delta(\text{BN}(\text{Conv1D}_{C \to C}(v_{intra}))) \tag{5}$
+$F_{intra}(v_{intra}) = \delta(\text{BN}(\text{Conv1D}\_{C \to C}(v_{intra}))) \tag{5}$
 
 - **Inter-patch 특징** — 1D Adaptive Pooling으로 패치 간 정보 집약:
 
 $v_{inter} = \text{AdaptiveAvgPool1d}(v_{intra}) \in \mathbb{R}^{C_m \times 1} \tag{6}$
 
-$F_{inter}(v_{inter}) = \delta(\text{Conv1D}_{C \to C}(v_{inter})) \tag{7}$
+$F_{inter}(v_{inter}) = \delta(\text{Conv1D}\_{C \to C}(v_{inter})) \tag{7}$
 
 여기서 $\delta$는 ReLU 활성화 함수입니다.[^1_1]
 
@@ -120,7 +106,9 @@ TVNet의 일반화 능력은 다음 세 측면에서 두드러집니다:[^1_3][^
 
 ### 전이학습(Transfer Learning)
 
-ETTh1 → ETTh2, ETTm2 전이 실험에서 TVNet의 Direct Prediction 및 Full-Tuning 모두 PatchTST, FEDformer를 능가했습니다. 예를 들어 ETTh2 전이 시, TVNet Full-Tuning MAE는 0.327~0.422 범위로 PatchTST(0.337~0.450)보다 일관되게 낮았습니다. 이는 **동적 가중치 메커니즘이 다양한 데이터 분포에 적응적으로 반응**하기 때문입니다.[^1_1]
+ETTh1 → ETTh2, ETTm2 전이 실험에서 TVNet의 Direct Prediction 및 Full-Tuning 모두 PatchTST, FEDformer를 능가했습니다.  
+예를 들어 ETTh2 전이 시, TVNet Full-Tuning MAE는 0.327 ~ 0.422 범위로 PatchTST(0.337~0.450)보다 일관되게 낮았습니다.  
+이는 **동적 가중치 메커니즘이 다양한 데이터 분포에 적응적으로 반응**하기 때문입니다.[^1_1]
 
 ### 하이퍼파라미터 견고성
 
@@ -128,7 +116,7 @@ ETTh1 → ETTh2, ETTm2 전이 실험에서 TVNet의 Direct Prediction 및 Full-T
 
 ### 이론적 근거 (동적 가중치 우위 정리)
 
-고정 가중치 모델의 총 오차 $E_f = \sum_{i=1}^{N}(W_f \cdot x_i - y_i^*)^2$에 비해, 동적 가중치 모델은 $\alpha_i = y_i^* / (W_b \cdot x_i)$ 조건에서 최적화되어 $E_d < E_f$가 항상 성립합니다. 이는 일반화 성능 향상의 수학적 토대를 제공합니다.[^1_1]
+고정 가중치 모델의 총 오차 $E_f = \sum_{i=1}^{N}(W_f \cdot x_i - y_i^\*)^2$에 비해, 동적 가중치 모델은 $\alpha_i = y_i^* / (W_b \cdot x_i)$ 조건에서 최적화되어 $E_d < E_f$가 항상 성립합니다. 이는 일반화 성능 향상의 수학적 토대를 제공합니다.[^1_1]
 
 ### 한계
 
