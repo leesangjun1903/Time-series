@@ -1,19 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "TimeMixer++: A General Time Series Pattern Machine for Universal Predictive Analysis"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-이제 충분한 정보를 바탕으로 상세하고 구조화된 답변을 작성하겠습니다.
-
-***
-
-# TimeMixer++: A General Time Series Pattern Machine for Universal Predictive Analysis — 심층 분석 보고서
-
+# TimeMixer++: A General Time Series Pattern Machine for Universal Predictive Analysis
 
 ***
 
@@ -84,7 +69,9 @@ $X^{l+1} = \text{LayerNorm}\!\left(X^l + \text{MixerBlock}(X^l)\right)$
 
 출력은 앙상블로 취합됩니다:
 
-$\text{output} = \text{Ensemble}\!\left(\{ \text{Head}_m(x^L_m) \}_{m=0}^{M}\right)$
+```math
+\text{output} = \text{Ensemble}\!\left(\{ \text{Head}_m(x^L_m) \}_{m=0}^{M}\right)
+```
 
 [^1_1]
 
@@ -98,7 +85,9 @@ $\mathbf{A},\ \{f_1,\ldots,f_K\},\ \{p_1,\ldots,p_K\} = \text{FFT}(x^l_M)$
 
 각 스케일 $x^l_m$을 2D 시간 이미지로 변환합니다:
 
-$\text{MRTI}(X^l) = \left\{ z^{(l,k)}_m = \text{Reshape}^{1\text{D}\to2\text{D}}_{m,k}\!\left(\text{Padding}_{m,k}(x^l_m)\right) \right\}_{m,k}$
+```math
+\text{MRTI}(X^l) = \left\{ z^{(l,k)}_m = \text{Reshape}^{1\text{D}\to2\text{D}}_{m,k}\!\left(\text{Padding}_{m,k}(x^l_m)\right) \right\}_{m,k}
+```
 
 결과 이미지 크기는 $p_k \times \lceil \lfloor T/2^m \rfloor / p_k \rceil$입니다.[^1_1]
 
@@ -108,8 +97,9 @@ $\text{MRTI}(X^l) = \left\{ z^{(l,k)}_m = \text{Reshape}^{1\text{D}\to2\text{D}}
 
 이미지 열(column)은 주기 내 시간 세그먼트, 행(row)은 주기에 걸친 일관된 시점을 나타냅니다:
 
-$s^{(l,k)}_m = \text{Attention}_{\text{col}}(Q_{\text{col}}, K_{\text{col}}, V_{\text{col}})$
-$t^{(l,k)}_m = \text{Attention}_{\text{row}}(Q_{\text{row}}, K_{\text{row}}, V_{\text{row}})$
+$s^{(l,k)}\_m = \text{Attention}\_{\text{col}}(Q_{\text{col}}, K_{\text{col}}, V_{\text{col}})$
+
+$t^{(l,k)}\_m = \text{Attention}\_{\text{row}}(Q_{\text{row}}, K_{\text{row}}, V_{\text{row}})$
 
 - **열 축 어텐션** → 계절성 이미지 $s^{(l,k)}_m$
 - **행 축 어텐션** → 추세 이미지 $t^{(l,k)}_m$
@@ -122,15 +112,15 @@ $t^{(l,k)}_m = \text{Attention}_{\text{row}}(Q_{\text{row}}, K_{\text{row}}, V_{
 
 **계절성**: 세밀한 스케일 → 거친 스케일 방향(bottom-up)
 
-$s^{(l,k)}_m = s^{(l,k)}_m + \text{2D-Conv}(s^{(l,k)}_{m-1}), \quad m: 1 \to M$
+$s^{(l,k)}\_m = s^{(l,k)}\_m + \text{2D-Conv}(s^{(l,k)}_{m-1}), \quad m: 1 \to M$
 
 **추세**: 거친 스케일 → 세밀한 스케일 방향(top-down)
 
-$t^{(l,k)}_m = t^{(l,k)}_m + \text{2D-TransConv}(t^{(l,k)}_{m+1}), \quad m: M-1 \to 0$
+$t^{(l,k)}\_m = t^{(l,k)}\_m + \text{2D-TransConv}(t^{(l,k)}_{m+1}), \quad m: M-1 \to 0$
 
 혼합 후 계절성+추세를 합산하여 1D로 복원합니다:
 
-$z^{(l,k)}_m = \text{Reshape}^{2\text{D}\to1\text{D}}_{m,k}\!\left(s^{(l,k)}_m + t^{(l,k)}_m\right)$
+$z^{(l,k)}\_m = \text{Reshape}^{2\text{D}\to1\text{D}}\_{m,k}\left(s^{(l,k)}_m + t^{(l,k)}_m\right)$
 
 [^1_1]
 
@@ -140,7 +130,7 @@ $z^{(l,k)}_m = \text{Reshape}^{2\text{D}\to1\text{D}}_{m,k}\!\left(s^{(l,k)}_m +
 
 FFT 진폭을 가중치로 삼아 $K$개 주기를 적응적으로 통합합니다:
 
-$\hat{A}_{f_k} = \text{Softmax}(A_{f_k}), \quad x^l_m = \sum_{k=1}^{K} \hat{A}_{f_k} \circ z^{(l,k)}_m$
+$\hat{A}\_{f_k} = \text{Softmax}(A_{f_k}), \quad x^l_m = \sum_{k=1}^{K} \hat{A}_{f_k} \circ z^{(l,k)}_m$
 
 [^1_1]
 
