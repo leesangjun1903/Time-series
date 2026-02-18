@@ -1,18 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Kolmogorov-Arnold Networks (KANs) for Time Series Analysis"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-아래는 첨부 논문과 최신 관련 연구를 종합한 상세 분석입니다.
-
-***
-
-# KANs for Time Series Analysis: 종합 연구 분석
+# Kolmogorov-Arnold Networks (KANs) for Time Series Analysis
 
 ## 1. 핵심 주장과 주요 기여 요약
 
@@ -47,7 +33,7 @@ B-spline은 다항식 차수 $k=3$, 그리드 인터벌 수 $G$로 정의되며 
 
 **시계열 예측 프레임워크**는 컨텍스트 길이 $c$의 과거 입력을 기반으로 예측 길이 $T$의 미래 값을 추정합니다:
 
-$\hat{y}_{t_0:T} \approx f(x_{t_0-c:t_0-1}) = (\Phi_2 \circ \Phi_1)\mathbf{x} \tag{3}$
+$\hat{y}\_{t_0:T} \approx f(x_{t_0-c:t_0-1}) = (\Phi_2 \circ \Phi_1)\mathbf{x} \tag{3}$
 
 손실 함수는 예측 구간의 **MAE(Mean Absolute Error)** 최소화를 목표로 하며, Adam optimizer(lr=0.001), 500 epochs로 훈련합니다.[^1_1]
 
