@@ -1,19 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Convolutional LSTM Network: A Machine Learning Approach for Precipitation Nowcasting"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-이제 논문의 내용을 충분히 파악했으니 상세한 답변을 작성하겠습니다.
-
-***
-
-# ConvLSTM Network: Precipitation Nowcasting 논문 심층 분석
-
+# Convolutional LSTM Network: A Machine Learning Approach for Precipitation Nowcasting
 
 ***
 
@@ -49,26 +34,36 @@ FC-LSTM을 직접 적용하면 1D 벡터로 공간 구조를 펼치는 과정에
 
 레이더 에코 지도 시퀀스를 $M \times N$ 그리드 상의 텐서 $\mathcal{X} \in \mathbb{R}^{P \times M \times N}$으로 표현합니다.  나우캐스팅은 과거 $J$개 관측에서 미래 $K$개 시퀀스를 예측하는 문제입니다:[^1_1]
 
-$\tilde{\mathcal{X}}_{t+1}, \ldots, \tilde{\mathcal{X}}_{t+K} = \underset{\mathcal{X}_{t+1}, \ldots, \mathcal{X}_{t+K}}{\arg\max} \; p(\mathcal{X}_{t+1}, \ldots, \mathcal{X}_{t+K} \mid \hat{\mathcal{X}}_{t-J+1}, \ldots, \hat{\mathcal{X}}_t) \tag{1}$
+```math
+\tilde{\mathcal{X}}_{t+1}, \ldots, \tilde{\mathcal{X}}_{t+K} = \underset{\mathcal{X}_{t+1}, \ldots, \mathcal{X}_{t+K}}{\arg\max} \; p(\mathcal{X}_{t+1}, \ldots, \mathcal{X}_{t+K} \mid \hat{\mathcal{X}}_{t-J+1}, \ldots, \hat{\mathcal{X}}_t) 
+```
 
 ### FC-LSTM 수식
 
 기존 FC-LSTM의 핵심 방정식은 다음과 같습니다 ($\circ$는 Hadamard product):[^1_1]
 
 $i_t = \sigma(W_{xi} x_t + W_{hi} h_{t-1} + W_{ci} \circ c_{t-1} + b_i)$
+
 $f_t = \sigma(W_{xf} x_t + W_{hf} h_{t-1} + W_{cf} \circ c_{t-1} + b_f)$
+
 $c_t = f_t \circ c_{t-1} + i_t \circ \tanh(W_{xc} x_t + W_{hc} h_{t-1} + b_c)$
+
 $o_t = \sigma(W_{xo} x_t + W_{ho} h_{t-1} + W_{co} \circ c_t + b_o)$
+
 $h_t = o_t \circ \tanh(c_t) \tag{2}$
 
 ### ConvLSTM 수식 (핵심 기여)
 
 FC-LSTM에서 행렬 곱(matrix multiplication)을 **컨볼루션 연산** $\ast$으로 대체합니다:[^1_1]
 
-$i_t = \sigma(W_{xi} \ast \mathcal{X}_t + W_{hi} \ast \mathcal{H}_{t-1} + W_{ci} \circ \mathcal{C}_{t-1} + b_i)$
-$f_t = \sigma(W_{xf} \ast \mathcal{X}_t + W_{hf} \ast \mathcal{H}_{t-1} + W_{cf} \circ \mathcal{C}_{t-1} + b_f)$
-$\mathcal{C}_t = f_t \circ \mathcal{C}_{t-1} + i_t \circ \tanh(W_{xc} \ast \mathcal{X}_t + W_{hc} \ast \mathcal{H}_{t-1} + b_c)$
-$o_t = \sigma(W_{xo} \ast \mathcal{X}_t + W_{ho} \ast \mathcal{H}_{t-1} + W_{co} \circ \mathcal{C}_t + b_o)$
+$i_t = \sigma(W_{xi} \ast \mathcal{X}\_t + W_{hi} \ast \mathcal{H}\_{t-1} + W_{ci} \circ \mathcal{C}_{t-1} + b_i)$
+
+$f_t = \sigma(W_{xf} \ast \mathcal{X}\_t + W_{hf} \ast \mathcal{H}\_{t-1} + W_{cf} \circ \mathcal{C}_{t-1} + b_f)$
+
+$\mathcal{C}\_t = f_t \circ \mathcal{C}\_{t-1} + i_t \circ \tanh(W_{xc} \ast \mathcal{X}\_t + W_{hc} \ast \mathcal{H}_{t-1} + b_c)$
+
+$o_t = \sigma(W_{xo} \ast \mathcal{X}\_t + W_{ho} \ast \mathcal{H}\_{t-1} + W_{co} \circ \mathcal{C}_t + b_o)$
+
 $\mathcal{H}_t = o_t \circ \tanh(\mathcal{C}_t) \tag{3}$
 
 FC-LSTM의 경우 입력·셀·히든이 모두 1D 벡터인 반면, ConvLSTM에서는 모두 **3D 텐서**($P \times M \times N$)로 처리됩니다. FC-LSTM은 공간 차원이 1×1인 ConvLSTM의 특수한 경우로 볼 수 있습니다.[^1_1]
@@ -77,7 +72,9 @@ FC-LSTM의 경우 입력·셀·히든이 모두 1D 벡터인 반면, ConvLSTM에
 
 예측 공식은 다음과 같이 인코딩 함수와 예측 함수의 합성으로 표현됩니다:[^1_1]
 
-$\tilde{\mathcal{X}}_{t+1}, \ldots, \tilde{\mathcal{X}}_{t+K} \approx g_{\text{forecasting}}\!\left(f_{\text{encoding}}(\hat{\mathcal{X}}_{t-J+1}, \ldots, \hat{\mathcal{X}}_t)\right) \tag{4}$
+```math
+\tilde{\mathcal{X}}_{t+1}, \ldots, \tilde{\mathcal{X}}_{t+K} \approx g_{\text{forecasting}}\!\left(f_{\text{encoding}}(\hat{\mathcal{X}}_{t-J+1}, \ldots, \hat{\mathcal{X}}_t)\right) 
+```
 
 인코딩 네트워크의 마지막 은닉 상태 텐서를 예측 네트워크의 초기 상태로 복사하고, 예측 네트워크의 모든 상태를 연결(concatenate)한 후 $1 \times 1$ 컨볼루션으로 최종 예측을 생성합니다.[^1_1]
 
