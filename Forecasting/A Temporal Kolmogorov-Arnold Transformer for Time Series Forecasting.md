@@ -1,18 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "A Temporal Kolmogorov-Arnold Transformer for Time Series Forecasting"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-아래는 논문 내용과 최신 관련 연구를 종합한 심층 분석입니다.
-
-***
-
-# Temporal Kolmogorov-Arnold Transformer (TKAT): 심층 분석 보고서
+# A Temporal Kolmogorov-Arnold Transformer for Time Series Forecasting
 
 ## 1. 핵심 주장 및 주요 기여
 
@@ -45,7 +31,7 @@ TKAT(Temporal Kolmogorov-Arnold Transformer)는 **Kolmogorov-Arnold 표현 정�
 
 각 변환 함수 $\phi_{l,j,i}$를 시간 의존적으로 만들어 시계열 처리:
 
-$x_{l+1,j}(t) = \sum_{i=1}^{n_l} \tilde{x}_{l,j,i}(t) = \sum_{i=1}^{n_l} \phi_{l,j,i,t}(x_{l,i}(t),\, h_{l,i}(t))$
+$x_{l+1,j}(t) = \sum_{i=1}^{n_l} \tilde{x}\_{l,j,i}(t) = \sum_{i=1}^{n_l} \phi_{l,j,i,t}(x_{l,i}(t),\, h_{l,i}(t))$
 
 여기서 메모리 함수 $h_{l,i}(t)$는:
 
@@ -67,42 +53,43 @@ $i_t = \sigma(W_i x_t + U_i h_{t-1} + b_i)$
 $o_t = \sigma(\text{KAN}(\vec{x},\, t))$
 
 **셀 상태(Cell state) 업데이트**:
-$c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t, \quad \tilde{c}_t = \sigma(W_c x_t + U_c h_{t-1} + b_c)$
+
+$c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}\_t, \quad \tilde{c}\_t = \sigma(W_c x_t + U_c h_{t-1} + b_c)$
 
 **은닉 상태(Hidden state) 출력**:
 $h_t = o_t \odot \tanh(c_t)$
 
 ### 3.3 Gated Residual Network (GRN)
 
-$\text{GRN}_\omega(x) = \text{LayerNorm}\bigl(x + \text{GLU}_\omega(\eta_1)\bigr)$
+$\text{GRN}\_\omega(x) = \text{LayerNorm}\bigl(x + \text{GLU}_\omega(\eta_1)\bigr)$
 
 $\eta_1 = W_{1,\omega}\,\eta_2 + b_{1,\omega}, \quad \eta_2 = \text{ELU}(W_{2,\omega}\,x + b_{2,\omega})$
 
-$\text{GLU}_\omega(\gamma) = \sigma(W_{4,\omega}\gamma + b_{4,\omega}) \odot (W_{5,\omega}\gamma + b_{5,\omega})$
+$\text{GLU}\_\omega(\gamma) = \sigma(W_{4,\omega}\gamma + b_{4,\omega}) \odot (W_{5,\omega}\gamma + b_{5,\omega})$
 
 ### 3.4 Variable Selection Network (VSN)
 
 $v_{\chi t} = \text{Softmax}\bigl(\text{GRN}_{v\chi}(\Xi_t)\bigr)$
 
-$\tilde{\xi}_t^{(j)} = \text{GRN}_{\tilde{\xi}^{(j)}}\!\bigl(\xi_t^{(j)}\bigr), \quad \tilde{\xi}_t = \sum_{j=1}^{m_\chi} v_{\chi t}^{(j)}\, \tilde{\xi}_t^{(j)}$
+$\tilde{\xi}\_t^{(j)} = \text{GRN}\_{\tilde{\xi}^{(j)}}\bigl(\xi_t^{(j)}\bigr), \quad \tilde{\xi}\_t = \sum_{j=1}^{m_\chi} v_{\chi t}^{(j)}\, \tilde{\xi}_t^{(j)}$
 
 ### 3.5 Multi-Head Self-Attention
 
-$\text{Attention}(Q, K, V) = A(Q,K)\,V, \quad A(Q,K) = \text{Softmax}\!\left(\frac{QK^T}{\sqrt{d_{\text{attn}}}}\right)$
+$\text{Attention}(Q, K, V) = A(Q,K)\,V, \quad A(Q,K) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_{\text{attn}}}}\right)$
 
 $\text{MultiHead}(Q,K,V) = [H_1, \ldots, H_{m_H}]\,W_H, \quad H_h = \text{Attention}(QW_Q^{(h)},\, KW_K^{(h)},\, VW_V^{(h)})$
 
 ### 3.6 최종 출력 (Fully Aware Layer)
 
-어텐션 출력 $[\tilde{H}_1, \ldots, \tilde{H}_{m_H}]$를 플래튼 후 선형 투영:
+어텐션 출력 $[\tilde{H}\_1, \ldots, \tilde{H}_{m_H}]$를 플래튼 후 선형 투영:
 
-$\hat{y}_{t:t+\tau} = W_{\hat{y}}\,\tilde{H}_{\text{flat}} + b_{\hat{y}}$
+$\hat{y}\_{t:t+\tau} = W_{\hat{y}}\,\tilde{H}\_{\text{flat}} + b_{\hat{y}}$
 
 ### 3.7 손실 함수
 
-$\text{MSE} = \frac{1}{N}\sum_{i=1}^{N}\bigl(\hat{X}^{(i)}_{t+1} - X^{(i)}_{t+1}\bigr)^2$
+$\text{MSE} = \frac{1}{N}\sum_{i=1}^{N}\bigl(\hat{X}^{(i)}\_{t+1} - X^{(i)}_{t+1}\bigr)^2$
 
-$R^2 = 1 - \frac{\sum_{i=1}^{N}(\hat{X}^{(i)}_{t+1} - X^{(i)}_{t+1})^2}{\sum_{i=1}^{N}(X^{(i)}_{t+1} - \bar{X}_{t+1})^2}$
+$R^2 = 1 - \frac{\sum\_{i=1}^{N}(\hat{X}^{(i)}\_{t+1} - X^{(i)}\_{t+1})^2}{\sum_{i=1}^{N}(X^{(i)}\_{t+1} - \bar{X}_{t+1})^2}$
 
 ***
 
@@ -168,7 +155,7 @@ TKAT의 일반화 성능은 여러 측면에서 긍정적 가능성을 보입니
 | 모델 | 연도 | 핵심 기법 | 강점 | 한계 |
 | :-- | :-- | :-- | :-- | :-- |
 | **TFT** (Lim et al.) | 2021 | LSTM + Multi-Head Attention + GRN | 해석 가능, 정적 공변량 지원 | 관측 입력 중심 태스크에 약함 |
-| **Informer** (Zhou et al.) | 2021 | ProbSparse Attention ($O(L\log L)$) | 장기 시계열 효율 | 복잡한 다변량 패턴 포착 어려움 |
+| **Informer** (Zhou et al.) | 2021 | ProbSparse Attention ( $O(L\log L)$ ) | 장기 시계열 효율 | 복잡한 다변량 패턴 포착 어려움 |
 | **TKAN** (Genet \& Inzirillo) | 2024 | LSTM + KAN 게이팅 | 다단계 예측 우수, 경량 | 단독 사용 시 아키텍처 제한 |
 | **TKAT** (본 논문) | 2024 | TKAN + Transformer + VSN + Fully Aware Layer | 다단계 예측 SOTA, 안정성 | 파라미터 많음, 단일 도메인 검증 |
 | **C-KAN** (Koukaras et al.) | 2024 | Conv + KAN + DILATE loss | 비정상 시계열 강인 | 장기 의존성 취약 |
