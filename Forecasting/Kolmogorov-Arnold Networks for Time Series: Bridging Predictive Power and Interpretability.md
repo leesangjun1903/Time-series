@@ -1,18 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Kolmogorov-Arnold Networks for Time Series: Bridging Predictive Power and Interpretability"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-이제 논문 내용과 최신 연구를 충분히 수집했습니다. 포괄적인 분석 답변을 작성합니다.
-
-***
-
-# KAN for Time Series: 핵심 분석 및 최신 연구 비교
+# Kolmogorov-Arnold Networks for Time Series: Bridging Predictive Power and Interpretability
 
 ## 1. 핵심 주장 및 주요 기여 요약
 
@@ -36,7 +22,7 @@
 
 **Kolmogorov-Arnold 표현 정리**에 의하면, 임의의 다변량 연속 함수는 단변량 연속 함수의 합성으로 분해 가능합니다:[^1_1]
 
-$f(x_1, \ldots, x_n) = \sum_{q=1}^{2n+1} \Phi_q \left( \sum_{p=1}^{n} \phi_{q,p}(x_p) \right) \tag{1}$
+$f(x_1, \ldots, x_n) = \sum_{q=1}^{2n+1} \Phi_q \left( \sum_{p=1}^{n} \phi_{q,p}(x_p) \right)$
 
 여기서 $\phi_{q,p}$는 각 입력 변수 $x_p$에 대한 단변량 함수이며, $\Phi_q$는 연속 함수입니다.
 
@@ -56,10 +42,10 @@ $\text{KAN}(x) = (\Phi_{L-1} \circ \Phi_{L-2} \circ \cdots \circ \Phi_0)(x) \tag
 
 슬라이딩 윈도우로 입력-출력 쌍을 구성하며, 시각 $t$에서의 예측값 $\hat{S}_{t+T}$는 다음과 같습니다:[^1_1]
 
-$\hat{S}_{t+T} = \sum_{q=1}^{2n+1} \Phi_q \left( \sum_{p=1}^{h} \phi_{q,p}(S_{t-h+p}) \right) \tag{3}$
+$\hat{S}\_{t+T} = \sum_{q=1}^{2n+1} \Phi_q \left( \sum_{p=1}^{h} \phi_{q,p}(S_{t-h+p}) \right)$
 
 - 2-layer, 5 hidden neuron 구조 `[84, 5, 21]`
-- **Symbolic Regression**을 통해 학습된 활성화 함수를 수학 표현식(예: $\hat{S}_{t+1} = e^{S_t^2} + \sin(3.14 \cdot S_{t-1})$)으로 변환, 인간이 읽을 수 있는 해석 제공[^1_1]
+- **Symbolic Regression**을 통해 학습된 활성화 함수를 수학 표현식(예: $\hat{S}\_{t+1} = e^{S_t^2} + \sin(3.14 \cdot S_{t-1})$ )으로 변환, 인간이 읽을 수 있는 해석 제공[^1_1]
 - 서로 다른 개념(concept)에서 학습된 KAN들의 활성화 패턴 변화를 비교하여 **개념 드리프트 탐지** 수행
 
 
@@ -67,7 +53,7 @@ $\hat{S}_{t+T} = \sum_{q=1}^{2n+1} \Phi_q \left( \sum_{p=1}^{h} \phi_{q,p}(S_{t-
 
 $k$번째 변수의 과거 관측값 $S_{t-h+p,k}$를 활용하는 MT-KAN의 예측 수식:[^1_1]
 
-$\hat{S}_{t+T} = \sum_{q=1}^{2n+1} \Phi_q \left( \sum_{p=1}^{h} \sum_{k=1}^{m} \phi_{q,p,k}(S_{t-h+p,k}) \right) \tag{4}$
+$\hat{S}\_{t+T} = \sum_{q=1}^{2n+1} \Phi_q \left( \sum_{p=1}^{h} \sum_{k=1}^{m} \phi_{q,p,k}(S_{t-h+p,k}) \right) $
 
 - 모든 변수의 히스토리를 flatten하여 입력으로 활용: `[84×5, 5, 21×5]`
 - 교차 변수 상호작용(cross-variable interaction)을 명시적으로 모델링
