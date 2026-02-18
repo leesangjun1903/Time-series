@@ -1,18 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "TSKANMixer: Kolmogorov–Arnold Networks with MLP-Mixer Model for Time Series Forecasting"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-아래에 모든 질문에 대한 종합적이고 상세한 분석을 제공합니다.
-
-***
-
-# TSKANMixer 논문 심층 분석
+# TSKANMixer: Kolmogorov–Arnold Networks with MLP-Mixer Model for Time Series Forecasting
 
 ## 1. 핵심 주장 및 주요 기여 요약
 
@@ -61,7 +47,7 @@ $y = \text{KAN}(\mathbf{x}) = (\mathbf{\Phi}_{L-1} \circ \cdots \circ \mathbf{\P
 
 > 기존 FC Temporal Projection은 유지하고, 추가된 KAN Time-Mixing이 시간 영역의 패턴 탐색 능력을 강화
 
-두 버전 모두 **2-깊이(2-depth) KAN 레이어**를 사용하며, 이는 식 (1)의 콜모고로프-아놀드 정리의 \$ [n, 2n+1, 1] \$ 구조에 대응합니다.[^1_1]
+두 버전 모두 **2-깊이(2-depth) KAN 레이어**를 사용하며, 이는 식 (1)의 콜모고로프-아놀드 정리의 $[n, 2n+1, 1]$ 구조에 대응합니다.[^1_1]
 
 ***
 
