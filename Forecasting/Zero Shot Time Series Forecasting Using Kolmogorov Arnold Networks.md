@@ -1,19 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Zero Shot Time Series Forecasting Using Kolmogorov Arnold Networks"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-아래에 논문에 대한 심층 분석을 제공합니다. 수식은 LaTeX 형식으로 작성하였습니다.
-
-***
-
-# Zero-Shot Time Series Forecasting Using Kolmogorov-Arnold Networks: 심층 분석
-
+# Zero Shot Time Series Forecasting Using Kolmogorov Arnold Networks
 ## 1. 핵심 주장 및 주요 기여
 
 이 논문은 **전기 에너지 가격 예측**이라는 실용적 문제를 해결하기 위해, 학습에 사용하지 않은 완전히 새로운 시장(Zero-Shot)에서도 예측이 가능한 범용 도메인 적응 모델을 최초로 제안합니다. NeurIPS 2024 Time Series Workshop에서 발표된 이 논문의 핵심 기여는 두 가지입니다:[^1_1]
@@ -43,7 +28,7 @@ $f(x_1, \ldots, x_n) = \sum_{q=0}^{2n} \Phi_q\left(\sum_{p=1}^{n} \phi_{q,p}(x_p
 
 스택 $i$, 블록 $j$에서 KAN 네트워크가 입력 데이터를 처리하여 hidden 표현을 생성합니다:[^1_1]
 
-$h_{i,j} = \text{NN}_{i,j}(y^b_{i,j-1},\ X^{b-1})$
+$h\_{i,j} = \text{NN}\_{i,j}(y^b_{i,j-1},\ X^{b-1})$
 
 B-spline 파라미터로부터 예측(forecast) 및 역추적(backcast) 계수를 선형 투사합니다:[^1_1]
 
@@ -79,7 +64,7 @@ $R_T = \mathbb{E}_{(x,y)\sim S}\left[\frac{T_X(x)}{S_X(x)} \cdot \ell(h(x,y))\ri
 
 ### 평가 지표
 
-$\text{MAE} = \frac{1}{n}\sum_{i=1}^{n}|y_i - \hat{y}_i|, \quad \text{SMAPE} = \frac{1}{n}\sum_{i=1}^{n}\frac{2|y_i - \hat{y}_i|}{|y_i| + |\hat{y}_i|}$
+$\text{MAE} = \frac{1}{n}\sum_{i=1}^{n}|y_i - \hat{y}\_i|, \quad \text{SMAPE} = \frac{1}{n}\sum_{i=1}^{n}\frac{2|y_i - \hat{y}_i|}{|y_i| + |\hat{y}_i|}$
 
 ***
 
