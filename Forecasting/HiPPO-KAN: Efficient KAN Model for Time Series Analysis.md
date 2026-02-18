@@ -1,19 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "HiPPO-KAN: Efficient KAN Model for Time Series Analysis"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-충분한 정보를 수집했습니다. 이제 상세한 분석 답변을 작성하겠습니다.
-
-***
-
-# HiPPO-KAN: 시계열 분석을 위한 효율적 KAN 모델 — 심층 분석
-
+# HiPPO-KAN: Efficient KAN Model for Time Series Analysis
 
 ***
 
@@ -78,17 +63,17 @@ $\phi(x) = w_b\, b(x) + w_s\, \text{spline}(x) \tag{6}$
 
 $\text{HiPPO-KAN} \equiv \text{hippo}^{-1}_{L+1} \circ \text{KAN} \circ \text{hippo}_L \tag{7}$
 
-- **인코딩**: $\text{hippo}_L: \mathbb{R}^L \to \mathbb{R}^N, \quad u_{1:L} \mapsto c^{(L)}$
+- **인코딩**: $\text{hippo}\_L: \mathbb{R}^L \to \mathbb{R}^N, \quad u_{1:L} \mapsto c^{(L)}$
 - **변환 (KAN)**: $\text{KAN}: \mathbb{R}^N \to \mathbb{R}^N, \quad c^{(L)} \mapsto c^{(L+1)}$
-- **디코딩**: $\text{hippo}^{-1}_{L+1}: \mathbb{R}^N \to \mathbb{R}^{L+1}, \quad c^{(L+1)} \mapsto u'_{1:L+1}$
+- **디코딩**: $\text{hippo}^{-1}\_{L+1}: \mathbb{R}^N \to \mathbb{R}^{L+1}, \quad c^{(L+1)} \mapsto u'_{1:L+1}$
 
 KAN 레이어의 계수 업데이트는 다음과 같습니다:[^1_1]
 
-$c'_n = \sum_{m=1}^{N} \Phi_{nm}(c_m) \tag{8}$
+$c'\_n = \sum_{m=1}^{N} \Phi_{nm}(c_m) \tag{8}$
 
 Leg-S 기저 함수($p_n(L+1,\, L+1) = \sqrt{2n+1}$)를 적용하면 최종 예측값은:[^1_1]
 
-$\hat{u}_{L+1} = \sum_{n=1}^{N} \sqrt{2n+1} \left(\sum_{m=1}^{N} \Phi_{nm}(c_m) + B\, u_L\right) \tag{9}$
+$\hat{u}\_{L+1} = \sum_{n=1}^{N} \sqrt{2n+1} \left(\sum_{m=1}^{N} \Phi_{nm}(c_m) + B\, u_L\right) \tag{9}$
 
 ### 3.5 수정된 손실 함수 (Lagging 문제 해결)
 
@@ -96,7 +81,7 @@ $\hat{u}_{L+1} = \sum_{n=1}^{N} \sqrt{2n+1} \left(\sum_{m=1}^{N} \Phi_{nm}(c_m) 
 
 $\mathcal{L}(\theta) = \frac{1}{D} \sum_{i=1}^{D} \left\| c^{(L+1)(i)}_{\text{true}} - \hat{c}^{(L+1)(i)} \right\|^2 \tag{10}$
 
-여기서 $c^{(L+1)(i)}_{\text{true}} = \text{hippo}_{L+1}(u^{(i)}_{1:L+1})$, $\hat{c}^{(L+1)(i)} = \text{KAN}(c^{(L)(i)})$입니다.[^1_1]
+여기서 $c^{(L+1)(i)}\_{\text{true}} = \text{hippo}\_{L+1}(u^{(i)}_{1:L+1})$, $\hat{c}^{(L+1)(i)} = \text{KAN}(c^{(L)(i)})$입니다.[^1_1]
 
 ***
 
