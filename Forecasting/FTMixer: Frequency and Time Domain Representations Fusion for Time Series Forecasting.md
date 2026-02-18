@@ -1,19 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "FTMixer: Frequency and Time Domain Representations Fusion for Time Series Forecasting"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-이제 논문의 내용을 바탕으로 체계적인 한국어 분석을 작성합니다.
-
-***
-
-# FTMixer: 주파수·시간 도메인 융합 시계열 예측 모델 심층 분석
-
+# FTMixer: Frequency and Time Domain Representations Fusion for Time Series Forecasting
 
 ***
 
@@ -47,17 +32,18 @@ FTMixer(Frequency and Time domain Mixer)는 시계열 예측에서 **시간 도�
 
 길이 $L$의 시퀀스 $\mathbf{x}$에 대해 DCT는 다음과 같이 정의됩니다:[^1_1]
 
-$\bar{x}_k = \sum_{n=0}^{L-1} x_n \cos\left(\frac{\pi}{L}\left(n + \frac{1}{2}\right)k\right), \quad k \in \{0, 1, \ldots, L-1\}$
+$\bar{x}\_k = \sum_{n=0}^{L-1} x_n \cos\left(\frac{\pi}{L}\left(n + \frac{1}{2}\right)k\right), \quad k \in \{0, 1, \ldots, L-1\}$
 
 역변환(iDCT)은 주파수 도메인에서 다시 시간 도메인으로 복원합니다:
 
-$x_n = \frac{1}{2}\bar{x}_0 + \sum_{k=1}^{L-1} \bar{x}_k \cos\left(\frac{\pi}{L}\left(k + \frac{1}{2}\right)n\right)$
+$x_n = \frac{1}{2}\bar{x}\_0 + \sum_{k=1}^{L-1} \bar{x}_k \cos\left(\frac{\pi}{L}\left(k + \frac{1}{2}\right)n\right)$
 
 **② 전체 모델 구조 수식**
 
 FTMixer의 전체 파이프라인은 다음과 같습니다:[^1_1]
 
 $Z_{FCC} = f_{FCC}(\mathbf{X}), \quad Z_{DS} = f_{DS}\left(\text{Concat}\left(f_{WFTC}(\mathbf{X})\right)\right)$
+
 $Z = Z_{FCC} + Z_{DS}, \quad \hat{\mathbf{Y}} = f_{Pre}(Z)$
 
 **③ FCC 모듈 (전역 의존성 포착)**
@@ -65,6 +51,7 @@ $Z = Z_{FCC} + Z_{DS}, \quad \hat{\mathbf{Y}} = f_{Pre}(Z)$
 전체 시퀀스를 주파수 도메인으로 변환한 후, 채널 전체를 커버하는 컨볼루션을 수행합니다:[^1_1]
 
 $X_f = \text{Embedding}(\text{DCT}(\mathbf{X}))$
+
 $Z_{FCC} = \text{iDCT}\left(\text{Linear}\left(\text{Conv1d}(X_f)\right)\right)$
 
 **④ WFTC 모듈 (국소 의존성 포착)**
@@ -72,24 +59,31 @@ $Z_{FCC} = \text{iDCT}\left(\text{Linear}\left(\text{Conv1d}(X_f)\right)\right)$
 입력 시퀀스를 여러 스케일의 패치 $P_j$로 분할하고, 각 패치 내에서 DCT를 적용한 후 시간 도메인과 융합합니다:[^1_1]
 
 $FP_j = \text{iDCT}\left(\text{Conv}\left(\text{DCT}(P_j)\right)\right)$
-$Z_{P_j} = FP_j + \text{Conv}(P_j), \quad \tilde{Z}_{P_j} = \text{Embedding}(Z_{P_j})$
-$Z_{WFTC} = \text{Concat}(\tilde{Z}_{P_1}, \tilde{Z}_{P_2}, \ldots, \tilde{Z}_{P_n})$
+
+$Z_{P_j} = FP_j + \text{Conv}(P_j), \quad \tilde{Z}\_{P_j} = \text{Embedding}(Z_{P_j})$
+
+$Z_{WFTC} = \text{Concat}(\tilde{Z}\_{P_1}, \tilde{Z}\_{P_2}, \ldots, \tilde{Z}_{P_n})$
 
 **⑤ Dual-Domain Loss Function (DDLF)**
 
 시간 도메인과 주파수 도메인의 손실을 동시에 최소화합니다:[^1_1]
 
 $\mathcal{L}_{time} = \text{MSE}(\mathbf{Y} - F(\mathbf{X}))$
+
 $\mathcal{L}_{fre} = \text{MAE}\left(\text{DCT}(\mathbf{Y}) - \text{DCT}(F(\mathbf{X}))\right)$
-$\mathcal{L}_{total} = \mathcal{L}_{time} + \mathcal{L}_{fre}$
+
+$\mathcal{L}\_{total} = \mathcal{L}\_{time} + \mathcal{L}_{fre}$
 
 ### 모델 구조
 
-FTMixer는 순수 TCN(Temporal Convolutional Network) 기반 구조로, 트랜스포머의 $O(T^2)$ 복잡도 대비 $O(KT)$ (K: 컨볼루션 커널 크기)로 효율적입니다. FCC의 계산 복잡도는 $O(TMK)$ (M: 채널 수)로 표현됩니다. ETTh1(7채널) vs ECL(321채널) 비교 실험에서 FTMixer는 ModernTCN 대비 메모리를 최대 11배(3350MB → 304MB) 절약했습니다.[^1_1]
+FTMixer는 순수 TCN(Temporal Convolutional Network) 기반 구조로, 트랜스포머의 $O(T^2)$ 복잡도 대비 $O(KT)$ (K: 컨볼루션 커널 크기)로 효율적입니다.  
+FCC의 계산 복잡도는 $O(TMK)$ (M: 채널 수)로 표현됩니다.  
+ETTh1(7채널) vs ECL(321채널) 비교 실험에서 FTMixer는 ModernTCN 대비 메모리를 최대 11배(3350MB → 304MB) 절약했습니다.[^1_1]
 
 ### 성능 향상
 
-7개 실세계 벤치마크 데이터셋(ETTh1/h2, ETTm1/m2, Traffic, ECL, Weather)에서 10개의 최신 모델(iTransformer, PatchTST, ModernTCN, TSLANet, FEDformer 등)과 비교한 결과, FTMixer가 전 데이터셋에서 최상위 성능을 달성했습니다. 예를 들어 ETTh1에서 평균 MSE 0.402로 ModernTCN(0.426), iTransformer(0.454)를 크게 앞섰습니다.[^1_1]
+7개 실세계 벤치마크 데이터셋(ETTh1/h2, ETTm1/m2, Traffic, ECL, Weather)에서 10개의 최신 모델(iTransformer, PatchTST, ModernTCN, TSLANet, FEDformer 등)과 비교한 결과, FTMixer가 전 데이터셋에서 최상위 성능을 달성했습니다.  
+예를 들어 ETTh1에서 평균 MSE 0.402로 ModernTCN(0.426), iTransformer(0.454)를 크게 앞섰습니다.[^1_1]
 
 Ablation study 결과:
 
