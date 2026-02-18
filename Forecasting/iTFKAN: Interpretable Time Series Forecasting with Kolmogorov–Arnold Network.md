@@ -1,18 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "iTFKAN: Interpretable Time Series Forecasting with Kolmogorov–Arnold Network"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-아래에 iTFKAN 논문에 대한 상세한 연구자 관점의 분석을 제공합니다.
-
-***
-
-# iTFKAN: 핵심 주장과 주요 기여 요약
+# iTFKAN: Interpretable Time Series Forecasting with Kolmogorov–Arnold Network
 
 iTFKAN은 **KAN(Kolmogorov–Arnold Network)을 시계열 예측에 적용한 최초의 완전 해석 가능한 프레임워크**로, 예측 성능과 해석 가능성을 동시에 달성하는 것이 핵심 목표입니다. 기존 딥러닝 예측 모델(MLP, Transformer 계열)이 블랙박스 구조로 인해 신뢰성이 낮다는 문제를 해결하기 위해, 모델 구조 자체에서 상징적 수식(symbolic formula)을 통해 의사결정 근거를 제공합니다.[^1_1]
 
@@ -91,13 +77,13 @@ $TF_{p,k} = A_k \cdot e^{j\left(\phi_k + \frac{2\pi}{P}kp\right)} \tag{11}$
 
 각 패치에 대해 KAN을 적용하여 시간-주파수 보완 표현을 학습합니다:[^1_1]
 
-$h^p_{tf} = \text{TFKAN}(TF_{p,k}) = \frac{1}{K}\sum_{k=1}^{K} \text{KAN}_p(TF_{p,k}) \tag{12}$
+$h^p_{tf} = \text{TFKAN}(TF_{p,k}) = \frac{1}{K}\sum_{k=1}^{K} \text{KAN}\_p(TF_{p,k}) \tag{12}$
 
 ### 5. 손실 함수 (Sparsification Loss 포함)
 
 해석 가능성을 위한 희소화(sparsification) 패널티를 총 손실에 포함합니다:[^1_1]
 
-$\ell_{reg} = \sum_{d=1}^{D}\sum_{j=1}^{J}\sum_{i=1}^{I} \|\phi^d_{i,j}\|_2, \quad \|\phi\|_2 = \frac{1}{O}\sum_{o=1}^{O} a_o^2 \tag{13}$
+$\ell_{reg} = \sum_{d=1}^{D}\sum_{j=1}^{J}\sum_{i=1}^{I} \|\phi^d_{i,j}\|\_2, \quad \|\phi\|\_2 = \frac{1}{O}\sum_{o=1}^{O} a_o^2 \tag{13}$
 
 $\ell_{total} = \ell_{pred} + \lambda \sum_{\text{kan} \in \text{KANs}} \ell^{\text{kan}}_{reg} \tag{14}$
 
