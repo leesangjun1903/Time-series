@@ -1,18 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "KAN4TSF: Are KAN and KAN-based models Effective for Time Series Forecasting?"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-이제 논문 내용을 충분히 파악했습니다. 상세하고 구조화된 분석 답변을 작성하겠습니다.
-
-***
-
-# KAN4TSF 논문 심층 분석: KAN 기반 시계열 예측의 가능성과 한계
+# KAN4TSF: Are KAN and KAN-based models Effective for Time Series Forecasting?
 
 ## 1. 핵심 주장 및 주요 기여 요약
 
