@@ -1,18 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Adaptive Extraction Network for Multivariate Long Sequence Time-Series Forecasting"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
----
-
-# ATVCNet: Adaptive Extraction Network for MLSTF 심층 분석
-
-
+# Adaptive Extraction Network for Multivariate Long Sequence Time-Series Forecasting
 ***
 
 ## 1. 핵심 주장 및 주요 기여 요약
@@ -47,7 +33,9 @@ $O_{j,k} = \langle f, \Psi_{j,k} \rangle = \int_{-\infty}^{+\infty} f(x)\Psi_{j,
 
 소프트-하드 절충 임계값 처리:
 
-$\hat{O}_{j,k} = \begin{cases} \text{sgn}(O_{j,k})\left(|O_{j,k}| - a\gamma\right), & |O_{j,k}| \geq \gamma \\ 0, & |O_{j,k}| < \gamma \end{cases} \tag{4}$
+```math
+\hat{O}_{j,k} = \begin{cases} \text{sgn}(O_{j,k})\left(|O_{j,k}| - a\gamma\right), & |O_{j,k}| \geq \gamma \\ 0, & |O_{j,k}| < \gamma \end{cases}
+```
 
 여기서 $0 \leq a \leq 1$이 소프트/하드 임계값 사이의 균형을 조절하며, 역변환으로 잡음 제거된 시퀀스 $\tilde{X}(t)$를 복원합니다.[^1_1]
 
@@ -55,16 +43,21 @@ $\hat{O}_{j,k} = \begin{cases} \text{sgn}(O_{j,k})\left(|O_{j,k}| - a\gamma\righ
 
 1D 팽창 합성곱으로 다해상도 로컬 패턴 추출:
 
-$\text{Conv}_{1d} = \sum_{i=1}^{k} w_i \cdot x(t + d \times i) \tag{6}$
+$\text{Conv}\_{1d} = \sum_{i=1}^{k} w_i \cdot x(t + d \times i) $
 
 팽창 계수 $d \in \{1, 2, 5\}$로 각각 연산 후, 레이어 정규화(LN)와 ReLU 적용:
 
-$\chi_{\text{dilated}} = \text{ReLU}(\text{LN}(\text{Conv}_{1d}(\chi^l_i,\, d=n))), \quad n \in \mathbb{R}$
-$\chi_{\text{avg\_pool}} = \text{Upsample}(\text{Conv}_{1d}(\text{AvgPool}(\chi^l_i))) \tag{7}$
+```math
+\chi_{\text{dilated}} = \text{ReLU}(\text{LN}(\text{Conv}_{1d}(\chi^l_i,\, d=n))), \quad n \in \mathbb{R}
+```
+
+```math
+\chi_{\text{avg pool}} = \text{Upsample}(\text{Conv}_{1d}(\text{AvgPool}(\chi^l_i)))
+```
 
 최종 크로스-스케일 시간 특징 융합 (위치 불변성 보장):
 
-$X_c = \text{Add}(\chi_{\text{dilated}},\, \chi_{\text{avg\_pool}}) \tag{8}$
+$X_c = \text{Add}(\chi_{\text{dilated}},\, \chi_{\text{avg pool}}) \tag{8}$
 
 ### 변수 간 적응적 특징 추출 모듈 (Inter-Variable Feature Adaptive Extraction)
 
@@ -74,7 +67,7 @@ $\text{DefConv}(p_0) = \sum_{p_n \in \mathcal{R}} w(p_n) \cdot x(p_0 + p_n + \De
 
 여기서 $\Delta p_n$은 각 위치에 대해 학습되는 오프셋으로, 커널이 입력 특징맵에서 적응적으로 샘플링 위치를 조정합니다. 다해상도 특징맵을 스택하여 입력:[^1_1]
 
-$X_{sd} = \text{Stack}(\chi_{\text{dilated}},\, \chi_{\text{avg\_pool}}), \quad X_{dc} = \text{DefConv}(X_{sd}) \tag{10}$
+$X_{sd} = \text{Stack}(\chi_{\text{dilated}},\, \chi_{\text{avg pool}}), \quad X_{dc} = \text{DefConv}(X_{sd})$
 
 피처 믹싱 및 잔차 연결로 정보 손실 방지:
 
