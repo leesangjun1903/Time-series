@@ -1,18 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "TimeCNN: Refining Cross-Variable Interaction on Time Point for Time Series Forecasting"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-이제 논문의 내용을 충분히 확보했습니다. 상세한 분석 답변을 작성하겠습니다.
-
-***
-
-# TimeCNN: 시계열 예측을 위한 교차 변수 상호작용 정제
+# TimeCNN: Refining Cross-Variable Interaction on Time Point for Time Series Forecasting
 
 ## 1. 핵심 주장 및 주요 기여
 
@@ -36,7 +22,7 @@
 
 ### 문제 정의
 
-다변량 시계열 \$ X = [x^{(1)}, x^{(2)}, ···, x^{(L)}] \in \mathbb{R}^{L \times N} \$ 이 주어졌을 때, 미래 시퀀스 \$ Y = [x^{(L+1)}, ···, x^{(L+T)}] \in \mathbb{R}^{T \times N} \$ 를 예측하는 과제에서:[^1_1]
+다변량 시계열 $X = [x^{(1)}, x^{(2)}, ···, x^{(L)}] \in \mathbb{R}^{L \times N}$ 이 주어졌을 때, 미래 시퀀스 $Y = [x^{(L+1)}, ···, x^{(L+T)}] \in \mathbb{R}^{T \times N}$ 를 예측하는 과제에서:[^1_1]
 
 1. **동적 상관관계 미포착**: 변수 간 상관관계는 시간에 따라 변화하지만(Figure 1의 Pearson 상관계수 시각화), iTransformer는 전체 시계열을 단일 토큰으로 인코딩하므로 이 동적 변화를 반영하지 못함[^1_1]
 2. **음의 상관관계 소멸**: iTransformer의 self-attention은 pre-Softmax 단계에서 음의 상관관계를 인식하지만, Softmax를 거치면 **매우 작은 유사도 값**으로 변환되어 음의 상관관계 정보가 손실됨[^1_1]
@@ -59,7 +45,7 @@ $\hat{Y} = \text{Projection}(X_{\text{FFN}}) \tag{5}$
 
 $i$번째 타임포인트 입력 $x^{(i)} \in \mathbb{R}^{1 \times N}$에 대해, 패딩 후 합성곱 커널 $w^{(i)} = [w^{(i)}_1, w^{(i)}_2, \ldots, w^{(i)}_N]$을 적용하여 $j$번째 변수의 출력을 계산:
 
-$c^{(i)}_j = \sum_{k=1}^{N} w^{(i)}_k \cdot \hat{x}^{(i)}_{(j+k)}, \quad j=1,2,\ldots,N, \quad i=1,2,\ldots,L \tag{6}$
+$c^{(i)}\_j = \sum_{k=1}^{N} w^{(i)}\_k \cdot \hat{x}^{(i)}_{(j+k)}, \quad j=1,2,\ldots,N, \quad i=1,2,\ldots,L$
 
 > **핵심 통찰**: 합성곱 커널 파라미터의 **부호(sign)**가 변수 간 양·음 상관관계를 직접 표현하며, 이는 Softmax가 소멸시키던 음의 상관관계를 명시적으로 학습 가능하게 한다[^1_1]
 
