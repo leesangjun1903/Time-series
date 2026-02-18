@@ -1,18 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "WormKAN: Are KAN Effective for Identifying and Tracking Concept Drift in Time Series?"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-이제 충분한 정보가 확보되었습니다. 상세한 분석을 작성하겠습니다.
-
-***
-
-# WormKAN: KAN 기반 시계열 컨셉 드리프트 탐지 모델 종합 분석
+# WormKAN: Are KAN Effective for Identifying and Tracking Concept Drift in Time Series?
 
 ## 1. 핵심 주장 및 주요 기여
 
@@ -46,7 +32,7 @@ WormKAN은 세 가지 핵심 컴포넌트로 구성됩니다:
 
 KAN의 이론적 기반인 Kolmogorov-Arnold 표현 정리는 임의의 다변수 연속 함수를 단변수 함수들의 합성으로 표현합니다:[^1_1]
 
-$f(x_1, \ldots, x_n) = \sum_{q=1}^{2n+1} \Phi_q\!\left(\sum_{p=1}^{n} \phi_{q,p}(x_p)\right)$
+$f(x_1, \ldots, x_n) = \sum_{q=1}^{2n+1} \Phi_q\left(\sum_{p=1}^{n} \phi_{q,p}(x_p)\right)$
 
 KAN 전체 아키텍처는 레이어들의 합성으로 표현되며:
 
@@ -62,25 +48,31 @@ $Z_{\Theta_e} = Z_{\Theta_e}\Theta_s, \quad \Theta_s \in \mathbb{R}^{n \times n}
 
 이상적으로 $\Theta_s$는 **블록 대각 구조**를 가지며, 각 블록이 하나의 컨셉을 표현합니다:
 
-$\Theta_s = \begin{pmatrix} \Theta_s^{(1)} & 0 & \cdots & 0 \\ 0 & \Theta_s^{(2)} & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \Theta_s^{(k)} \end{pmatrix}$
+```math
+\Theta_s = \begin{pmatrix} \Theta_s^{(1)} & 0 & \cdots & 0 \\ 0 & \Theta_s^{(2)} & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \Theta_s^{(k)} \end{pmatrix}
+```
 
 3-레이어 KAN 디코더로 패치를 재구성합니다:
 
-$\hat{P}_{\Theta} = \text{KAN}_{\Theta_d}(\hat{Z}_{\Theta_e})$
+$\hat{P}\_{\Theta} = \text{KAN}\_{\Theta_d}(\hat{Z}_{\Theta_e})$
 
 **③ Temporal Smoothness Constraint (TSC)**
 
 연속된 잠재 표현의 부드러운 변화를 강제하는 차분 행렬 $R \in \mathbb{R}^{n \times (n-1)}$을 정의합니다:
 
-$R = \begin{pmatrix} 1 & -1 & 0 & \cdots & 0 \\ 0 & 1 & -1 & \cdots & 0 \\ \vdots & & \ddots & \ddots & \vdots \\ 0 & 0 & \cdots & 0 & 1 \end{pmatrix}_{n \times (n-1)}$
+```math
+R = \begin{pmatrix} 1 & -1 & 0 & \cdots & 0 \\ 0 & 1 & -1 & \cdots & 0 \\ \vdots & & \ddots & \ddots & \vdots \\ 0 & 0 & \cdots & 0 & 1 \end{pmatrix}_{n \times (n-1)}
+```
 
 스무스니스 제약:
 
-$\mathcal{L}_{\text{smooth}}(\Theta_s) = \|\Theta_s R\|_{1,2}$
+$\mathcal{L}\_{\text{smooth}}(\Theta_s) = \|\Theta_s R\|_{1,2}$
 
 **전체 손실 함수:**
 
-$\mathcal{L}(\Theta) = \frac{1}{2}\|P - \hat{P}_\Theta\|_F^2 + \lambda_1\|\Theta_s\|_1 + \lambda_2\|Z_{\Theta_e} - Z_{\Theta_e}\Theta_s\|_F^2 + \lambda_3\|\Theta_s R\|_{1,2}$
+```math
+\mathcal{L}(\Theta) = \frac{1}{2}\|P - \hat{P}_\Theta\|_F^2 + \lambda_1\|\Theta_s\|_1 + \lambda_2\|Z_{\Theta_e} - Z_{\Theta_e}\Theta_s\|_F^2 + \lambda_3\|\Theta_s R\|_{1,2}
+```
 
 - $\lambda_1$: $\Theta_s$의 희소성(sparsity) 촉진
 - $\lambda_2$: 자기 표현 성질 보존
@@ -100,7 +92,7 @@ $C_{k+1} = \lambda(C_1, \ldots, C_k) + \mu_{k+1}$
 
 예측된 컨셉에 기반한 시계열 값 예측:
 
-$\hat{p}_{n+1} = \sum_{i \in \mathcal{H}(C_{k+1})} \alpha_i p_i$
+$\hat{p}\_{n+1} = \sum_{i \in \mathcal{H}(C_{k+1})} \alpha_i p_i$
 
 여기서 $\mathcal{H}(C_{k+1})$은 해당 컨셉에 속하는 과거 패치 집합, $\mu_{k+1}$은 과적합 방지를 위한 백색 가우시안 잡음.[^1_1]
 
