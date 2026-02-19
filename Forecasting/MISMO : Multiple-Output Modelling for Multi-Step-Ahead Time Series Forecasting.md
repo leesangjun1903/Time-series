@@ -1,16 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Multiple-Output Modelling for Multi-Step-Ahead Time Series Forecasting"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-아래는 논문 전문을 기반으로 작성한 종합 분석입니다.
-
-***
+# Multiple-Output Modelling for Multi-Step-Ahead Time Series Forecasting
 
 ## 1. 핵심 주장 및 주요 기여
 
@@ -43,7 +31,7 @@ $\phi_{t+1} = f(\phi_t, \phi_{t-1}, \ldots, \phi_{t-d+1}) + w \tag{1}$
 
 이를 H번 반복하면 $h \geq d+1$일 때:
 
-$\hat{\phi}_{N+h} = \hat{f}(\hat{\phi}_{N+h-1}, \ldots, \hat{\phi}_{N+h-d}) \tag{2}$
+$\hat{\phi}\_{N+h} = \hat{f}(\hat{\phi}\_{N+h-1}, \ldots, \hat{\phi}_{N+h-d}) \tag{2}$
 
 [^1_1]
 
@@ -53,7 +41,7 @@ $\hat{\phi}_{N+h} = \hat{f}(\hat{\phi}_{N+h-1}, \ldots, \hat{\phi}_{N+h-d}) \tag
 
 $\phi_{t+h} = f_h(\phi_t, \phi_{t-1}, \ldots, \phi_{t-d+1}) + w, \quad h \in \{1, \ldots, H\} \tag{3}$
 
-$\hat{\phi}_{N+h} = \hat{f}_h(\phi_N, \ldots, \phi_{N-d+1}) \tag{4}$
+$\hat{\phi}\_{N+h} = \hat{f}\_h(\phi_N, \ldots, \phi_{N-d+1}) \tag{4}$
 
 [^1_1]
 
@@ -63,7 +51,7 @@ $\hat{\phi}_{N+h} = \hat{f}_h(\phi_N, \ldots, \phi_{N-d+1}) \tag{4}$
 
 $\{\phi_{t+H}, \ldots, \phi_{t+1}\} = F(\phi_t, \phi_{t-1}, \ldots, \phi_{t-d+1}) + \mathbf{w} \tag{5}$
 
-$\{\hat{\phi}_{N+H}, \ldots, \hat{\phi}_{N+1}\} = \hat{F}(\phi_N, \phi_{N-1}, \ldots, \phi_{N-d+1}) \tag{6}$
+$\{\hat{\phi}\_{N+H}, \ldots, \hat{\phi}\_{N+1}\} = \hat{F}(\phi_N, \phi_{N-1}, \ldots, \phi_{N-d+1}) \tag{6}$
 
 [^1_1]
 
@@ -99,7 +87,7 @@ $k^* = \arg\min_{k \in \{2,\ldots,K\}} E_{LOO}(k) \tag{10}$
 
 ### 평가 지표 (SMAPE)
 
-$SMAPE = \frac{1}{18} \sum_{i=1}^{18} \frac{|\phi_{t+i} - \hat{\phi}_{t+i}|}{(\phi_{t+i} + \hat{\phi}_{t+i})/2} \times 100 \tag{11}$
+$SMAPE = \frac{1}{18} \sum_{i=1}^{18} \frac{|\phi_{t+i} - \hat{\phi}\_{t+i}|}{(\phi_{t+i} + \hat{\phi}_{t+i})/2} \times 100 \tag{11}$
 
 [^1_1]
 
@@ -135,7 +123,7 @@ Multiple-Output 전략이 Single-Output 대비 약 **26~27% SMAPE 개선**을 �
 **일반화 성능에 영향을 미치는 세 가지 요인:**[^1_1]
 
 - **$s$의 전역 vs. 지역 선택**: LL-MISMO-G(전역 $s$)가 LL-MISMO-L(지역 $s$)보다 일관되게 우수한데, 이는 너무 많은 파라미터를 지역적으로 결정할수록 분산(variance)이 높아지기 때문
-- **조합(combination) 기준**: 단일 $s^*$를 선택하는 대신 여러 $s$ 값에서 얻은 예측을 평균하면 SMAPE* 16.50%로 최고 성능을 달성 — **앙상블 효과에 의한 분산 감소**
+- **조합(combination) 기준**: 단일 $s^\*$를 선택하는 대신 여러 $s$ 값에서 얻은 예측을 평균하면 SMAPE* 16.50%로 최고 성능을 달성 — **앙상블 효과에 의한 분산 감소**
 - **편향-분산 트레이드오프의 명시적 제어**: $s \in [1, H]$를 조정함으로써 모델 복잡도를 데이터에 맞게 적응시키는 구조 자체가 일반화 성능의 원천
 
 111개 시계열의 최적 $s$ 분포 분석에서, $s=1$(Direct)이 최적인 경우는 15개에 불과하고 $s=H$(MIMO)가 최적인 경우는 4개에 불과했습니다.  이는 데이터 구조에 따라 의존 관계의 범위가 다양하므로, 고정된 전략보다 **적응적 다중 출력 전략이 더 나은 일반화 성능**을 보임을 시사합니다.[^1_1]
