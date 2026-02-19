@@ -1,16 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Conditionally dependent strategies for multiple-step-ahead prediction in local learning"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
----
-
-# 논문 심층 분석: "Conditionally Dependent Strategies for Multiple-Step-Ahead Prediction in Local Learning"
+# Conditionally dependent strategies for multiple-step-ahead prediction in local learning
 
 *Bontempi \& Ben Taieb, International Journal of Forecasting 27 (2011) 689–699*[^1_1]
 
@@ -96,11 +84,11 @@ $k^* = \arg\min_k \Delta^{(1)}_k \tag{4}$
 
 훈련 시계열 기반의 1-스텝 예측 모델을 활용한 **로그-우도**로 예측 품질을 평가합니다:[^1_1]
 
-$\Delta^{(2)}_k = -\sum_{h=1}^{H} \log p(\hat{Y}^h_k | \phi)$
+$\Delta^{(2)}\_k = -\sum_{h=1}^{H} \log p(\hat{Y}^h_k | \phi)$
 
 가우시안 가정 하에서 이는 다음과 같이 근사됩니다:[^1_1]
 
-$\Delta^{(2)}_k \approx \sum_{h=m}^{H} (\hat{Y}^h_k - \hat{y}^h_k)^2 \tag{5}$
+$\Delta^{(2)}\_k \approx \sum_{h=m}^{H} (\hat{Y}^h_k - \hat{y}^h_k)^2 \tag{5}$
 
 여기서 $\hat{y}^h_k$는 훈련 데이터에 적합된 1-스텝 예측기가 지연 벡터 $\{\hat{Y}^{h-1}_k, \ldots, \hat{Y}^{h-m+1}_k\}$에 대해 반환한 예측값입니다.
 
@@ -108,7 +96,7 @@ $\Delta^{(2)}_k \approx \sum_{h=m}^{H} (\hat{Y}^h_k - \hat{y}^h_k)^2 \tag{5}$
 
 예측 지평 $H$가 길 때, 여러 horizon $j \geq h$에 대해 훈련된 MIMO 예측기들을 평균하여 분산을 감소시킵니다:[^1_1]
 
-$\hat{\phi}_{t+h} = \frac{\sum_{j=h}^{H} \hat{Y}^h_{(j)}}{H - h + 1} \tag{6}$
+$\hat{\phi}\_{t+h} = \frac{\sum_{j=h}^{H} \hat{Y}^h_{(j)}}{H - h + 1} \tag{6}$
 
 ***
 
