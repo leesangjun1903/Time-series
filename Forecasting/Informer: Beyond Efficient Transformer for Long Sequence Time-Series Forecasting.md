@@ -1,18 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Informer: Beyond Efficient Transformer for Long Sequence Time-Series Forecasting"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
-
-아래는 논문 파일을 기반으로 작성된 심층 분석 리포트입니다.
-
-***
-
-# Informer: 장기 시계열 예측을 위한 효율적 트랜스포머 심층 분석
+# Informer: Beyond Efficient Transformer for Long Sequence Time-Series Forecasting
 
 ## 1. 핵심 주장 및 주요 기여 요약
 
@@ -45,7 +31,7 @@ Vanilla Transformer는 LSTF에서 세 가지 병목을 가집니다:[^1_1]
 기존 self-attention의 $i$번째 쿼리 출력은 확률 커널 스무서 형태로 정의됩니다:[^1_1]
 
 $$
-A(q_i, K, V) = \sum_j \frac{k(q_i, k_j)}{\sum_l k(q_i, k_l)} v_j = \mathbb{E}_{p(k_j|q_i)}[v_j] \tag{1}
+A(q_i, K, V) = \sum_j \frac{k(q_i, k_j)}{\sum_l k(q_i, k_l)} v_j = \mathbb{E}_{p(k_j|q_i)}[v_j]
 $$
 
 여기서 $p(k_j|q_i) = k(q_i, k_j)/\sum_l k(q_i, k_l)$, $k(q_i, k_j) = \exp(q_i k_j^\top/\sqrt{d})$.
@@ -53,19 +39,19 @@ $$
 중요 쿼리와 그렇지 않은 쿼리를 구별하기 위해 **쿼리 희소성 측정(Query Sparsity Measurement)**을 KL 발산 기반으로 정의합니다:[^1_1]
 
 $$
-M(q_i, K) = \ln \sum_{j=1}^{L_K} e^{q_i k_j^\top / \sqrt{d}} - \frac{1}{L_K} \sum_{j=1}^{L_K} \frac{q_i k_j^\top}{\sqrt{d}} \tag{2}
+M(q_i, K) = \ln \sum_{j=1}^{L_K} e^{q_i k_j^\top / \sqrt{d}} - \frac{1}{L_K} \sum_{j=1}^{L_K} \frac{q_i k_j^\top}{\sqrt{d}}
 $$
 
 수치 안정성 문제를 해결하기 위한 **Max-Mean 근사**는 다음과 같습니다:[^1_1]
 
-$$
-\bar{M}(q_i, K) = \max_j \left\{ \frac{q_i k_j^\top}{\sqrt{d}} \right\} - \frac{1}{L_K} \sum_{j=1}^{L_K} \frac{q_i k_j^\top}{\sqrt{d}} \tag{3}
-$$
+```math
+\bar{M}(q_i, K) = \max_j \left\{ \frac{q_i k_j^\top}{\sqrt{d}} \right\} - \frac{1}{L_K} \sum_{j=1}^{L_K} \frac{q_i k_j^\top}{\sqrt{d}}
+```
 
 이를 바탕으로 **ProbSparse Self-Attention**은 상위 $u = c \cdot \ln L_Q$개의 지배적 쿼리만 선택하여 수행됩니다:[^1_1]
 
 $$
-A(Q, K, V) = \text{Softmax}\!\left(\frac{\bar{Q} K^\top}{\sqrt{d}}\right) V \tag{4}
+A(Q, K, V) = \text{Softmax}\left(\frac{\bar{Q} K^\top}{\sqrt{d}}\right) V
 $$
 
 이때 $\bar{Q}$는 희소행렬로서, 샘플링 팩터 $c$에 의해 제어됩니다. 총 복잡도는 $\mathcal{O}(L \ln L)$입니다.[^1_1]
@@ -75,7 +61,7 @@ $$
 $j$번째 레이어에서 $(j+1)$번째 레이어로의 디스틸링 연산:[^1_1]
 
 $$
-X^t_{j+1} = \text{MaxPool}\!\left(\text{ELU}\!\left(\text{Conv1d}\!\left([X^t_j]_{AB}\right)\right)\right) \tag{5}
+X^t_{j+1} = \text{MaxPool}\left(\text{ELU}\left(\text{Conv1d}\!\left([X^t_j]_{AB}\right)\right)\right)
 $$
 
 Conv1d는 커널 너비 3의 1차원 합성곱, MaxPool은 stride 2의 다운샘플링을 수행합니다. 이로써 전체 공간 복잡도는 $\mathcal{O}((2-\epsilon)L \log L)$로 감소합니다.[^1_1]
@@ -85,7 +71,7 @@ Conv1d는 커널 너비 3의 1차원 합성곱, MaxPool은 stride 2의 다운샘
 디코더 입력 벡터는 다음과 같이 구성됩니다:[^1_1]
 
 $$
-X^t_{de} = \text{Concat}(X^t_{token}, X^t_0) \in \mathbb{R}^{(L_{token}+L_y) \times d_{model}} \tag{6}
+X^t_{de} = \text{Concat}(X^t_{token}, X^t_0) \in \mathbb{R}^{(L_{token}+L_y) \times d_{model}}
 $$
 
 여기서 $X^t_{token}$은 입력에서 잘라낸 시작 토큰(start token)이고, $X^t_0$은 목표 시퀀스를 위한 0으로 채워진 플레이스홀더입니다. 마스크된 ProbSparse self-attention을 통해 자기회귀 없이 **한 번의 순방향 연산**으로 예측을 완료합니다.[^1_1]
@@ -95,13 +81,13 @@ $$
 지역·전역 시간 컨텍스트를 동시에 활용하는 통합 입력 표현:[^1_1]
 
 $$
-\text{PE}_{(pos, 2j)} = \sin\!\left(\frac{pos}{(2L_x)^{2j/d_{model}}}\right), \quad \text{PE}_{(pos, 2j+1)} = \cos\!\left(\frac{pos}{(2L_x)^{2j/d_{model}}}\right) \tag{7}
+\text{PE}_{(pos, 2j)} = \sin\left(\frac{pos}{(2L_x)^{2j/d_{model}}}\right), \quad \text{PE}_{(pos, 2j+1)} = \cos\left(\frac{pos}{(2L_x)^{2j/d_{model}}}\right)
 $$
 
 최종 피드 벡터는 스칼라 프로젝션 $u^t_i$, 위치 임베딩 PE, 전역 스탬프 임베딩 SE의 합으로 구성됩니다:[^1_1]
 
 $$
-X^t_{feed}[i] = \alpha u^t_i + \text{PE}(L_x(t-1)+i) + \sum_p [\text{SE}(L_x(t-1)+i)]_p \tag{8}
+X^t_{feed}[i] = \alpha u^t_i + \text{PE}(L_x(t-1)+i) + \sum_p [\text{SE}(L_x(t-1)+i)]_p 
 $$
 
 ***
