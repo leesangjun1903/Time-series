@@ -1,12 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
-
-# 1. 당신은 AI 분야의 연구자입니다. "Adaptive local learning techniques for multiple-step-ahead wind speed forecasting"의 핵심 주장과 주요 기여를 간결하게 요약하세요.
-
-2. 이 논문이 "해결하고자 하는 문제, 제안하는 방법(수식 포함), 모델 구조, 성능 향상 및 한계"를 중심으로 자세하게 설명하세요.
-3.특히 "모델의 일반화 성능 향상 가능성"과 관련된 내용을 중점적으로 다뤄 주세요.
-4.요약 후에는 "해당 논문이 앞으로의 연구에 미치는 영향과 앞으로 연구 시 고려할 점"도 자세히 기술해 주세요.
-“2020년 이후 관련 최신 연구 비교 분석”
-수식을 LaTeX 코드로 답변 형식을 맞춰주고, LaTeX 렌더링을 위해 마크다운에 달러 기호를 사용해 주세요.
+# Adaptive local learning techniques for multiple-step-ahead wind speed forecasting
 
 이 논문은 물리 기반(white-box), 데이터 기반(black-box), 두 가지를 결합한 grey-box 모델을 체계적으로 비교하며, Lazy Learning 기반의 적응형 국소 학습(Adaptive Local Learning)을 풍속 예측에 적용한 원조 연구 중 하나입니다. 아래에 네 가지 요청 사항을 모두 상세히 다룹니다.
 
@@ -66,7 +58,7 @@ $w(t+h) = f(w(t),\; w(t-1),\; \dots,\; w(t-n)) \tag{3}$
 
 쿼리 포인트 $\phi_q$에 대한 $k$-NN 기반 예측:
 
-$\hat{y}^{(k)}_q = \frac{1}{k}\sum_{i=1}^{k} y_{[i]} \tag{4}$
+$\hat{y}^{(k)}\_q = \frac{1}{k}\sum_{i=1}^{k} y_{[i]} \tag{4}$
 
 최적 이웃 수 $k^*$는 **Leave-One-Out(LOO) 오차**를 최소화하여 결정합니다:
 
