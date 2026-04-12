@@ -23,6 +23,7 @@
 # Application
 ## Anomaly Detection
 - awesome anomaly detection : https://github.com/hoya012/awesome-anomaly-detection
+- awesome-time-series : https://github.com/cuge1995/awesome-time-series
 
 ## Imputation
 - Awesome_Imputation : https://github.com/WenjieDu/Awesome_Imputation
