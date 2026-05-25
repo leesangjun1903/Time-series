@@ -19,6 +19,7 @@
 - Awesome Large Foundation Models/Task-Specific Models for Weather and Climate : https://github.com/shengchaochen82/Awesome-Foundation-Models-for-Weather-and-Climate
 
 - Diffusion Model for Time Series and Spatio-Temporal Data : https://github.com/yyysjz1997/Awesome-TimeSeries-SpatioTemporal-Diffusion-Model
+- Time Series Library (TSLib) : https://github.com/thuml/Time-Series-Library
 
 # Application
 ## Anomaly Detection
