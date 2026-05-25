@@ -121,6 +121,7 @@
 - LLM-ABBA: Understanding time series via symbolic approximation | 2024 · 1회 인용
 - N-HiTS: Neural Hierarchical Interpolation for Time Series Forecasting | 2022 · 896회 인용
 - Neural basis expansion analysis with exogenous variables: Forecasting electricity prices with NBEATSx | 2021 · 297회 인용
+- Reasoning-Aware Training for Time Series Forecasting | 2026
 
 
 
