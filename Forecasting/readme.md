@@ -122,6 +122,7 @@
 - N-HiTS: Neural Hierarchical Interpolation for Time Series Forecasting | 2022 · 896회 인용
 - Neural basis expansion analysis with exogenous variables: Forecasting electricity prices with NBEATSx | 2021 · 297회 인용
 - Reasoning-Aware Training for Time Series Forecasting | 2026
+- Kronos: A Foundation Model for the Language of Financial Markets | 2026
 
 
 
