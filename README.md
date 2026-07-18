@@ -25,6 +25,7 @@
 ## Anomaly Detection
 - awesome anomaly detection : https://github.com/hoya012/awesome-anomaly-detection
 - awesome-time-series : https://github.com/cuge1995/awesome-time-series
+- SR-CNN, Time-Series Anomaly Detection Service at Microsoft : https://github.com/ChangYungHua/SR-CNN
 
 ## Imputation
 - Awesome_Imputation : https://github.com/WenjieDu/Awesome_Imputation
