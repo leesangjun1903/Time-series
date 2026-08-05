@@ -70,7 +70,7 @@ $$\text{Input}(T \times n) \xrightarrow{\text{2D Conv}(k\times1)} \xrightarrow{1
 
 클래스 $c$에 대한 출력 스코어 $y^c$를 feature map $A$의 각 activation unit $u$에 대해 편미분하고, 전체 평균(global average pooling)을 취합니다:
 
-$$w^c = \frac{1}{Z} \sum_{u} \frac{\delta y^c}{\delta A_u} \tag{1}$$
+$$w^c = \frac{1}{Z} \sum_{u} \frac{\delta y^c}{\delta A_u} $$
 
 - $Z$: feature map $A$ 내 총 unit 수
 - 2D의 경우 $u$는 좌표 $(i, j)$를 가짐
@@ -78,7 +78,7 @@ $$w^c = \frac{1}{Z} \sum_{u} \frac{\delta y^c}{\delta A_u} \tag{1}$$
 
 **Step 2: 가중 조합 및 ReLU 적용**
 
-$$L^c_{1/2D} = \text{ReLU}\left(\sum_{f_{maps}} w^c A\right) \tag{2}$$
+$$L^c_{1/2D} = \text{ReLU}\left(\sum_{f_{maps}} w^c A\right) $$
 
 - **양의 기여만** 추출하기 위해 ReLU 적용
 - $L^c_{2D}$: **각 time interval × feature**의 기여도 (2D Saliency Map)
