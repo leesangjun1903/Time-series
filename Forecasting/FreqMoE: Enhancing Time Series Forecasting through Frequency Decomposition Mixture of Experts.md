@@ -1,4 +1,4 @@
-# reqMoE: Enhancing Time Series Forecasting through Frequency Decomposition Mixture of Experts
+# FreqMoE: Enhancing Time Series Forecasting through Frequency Decomposition Mixture of Experts
 
 > **참고 자료**: Liu, Z. (2025). *FreqMoE: Enhancing Time Series Forecasting through Frequency Decomposition Mixture of Experts*. arXiv:2501.15125v2 [cs.LG], 16 Mar 2025. (본 분석은 제공된 PDF 원문에만 근거합니다.)
 
