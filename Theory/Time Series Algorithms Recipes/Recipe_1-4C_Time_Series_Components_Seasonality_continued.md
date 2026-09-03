@@ -85,6 +85,9 @@ $$
 
 또한 이 절의 결과를 다른 Recipe와 비교할 때는 데이터셋, target scale, forecast horizon, split, metric이 동일한지 확인해야 합니다. 조건이 다르면 숫자의 크기만으로 모델 우열을 말할 수 없습니다.
 
+- 데이터의 추세(Trend)가 증가함에 따라 계절성(Seasonality)의 변동 폭(진폭)이 비례해서 커지는 현상은 전형적인 승법적(Multiplicative) 특성을 나타냅니다.
+- 분산 안정화 변환(Variance-Stabilizing Transformation, VST)은 데이터의 평균과 분산의 관계를 끊어, 데이터 전체의 분산을 일정하게(등분산성) 만드는 통계적 변환 기법입니다.
+
 ## 6. 통계적으로 취약한 부분과 비교 불가능한 수치
 
 trend와 seasonality의 상호작용을 정량화하지 않으며, 수준 증가에 따라 계절 진폭이 커지는지 가법/승법 판단 근거가 부족합니다.
@@ -95,6 +98,8 @@ trend와 seasonality의 상호작용을 정량화하지 않으며, 수준 증가
 
 **질문 1. 분해한 residual은 white noise인가요?**  
 아닙니다. ACF/Ljung–Box/ARCH test 등으로 남은 구조를 확인해야 합니다.
+
+- ARCH 검정(Autoregressive Conditional Heteroskedasticity Test)은 시계열 데이터에서 자기회귀 조건부 이분산성(ARCH 효과)이 존재하는지 확인하는 통계적 검정 방법입니다.
 
 **질문 2. additive와 multiplicative 중 무엇을 선택하나요?**  
 계절 진폭이 수준과 함께 커지는지, 로그 변환 후 분산이 안정되는지, validation forecasting error가 개선되는지를 종합합니다.
