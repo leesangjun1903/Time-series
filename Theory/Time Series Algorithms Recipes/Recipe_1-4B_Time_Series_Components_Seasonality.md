@@ -68,7 +68,7 @@ $$
 R_{\text{future}}(f)=\text{E}\left[L(Y_{t+h},f(\mathcal{I}_t))\right]
 $$
 
-을 낮추는 것입니다. 예측 위험식의 기호는 다음과 같습니다. $R_{\text{future}}(f)$는 아직 보지 못한 미래 분포에서의 기대 예측손실, $\text{E}[\cdot]$는 그 분포에 대한 기대값, $Y_{t+h}$는 $h$단계 미래의 실제값, $f$는 예측함수, $\mathcal{I}_t$는 시점 $t$까지 이용 가능한 정보, $L(\cdot,\cdot)$은 실제값과 예측값의 오차를 수치화하는 손실함수입니다. $f=f_\theta$로 쓸 때 $\theta$는 데이터에서 학습하는 모델 파라미터 전체를 뜻합니다.
+을 낮추는 것입니다. 예측 위험식의 기호는 다음과 같습니다. $R_{\text{future}}(f)$는 아직 보지 못한 미래 분포에서의 기대 예측손실, $\text{E}[\cdot]$는 그 분포에 대한 기대값, $Y\_{t+h}$는 $h$단계 미래의 실제값, $f$는 예측함수, $\mathcal{I}\_t$는 시점 $t$까지 이용 가능한 정보, $L(\cdot,\cdot)$은 실제값과 예측값의 오차를 수치화하는 손실함수입니다. $f=f_\theta$로 쓸 때 $\theta$는 데이터에서 학습하는 모델 파라미터 전체를 뜻합니다.
 
 > **용어 설명 — information set $\mathcal{I}_t$**  
 > 예측 순간에 현실적으로 알고 있는 모든 정보의 집합입니다. 미래 target이나 미래에만 측정되는 sensor 값을 포함하면 데이터 누수입니다.
@@ -123,6 +123,9 @@ forecasting 평가에서는 위험합니다. centered smoother나 STL이 미래�
 3. additive와 log-additive(multiplicative) 후보를 비교합니다.  
 4. residual whiteness와 heteroskedasticity를 검사합니다.  
 5. 분해를 사용한 예측과 사용하지 않은 예측을 rolling-origin으로 비교합니다.
+
+- 로그-가법적(Log-additive) 모델 또는 로그-승법적(Log-multiplicative) 모델은 종속 변수에 로그(log)를 취함으로써 본래의 곱셈(승법) 관계를 덧셈(가법) 관계로 변환하여 분석하는 회귀 모형입니다.
+- 회귀 분석에서 잔차의 백색 잡음(Residual Whiteness)과 이형산성(Heteroskedasticity)을 검사하는 핵심 방법은 잔차가 무작위적이고 등분산성을 따르는지 확인하는 것입니다.
 
 ### 일반화 성능을 높이기 위한 연구 방향
 
