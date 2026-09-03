@@ -48,7 +48,8 @@ $$
 
 rolling mean의 분산 감소 효과는 독립 잡음 가정에서 대략 $\text{Var}(M_t)=\sigma^2/w$이지만, 시계열에 자기상관이 있으면 이 식은 달라집니다. 또한 centered moving average를 전체 데이터에 적용하면 미래 관측을 사용하는 누수가 발생할 수 있으므로 forecasting에서는 trailing window를 사용해야 합니다.
 
-
+- 시계열 예측(Forecasting) 모델을 구축할 때 중심 이동 평균(Centered Moving Average)을 사용하면 미래 데이터가 과거로 유출되는 데이터 누수(Data Leakage)가 발생합니다. 따라서 예측 시점 이전의 데이터만을 활용하는 후방 이동 평균(Trailing/Causal Moving Average)을 반드시 사용해야 합니다.
+  - 후방 이동 평균(Trailing MA): $\(t\)$ 시점의 평균을 구하기 위해 $\(t-2\), \(t-1\), \(t\)$ 시점 등 과거와 현재의 데이터만 사용합니다. 실전 예측(Out-of-sample forecasting)에 바로 적용할 수 있는 올바른 방법입니다.
 
 
 ### 수식 기호 상세 해설
@@ -60,6 +61,8 @@ rolling mean의 분산 감소 효과는 독립 잡음 가정에서 대략 $\text
 - $q$: 확률모형 MA($q$)에서 사용하는 과거 innovation의 최대 lag입니다.
 - 따라서 첫 번째 moving average는 **평활 연산**, 두 번째 MA($q$)는 **확률모형**으로 서로 다른 개념입니다.
 
+> - MA(q) 모델의 이노베이션(Innovation)이란 현재 시점의 시계열 데이터를 설명하기 위해 모델에 투입되는 예측 불가능한 백색 잡음(white noise)이나 충격(shock) 오차항을 뜻합니다.
+
 ### 3.3 무엇을 학습하거나 추정하는가
 
 이 절의 핵심 추정 대상은 데이터의 시간 구조를 설명하는 **파라미터 또는 상태**입니다. 통계모델이라면 계수와 오차분산을 추정하고, tree/deep model이라면 예측손실을 최소화하는 함수 $f_\theta$를 학습합니다. 공통적인 연구 목표는 새로운 미래 구간에서의 기대 손실
@@ -68,7 +71,7 @@ $$
 R_{\text{future}}(f)=\text{E}\left[L(Y_{t+h},f(\mathcal{I}_t))\right]
 $$
 
-을 낮추는 것입니다. 예측 위험식의 기호는 다음과 같습니다. $R_{\text{future}}(f)$는 아직 보지 못한 미래 분포에서의 기대 예측손실, $\text{E}[\cdot]$는 그 분포에 대한 기대값, $Y_{t+h}$는 $h$단계 미래의 실제값, $f$는 예측함수, $\mathcal{I}_t$는 시점 $t$까지 이용 가능한 정보, $L(\cdot,\cdot)$은 실제값과 예측값의 오차를 수치화하는 손실함수입니다. $f=f_\theta$로 쓸 때 $\theta$는 데이터에서 학습하는 모델 파라미터 전체를 뜻합니다.
+을 낮추는 것입니다. 예측 위험식의 기호는 다음과 같습니다. $R_{\text{future}}(f)$는 아직 보지 못한 미래 분포에서의 기대 예측손실, $\text{E}[\cdot]$는 그 분포에 대한 기대값, $Y\_{t+h}$는 $h$단계 미래의 실제값, $f$는 예측함수, $\mathcal{I}\_t$는 시점 $t$까지 이용 가능한 정보, $L(\cdot,\cdot)$은 실제값과 예측값의 오차를 수치화하는 손실함수입니다. $f=f_\theta$로 쓸 때 $\theta$는 데이터에서 학습하는 모델 파라미터 전체를 뜻합니다.
 
 > **용어 설명 — information set $\mathcal{I}_t$**  
 > 예측 순간에 현실적으로 알고 있는 모든 정보의 집합입니다. 미래 target이나 미래에만 측정되는 sensor 값을 포함하면 데이터 누수입니다.
@@ -78,6 +81,8 @@ $$
 저자는 US GDP에 5기간 rolling mean을 적용해 원자료와 평활 시계열을 비교합니다. 정량적 holdout forecast 평가는 제시하지 않습니다.
 
 이 문단은 **저자의 보고를 요약한 것**이며, 아래의 비판적 해석과 구분해야 합니다.
+
+- 정량적 홀드아웃 예측 평가(Quantitative Holdout Forecast Evaluation)는 과거 데이터의 일부를 예측 모델 학습에서 제외(Holdout)한 후, 해당 기간의 실제 데이터와 모델의 예측치를 비교하여 모델의 객관적인 성과를 정량적으로 측정하는 기법입니다.
 
 ## 5. 비판적 해석 및 연구자 관점
 
@@ -96,11 +101,21 @@ rolling mean은 강력한 baseline/smoother지만 MA(q)와 구분해야 합니�
 **질문 1. 정상성이 반드시 필요한가요?**  
 ARMA의 고전 이론에는 중요하지만 ARIMA는 차분을 통해 비정상성을 다룹니다. 예측 목적에서는 모델 residual과 OOS 성능을 함께 봐야 합니다.
 
+- 고전 ARMA는 데이터 자체의 정상성을 요구하는 반면, ARIMA는 차분(Differencing)을 통해 비정상 데이터(단위근을 가진 데이터)를 처리합니다.
+- 예측 목적의 머신러닝/딥러닝 모델 역시 원본 데이터의 정상성보다는 잔차(Residual)의 정상성과 아웃오브샘플(OOS, Out-of-Sample) 성능을 중심으로 평가하는 것이 실무적으로 옳습니다.
+
 **질문 2. ACF/PACF만으로 차수를 정해도 되나요?**  
 초기 후보에는 유용하지만 noisy finite sample에서는 불확실합니다. 정보기준과 rolling-origin을 함께 사용해야 합니다.
 
+- ACF와 PACF는 이론적 분포를 가정한 초기 후보 식별에는 유용하지만, 유한하고 노이즈가 많은 실제 데이터(noisy finite sample)에서는 샘플 변동성이 커서 차수를 명확히 잘라내기(cut-off) 어렵기 때문입니다.
+
 **질문 3. ARIMA가 최신 모델보다 낡아서 쓸 필요가 없나요?**  
 그렇지 않습니다. 작은 데이터·강한 seasonality·해석성·빠른 재학습이 중요하면 여전히 매우 강한 baseline입니다.
+
+- 압도적인 연산 속도: 딥러닝 모델(예: Informer, PatchTST 등)이 학습에 수 시간에서 수일이 걸릴 때, ARIMA는 수초 내에 학습과 예측을 끝냅니다.
+- 명확한 해석 가능성: 결과의 원인을 파악하기 힘든 '블랙박스' 딥러닝과 달리, ARIMA는 과거의 내 값(AR)과 과거의 오차(MA) 중 어느 것이 예측에 영향을 주었는지 수학적으로 완벽히 설명할 수 있습니다.
+- 적은 데이터로도 작동: 최신 대형 모델은 수만 개 이상의 데이터 포인트가 있어야 과적합(Overfitting)을 피할 수 있지만, ARIMA는 수십~수백 개의 데이터만으로도 안정적인 예측값을 냅니다.
+- 강력한 기준점(Baseline): 새로운 복잡한 모델을 도입했을 때, 그 모델이 정말 우수한지 평가하려면 ARIMA보다 성능이 좋은지 확인하는 것이 업계 표준입니다.
 
 ## 8. 2020년 이후 관련 최신 연구 비교 분석
 
@@ -126,6 +141,14 @@ ARMA의 고전 이론에는 중요하지만 ARIMA는 차분을 통해 비정상�
 4. residual ACF/Ljung–Box와 분산 안정성을 확인합니다.  
 5. untouched test에서 horizon별 MAE/RMSE/MASE를 보고합니다.
 
+> Seasonal Naive (계절성 나이브) 모델 : 가장 최근의 '동일한 계절' 또는 '동일한 주기'의 관측치를 미래 예측값으로 사용하는 방법입니다.
+
+> AICc / BIC를 통한 후보 축소 (Filter Step): 수많은 파라미터 조합(예: ARIMA의 p, d, q 차수 또는 변수 조합) 중 연산 비용을 줄이고 과적합을 방지하기 위해 상위 후보군을 빠르게 선별합니다. 
+
+> 잔차의 자기상관 확인 (ACF / Ljung-Box Test) : 잔차에 정보가 남아있지 않고 무작위적인지(백색잡음) 확인합니다.
+>   - 잔차 ACF (Autocorrelation Function) 플롯 : 모든 시차(Lag)에서 ACF 값이 신뢰구간(보통 파란 점선, $\(\pm 1.96/\sqrt{T}\))$ 안에 들어와야 합니다. 신뢰구간을 벗어나는 시차가 없다면 자기상관이 없는 백색잡음으로 봅니다.
+>   - 융-박스 검정 (Ljung-Box Test) - 가설: $\(H_{0}\)$ (잔차들이 독립적이다 / 자기상관이 없다) vs $\(H_{1}\)$ (잔차들이 독립적이지 않다). p-value > 0.05이면 귀무가설을 채택하여 잔차에 자기상관이 없는 백색잡음 상태로 판단합니다.
+
 ### 일반화 성능을 높이기 위한 연구 방향
 
 - 모델 복잡도를 먼저 키우기보다 **시간순 교차검증과 leakage 제거**로 평가분산을 줄입니다.
@@ -133,6 +156,18 @@ ARMA의 고전 이론에는 중요하지만 ARIMA는 차분을 통해 비정상�
 - 여러 seed 또는 여러 rolling origin에서 평균과 표준편차를 보고 selection noise를 줄입니다.
 - 작은 데이터에서는 low-capacity statistical/tree baseline을 유지하고, deep/foundation model이 실제로 유의한 개선을 주는지 검증합니다.
 - domain shift가 예상되면 최근 구간 가중, calibration, covariate shift 진단, fine-tuning을 별도 실험합니다.
+
+> 최근 구간 가중 (Recency Weighting) : 데이터가 시간에 따라 점진적으로 변하는 Concept Drift나 시간 경과에 따른 가중치 최적화를 위함입니다.
+
+> Calibration (예측 확률 보정): 도메인이 변화하면 모델이 출력하는 확률값(Confidence)의 신뢰도가 떨어져 과잉 확신(Overconfidence) 또는 과소 확신이 발생합니다. 배포 전 단계에서 Platt Scaling이나 Isotonic Regression을 활용하여 예측 확률을 실제 정확도와 일치시킵니다.
+
+> Covariate Shift 진단: 학습 데이터 $(\(P(X)\))$ 와 최근 데이터 $(\(P'(X)\))$ 의 입력 분포 차이를 정량적으로 확인합니다.
+>   - Adversarial Validation(적대적 검증): 데이터가 원래 학습 데이터인지 최근 데이터인지 분류하는 이진 분류기를 학습시킵니다. 이때 AUC가 0.5에 가깝다면 차이가 없는 것이고, 1.0에 가깝다면 심각한 Covariate Shift가 발생한 것입니다.
+>   - 주요 피처별로 PSI(Population Stability Index)나 KL-Divergence를 계산하여 어떤 피처가 변했는지 추적합니다.
+
+> Fine-tuning (미세 조정): 변화한 도메인의 패턴을 모델에 직접 학습시켜 적응(Domain Adaptation)시킵니다.
+>   - 기존 지식을 잊어버리는 파괴적 망각(Catastrophic Forgetting)을 방지하기 위해 학습률(Learning Rate)을 매우 낮게 설정합니다.
+>   - 앞단의 특징 추출 레이어는 동결(Freeze)하고, 출력층(Classification Head) 위주로 먼저 학습하는 방안을 비교 실험합니다.
 
 ## 10. 후속 연구 계획
 
