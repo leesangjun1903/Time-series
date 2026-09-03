@@ -34,12 +34,12 @@ $$
 \{Y_t\}_{t\in\mathcal{T}}
 $$
 
-여기서 $Y_t$는 시점 $t$에서 관측된 값이고, $\mathcal{T}$는 관측 가능한 시간 인덱스의 집합입니다. 규칙 간격 데이터라면 $\mathcal{T}=\{1,2,\ldots,T\}$처럼 쓸 수 있고, 실제 timestamp를 사용한다면 $t_1<t_2<\cdots<t_T$의 형태로 봅니다.
+여기서 $Y_t$는 시점 $t$에서 관측된 값이고, $\mathcal{T}$는 관측 가능한 시간 인덱스의 집합입니다. 규칙 간격 데이터라면 $\mathcal{T}=\{1,2,\ldots,T\}$처럼 쓸 수 있고, 실제 timestamp를 사용한다면 $t_1 < t_2 < \cdots < t_T$의 형태로 봅니다.
 
 > **용어 설명 — 시간 인덱스(time index)**  
 > 각 관측값이 언제 발생했는지를 나타내는 순서 정보입니다. 일반 회귀에서는 행 순서를 바꾸어도 의미가 유지되는 경우가 많지만, 시계열에서는 행 순서가 정보 그 자체입니다.
 
-데이터 프레임으로 표현하면 단변량은 $(t_i,y_i)$, 다변량은 $(t_i,\mathbf{x}_i,y_i)$의 행으로 구성됩니다. 여기서 $\mathbf{x}_i=[x_{i1},\ldots,x_{ip}]^\top$는 시점 $t_i$의 $p$개 설명변수입니다. 연구 단계에서는 파일을 읽는 것보다 먼저 **시간축의 단조 증가성, 중복 timestamp, 결측 구간, 샘플링 간격**을 검증해야 합니다.
+데이터 프레임으로 표현하면 단변량은 $(t_i,y_i)$, 다변량은 $(t\_i,\mathbf{x}\_i,y_i)$의 행으로 구성됩니다. 여기서 $\mathbf{x}\_i=[x_{i1},\ldots,x_{ip}]^\top$는 시점 $t_i$의 $p$개 설명변수입니다. 연구 단계에서는 파일을 읽는 것보다 먼저 **시간축의 단조 증가성, 중복 timestamp, 결측 구간, 샘플링 간격**을 검증해야 합니다.
 
 샘플링 간격은
 
@@ -65,13 +65,13 @@ $$
 
 ### 3.3 무엇을 학습하거나 추정하는가
 
-이 절의 핵심 추정 대상은 데이터의 시간 구조를 설명하는 **파라미터 또는 상태**입니다. 통계모델이라면 계수와 오차분산을 추정하고, tree/deep model이라면 예측손실을 최소화하는 함수 $f_\theta$를 학습합니다. 공통적인 연구 목표는 새로운 미래 구간에서의 기대 손실
+이 절의 핵심 추정 대상은 데이터의 시간 구조를 설명하는 **파라미터 또는 상태**입니다. 통계모델이라면 계수와 오차분산을 추정하고, tree/Deep Learning model이라면 예측손실을 최소화하는 함수 $f_\theta$를 학습합니다. 공통적인 연구 목표는 새로운 미래 구간에서의 기대 손실
 
 $$
 R_{\text{future}}(f)=\text{E}\left[L(Y_{t+h},f(\mathcal{I}_t))\right]
 $$
 
-을 낮추는 것입니다. 예측 위험식의 기호는 다음과 같습니다. $R_{\text{future}}(f)$는 아직 보지 못한 미래 분포에서의 기대 예측손실, $\text{E}[\cdot]$는 그 분포에 대한 기대값, $Y_{t+h}$는 $h$단계 미래의 실제값, $f$는 예측함수, $\mathcal{I}_t$는 시점 $t$까지 이용 가능한 정보, $L(\cdot,\cdot)$은 실제값과 예측값의 오차를 수치화하는 손실함수입니다. $f=f_\theta$로 쓸 때 $\theta$는 데이터에서 학습하는 모델 파라미터 전체를 뜻합니다.
+을 낮추는 것입니다. 예측 위험식의 기호는 다음과 같습니다. $R_{\text{future}}(f)$는 아직 보지 못한 미래 분포에서의 기대 예측손실, $\text{E}[\cdot]$는 그 분포에 대한 기대값, $Y_{t+h}$는 $h$단계 미래의 실제값, $f$는 예측함수, $\mathcal{I}\_t$는 시점 $t$까지 이용 가능한 정보, $L(\cdot,\cdot)$은 실제값과 예측값의 오차를 수치화하는 손실함수입니다. $f=f_\theta$로 쓸 때 $\theta$는 데이터에서 학습하는 모델 파라미터 전체를 뜻합니다.
 
 > **용어 설명 — information set $\mathcal{I}_t$**  
 > 예측 순간에 현실적으로 알고 있는 모든 정보의 집합입니다. 미래 target이나 미래에만 측정되는 sensor 값을 포함하면 데이터 누수입니다.
@@ -105,7 +105,7 @@ $$
 **질문 3. 파일 포맷이 모델 성능에 영향을 주나요?**  
 직접적인 알고리즘 성능보다 dtype 손실, timestamp precision, category encoding 변화가 간접적으로 재현성과 성능을 바꿀 수 있습니다.
 
-## 8. 2020년 이후 관련 최신 연구 비교 분석
+## 8. 최신 연구 비교 분석
 
 2020년 이후 연구에서는 모델 구조보다 **평가 프로토콜과 데이터 누수 방지**가 재현성의 핵심이라는 점이 강조됩니다. 2022년 forecast evaluation 연구는 fixed-origin과 rolling-origin을 구분하고, smoothing·decomposition·normalization 단계에서도 미래 정보가 들어갈 수 있음을 명시합니다. 2024~2026 foundation model 연구는 대규모 사전학습을 사용하지만, 새로운 도메인에서 zero-shot 성능이 항상 최적이라는 보장은 없으며 train/test contamination과 domain shift 검증이 더 중요해졌습니다.
 
@@ -117,7 +117,7 @@ $$
 
 ### 최신 연구 결과를 읽을 때의 주의점
 
-논문에서 “SOTA”라고 보고된 수치는 특정 benchmark, split, horizon, preprocessing, tuning budget에 종속됩니다. 특히 foundation model은 pretraining corpus가 benchmark와 얼마나 겹치는지, zero-shot인지 fine-tuned인지에 따라 비교 조건이 달라집니다. 따라서 **서로 다른 논문의 숫자를 한 표에 놓고 단순 순위화하지 않습니다.**
+논문에서 “SOTA”라고 보고된 수치는 특정 benchmark, split, horizon, preprocessing, tuning budget에 종속됩니다. 특히 foundation model은 pretraining corpus(모델 학습 초기 단계(Pretraining)에 투입하는 방대한 양의 텍스트 데이터 세트)가 benchmark와 얼마나 겹치는지, zero-shot인지 fine-tuned인지에 따라 비교 조건이 달라집니다. 따라서 **서로 다른 논문의 숫자를 한 표에 놓고 단순 순위화하지 않습니다.**
 
 ## 9. 실제 파이프라인 적용 방향
 
