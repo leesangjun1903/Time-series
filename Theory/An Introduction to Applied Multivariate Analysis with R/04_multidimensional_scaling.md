@@ -146,11 +146,11 @@ $$
 
 로 회전·반사해도
 
-$$
+```math
 X^*(X^*)^\top
 =XQQ^\top X^\top
 =XX^\top
-$$
+```
 
 이므로 pairwise distance는 같습니다.
 
@@ -187,14 +187,14 @@ Non-metric MDS는 $\delta_{ij}$의 절대값보다 **순위**를 중요하게 �
 
 교재가 제시하는 stress 형태는
 
-$$
+```math
 S(\hat X)
 =
 \sqrt{
-\frac{\sum_{i<j}(\hat d_{ij}-d_{ij})^2}
-{\sum_{i<j}d_{ij}^2}
+\frac{\sum_{i < j}(\hat d_{ij}-d_{ij})^2}
+{\sum_{i < j}d_{ij}^2}
 }
-$$
+```
 
 과 같은 normalized discrepancy로 이해할 수 있습니다.
 
@@ -213,7 +213,7 @@ $$
 
 행 $i$의 profile을 $p_{ij}/p_{i+}$라고 할 때 두 행 $i,i'$ 사이의 chi-square distance는 개념적으로
 
-$$
+```math
 d^2(i,i')
 =\sum_{j=1}^{c}
 \frac{1}{p_{+j}}
@@ -222,7 +222,7 @@ d^2(i,i')
 -
 \frac{p_{i'j}}{p_{i'+}}
 \right)^2
-$$
+```
 
 로 표현할 수 있습니다.
 
