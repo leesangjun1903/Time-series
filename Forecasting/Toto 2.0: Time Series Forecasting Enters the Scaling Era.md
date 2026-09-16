@@ -61,7 +61,7 @@ Toto 2.0은 Datadog AI Research가 공개한 시계열 예측 파운데이션 �
 
 #### A. Contiguous Patch Masking (CPM) — Eq. (1)
 
-$$\hat{\mathbf{p}}_i = \left[ f_\theta(\mathbf{p}_{1:N}, \mathbf{b}_{1:N}) \right]_i, \quad i \in \mathcal{M} \tag{1}$$
+$$\hat{\mathbf{p}}_i = \left[ f_\theta(\mathbf{p}_{1:N}, \mathbf{b}_{1:N}) \right]_i, \quad i \in \mathcal{M} $$
 
 | 기호 | 설명 |
 |------|------|
@@ -79,9 +79,9 @@ $$\hat{\mathbf{p}}_i = \left[ f_\theta(\mathbf{p}_{1:N}, \mathbf{b}_{1:N}) \righ
 
 #### B. Quantile (Pinball) Loss — Eq. (2), (3)
 
-$$\rho_\tau(y - \hat{q}_\tau) = (y - \hat{q}_\tau)\left(\tau - \mathbf{1}[y < \hat{q}_\tau]\right) \tag{2}$$
+$$\rho_\tau(y - \hat{q}_\tau) = (y - \hat{q}_\tau)\left(\tau - \mathbf{1}[y < \hat{q}_\tau]\right) $$
 
-$$\mathcal{L}_{\text{quantile}} = \frac{1}{|\mathcal{T}|} \sum_{\tau \in \mathcal{T}} \rho_\tau(y - \hat{q}_\tau) \tag{3}$$
+$$\mathcal{L}_{\text{quantile}} = \frac{1}{|\mathcal{T}|} \sum_{\tau \in \mathcal{T}} \rho_\tau(y - \hat{q}_\tau) $$
 
 | 기호 | 설명 |
 |------|------|
@@ -99,7 +99,9 @@ $$\mathcal{L}_{\text{quantile}} = \frac{1}{|\mathcal{T}|} \sum_{\tau \in \mathca
 
 #### C. Pinball Gradient (AdamW와의 비교 근거) — Eq. (4)
 
-$$\frac{\partial \rho_\tau(y - \hat{q})}{\partial \hat{q}} = g_\tau = \begin{cases} -\tau & y > \hat{q} \\ 0 & y = \hat{q} \\ 1 - \tau & y < \hat{q} \end{cases} \tag{4}$$
+```math
+\frac{\partial \rho_\tau(y - \hat{q})}{\partial \hat{q}} = g_\tau = \begin{cases} -\tau & y > \hat{q} \\ 0 & y = \hat{q} \\ 1 - \tau & y < \hat{q} \end{cases}
+```
 
 핀볼 기울기는 오직 3개의 값만 가지며(부호값 기울기), MSE 기울기 $\frac{\partial(y-\hat{q})^2}{\partial \hat{q}} = -2(y-\hat{q})$와 달리 오차 크기 정보를 전달하지 않음 → AdamW의 분산 기반 스텝 사이즈 조정이 제한적으로 작동
 
@@ -111,7 +113,7 @@ $$\frac{\partial \rho_\tau(y - \hat{q})}{\partial \hat{q}} = g_\tau = \begin{cas
 v_t = \beta_2 v_{t-1} + (1 - \beta_2) \cdot \text{mean\_cols}(O_t \odot O_t)
 ```
 
-$$W_t \leftarrow W_{t-1} - \eta \, O_t \Big/ \sqrt{v_t + \epsilon} \tag{5}$$
+$$W_t \leftarrow W_{t-1} - \eta \, O_t \Big/ \sqrt{v_t + \epsilon} $$
 
 | 기호 | 설명 |
 |------|------|
