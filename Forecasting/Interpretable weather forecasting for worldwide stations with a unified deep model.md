@@ -1,4 +1,4 @@
-# SageFormer: Series-Aware Framework for Long-Term Multivariate Time Series Forecasting
+# Interpretable weather forecasting for worldwide stations with a unified deep model
 
 **검토 대상:** Haixu Wu 외, *Interpretable weather forecasting for worldwide stations with a unified deep model*, **Nature Machine Intelligence 5, 602–611 (2023)**. 아래의 본문 페이지는 학술지 쪽수이며, Extended Data 그림은 첨부 PDF의 페이지를 병기했습니다. 보충자료와 후속 연구에서 확인한 내용은 원논문의 결과와 구분합니다. Interpretable-weather-forecasti…
 
